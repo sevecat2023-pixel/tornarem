@@ -1,0 +1,46 @@
+{
+  "hero-rooftops": {
+    "src": "assets/img/hero-rooftops.webp",
+    "title": "IMG_9638",
+    "creator": "準建築人手札網站 Forgemind ArchiMedia",
+    "creator_url": "https://www.flickr.com/photos/44343967@N00",
+    "license": "by",
+    "license_version": "2.0",
+    "license_url": "https://creativecommons.org/licenses/by/2.0/",
+    "foreign_landing_url": "https://www.flickr.com/photos/44343967@N00/5597094788",
+    "source": "flickr"
+  },
+  "fiber-optic": {
+    "src": "assets/img/fiber-optic.webp",
+    "title": "Strand of optical fibers",
+    "creator": "Groman123",
+    "creator_url": "https://www.flickr.com/photos/85203634@N05",
+    "license": "by-sa",
+    "license_version": "2.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/2.0/",
+    "foreign_landing_url": "https://www.flickr.com/photos/85203634@N05/16087273139",
+    "source": "flickr"
+  },
+  "technician": {
+    "src": "assets/img/technician.webp",
+    "title": "20180927-RD-LSC-0995",
+    "creator": "USDAgov",
+    "creator_url": "https://www.flickr.com/photos/41284017@N08",
+    "license": "pdm",
+    "license_version": "1.0",
+    "license_url": "https://creativecommons.org/publicdomain/mark/1.0/",
+    "foreign_landing_url": "https://www.flickr.com/photos/41284017@N08/45105757191",
+    "source": "flickr"
+  },
+  "tower": {
+    "src": "assets/img/tower.webp",
+    "title": "Cold war relic",
+    "creator": "selkovjr",
+    "creator_url": "https://www.flickr.com/photos/14192663@N07",
+    "license": "by",
+    "license_version": "2.0",
+    "license_url": "https://creativecommons.org/licenses/by/2.0/",
+    "foreign_landing_url": "https://www.flickr.com/photos/14192663@N07/6137217220",
+    "source": "flickr"
+  }
+}

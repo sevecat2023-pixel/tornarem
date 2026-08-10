@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="es" class="no-js">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tornarem Telecom · Fibra y móvil en el Gironès, Osona y el Ripollès</title>
+<meta name="description" content="Operador de fibra simétrica propia y móvil 5G en 41 municipios del Gironès, Osona y el Ripollès. Sin permanencia, sin cuota de alta y con el precio que firmas.">
+<meta name="theme-color" content="#f3f1ec">
+<link rel="canonical" href="https://www.tornarem.cat/">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Tornarem Telecom · Fibra y móvil de proximidad">
+<meta property="og:description" content="Fibra simétrica propia y móvil 5G en 41 municipios de Girona, Osona y el Ripollès. Sin permanencia y con precio para siempre.">
+<meta property="og:image" content="assets/img/fiber-optic.webp">
+<meta property="og:locale" content="es_ES">
+
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="preload" as="font" type="font/woff2" href="assets/fonts/manrope-800-latin.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="assets/fonts/inter-400-latin.woff2" crossorigin>
+<link rel="stylesheet" href="styles.css?v=20260810">
+<script>document.documentElement.classList.remove("no-js");</script>
+</head>
+
+<body>
+<a class="skip-link" href="#main">Saltar al contenido</a>
+
+<!-- ============================ NAV ============================ -->
+<header class="nav" data-nav>
+  <div class="nav-inner">
+    <a class="brand" href="index.html" aria-label="Tornarem Telecom, inicio">
+      <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true">
+        <circle cx="16" cy="16" r="3.4" fill="#0f7b6c"/>
+        <path d="M23.4 8.6a10.5 10.5 0 1 1-14.8 0" fill="none" stroke="#14181c" stroke-width="2.2" stroke-linecap="round"/>
+        <path d="M23.9 3.6v5.3h-5.3" fill="none" stroke="#0f7b6c" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span>Tornarem</span>
+    </a>
+
+    <nav class="nav-links" aria-label="Principal">
+      <a class="nav-link" href="#tarifas">Tarifas</a>
+      <a class="nav-link" href="#cobertura">Cobertura</a>
+      <a class="nav-link" href="#red">La red</a>
+      <a class="nav-link" href="empresas.html">Empresas</a>
+      <a class="nav-link" href="#ayuda">Ayuda</a>
+    </nav>
+
+    <div class="nav-actions">
+      <a class="nav-phone" href="tel:+34900000000">900 000 000</a>
+      <a class="btn btn--accent btn--sm" href="#hero-cp" data-magnetic data-magnetic-strength="0.22">Comprobar cobertura</a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="menu-movil" aria-label="Abrir menú">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="nav-drawer" id="menu-movil" data-open="false" aria-label="Menú">
+  <a href="#tarifas">Tarifas</a>
+  <a href="#cobertura">Cobertura</a>
+  <a href="#red">La red</a>
+  <a href="empresas.html">Empresas</a>
+  <a href="#ayuda">Ayuda</a>
+  <a href="#contacto">Contacto</a>
+  <a class="btn btn--accent drawer-cta" href="#hero-cp">Comprobar cobertura</a>
+</div>
+
+<main id="main">
+
+<!-- ============================ HERO ============================ -->
+<section class="hero" id="inicio">
+  <div class="mesh" aria-hidden="true"></div>
+  <div class="wrap hero-grid">
+
+    <div class="hero-copy">
+      <p class="eyebrow">Operador de proximidad · Gironès, Osona i el Ripollès</p>
+
+      <h1 class="hero-title">Conectamos 41 pueblos. <em>Uno a uno.</em></h1>
+
+      <p class="hero-sub">
+        Fibra simétrica tendida por nosotros y móvil 5G sin permanencia.
+        Instalamos en 72 horas y el precio que firmas hoy es el que pagarás
+        dentro de cuatro años.
+      </p>
+
+      <form class="hero-check" data-cover-check novalidate>
+        <div class="hero-check-row">
+          <label class="field" for="hero-cp">
+            <input id="hero-cp" name="cp" type="text" placeholder=" " autocomplete="postal-code"
+                   inputmode="text" required>
+            <span>Municipio o código postal</span>
+          </label>
+          <button class="btn btn--primary" type="submit">
+            Ver si llegamos
+            <span class="btn-arrow" aria-hidden="true">→</span>
+          </button>
+        </div>
+
+        <p class="hero-note">
+          <span>Sin permanencia</span>
+          <span>Sin cuota de alta</span>
+          <span>Router en propiedad</span>
+        </p>
+
+        <div class="check-result" data-cover-result role="status" aria-live="polite">
+          <h3><i class="check-dot" aria-hidden="true"></i><span data-cover-title></span></h3>
+          <p data-cover-text></p>
+        </div>
+      </form>
+    </div>
+
+    <!-- Panel flotante: estado de la red -->
+    <aside class="glass hero-panel" aria-label="Estado de la red">
+      <div class="panel-head">
+        <h2>Estado de la red</h2>
+        <span class="panel-live">En vivo</span>
+      </div>
+
+      <dl class="panel-metrics">
+        <div class="panel-metric">
+          <dt>Latencia media</dt>
+          <dd><span class="num" data-count-to="4">4</span><small>ms</small></dd>
+        </div>
+        <div class="panel-metric">
+          <dt>Disponibilidad</dt>
+          <dd><span class="num" data-count-to="99.98">99,98</span><small>%</small></dd>
+        </div>
+        <div class="panel-metric">
+          <dt>Averías abiertas</dt>
+          <dd><span class="num" data-count-to="0">0</span></dd>
+        </div>
+      </dl>
+
+      <div class="panel-chart">
+        <svg viewBox="0 0 300 60" preserveAspectRatio="none" role="img"
+             aria-label="Tráfico del anillo durante las últimas 24 horas: sube por la tarde y baja de madrugada.">
+          <defs>
+            <linearGradient id="sparkFill" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#7fd8c6" stop-opacity=".65"/>
+              <stop offset="100%" stop-color="#7fd8c6" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+          <path class="spark-area" d="M0,46 L20,48 L40,50 L60,47 L80,40 L100,36 L120,38 L140,30 L160,26 L180,29 L200,20 L220,14 L240,17 L260,10 L280,16 L300,22 L300,60 L0,60 Z"/>
+          <path class="spark-line" d="M0,46 L20,48 L40,50 L60,47 L80,40 L100,36 L120,38 L140,30 L160,26 L180,29 L200,20 L220,14 L240,17 L260,10 L280,16 L300,22"/>
+        </svg>
+      </div>
+
+      <div class="panel-foot">
+        <span>Tráfico del anillo · 24 h</span>
+        <span>Pico 412 Gb/s</span>
+      </div>
+    </aside>
+
+  </div>
+</section>
+
+<!-- ============================ CIFRAS ============================ -->
+<section class="stats" aria-label="La empresa en cifras">
+  <div class="wrap">
+    <dl class="stats-grid">
+      <div class="stat" data-reveal>
+        <dd><span class="num" data-count-to="41">41</span></dd>
+        <dt>municipios con fibra propia</dt>
+      </div>
+      <div class="stat" data-reveal data-delay="1">
+        <dd><span class="num" data-count-to="12400">12.400</span></dd>
+        <dt>hogares y negocios conectados</dt>
+      </div>
+      <div class="stat" data-reveal data-delay="2">
+        <dd><span class="num" data-count-to="480">480</span><small>km</small></dd>
+        <dt>de anillo de fibra desplegado</dt>
+      </div>
+      <div class="stat" data-reveal data-delay="3">
+        <dd><span class="num" data-count-to="1.4">1,4</span><small>min</small></dd>
+        <dt>de espera media al teléfono</dt>
+      </div>
+    </dl>
+  </div>
+</section>
+
+<!-- ============================ POR QUÉ ============================ -->
+<section class="section" id="nosotros">
+  <div class="wrap">
+    <div class="section-head" data-reveal>
+      <p class="eyebrow">Por qué existimos</p>
+      <h2>Nos llamamos Tornarem porque volvimos a los pueblos que los grandes dejaron a medias.</h2>
+      <p>
+        Empezamos en 2016 tendiendo fibra en tres calles de Ripoll con una zanjadora alquilada.
+        Hoy somos cuarenta personas y seguimos con la misma norma: si prometemos una fecha, se cumple.
+      </p>
+    </div>
+
+    <div class="trio">
+      <article class="glass" data-reveal>
+        <div class="trio-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M12 3v18M5 8l7-5 7 5M5 16l7 5 7-5"/></svg>
+        </div>
+        <h3 class="card-title">La fibra es nuestra, de punta a punta</h3>
+        <p class="card-text">
+          No revendemos la red de nadie. Tendemos, empalmamos y mantenemos los 480 km del anillo,
+          así que cuando algo falla sabemos exactamente dónde mirar.
+        </p>
+        <p class="trio-note">Subida igual que la bajada, siempre</p>
+      </article>
+
+      <article class="glass" data-reveal data-delay="1">
+        <div class="trio-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M4 5h16v11H8l-4 3z"/><path d="M8 9h8M8 12h5"/></svg>
+        </div>
+        <h3 class="card-title">Te coge una persona, en catalán o en castellano</h3>
+        <p class="card-text">
+          Atención y técnicos en Girona y Vic. Sin menú de opciones, sin centro de llamadas
+          a seis husos horarios de aquí y sin robots que te pidan repetir el DNI.
+        </p>
+        <p class="trio-note">1,4 minutos de espera media</p>
+      </article>
+
+      <article class="glass" data-reveal data-delay="2">
+        <div class="trio-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M12 3l7.5 3.5v5c0 4.6-3.1 8.4-7.5 9.5-4.4-1.1-7.5-4.9-7.5-9.5v-5z"/><path d="M9.2 12.2l2 2 3.6-4"/></svg>
+        </div>
+        <h3 class="card-title">El precio que firmas es el precio de siempre</h3>
+        <p class="card-text">
+          Ni subidas por IPC ni descuentos de bienvenida que caducan a los doce meses.
+          Nuestras tarifas han subido una vez en nueve años, y avisamos con tres meses.
+        </p>
+        <p class="trio-note">Sin permanencia en ninguna tarifa</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ TARIFAS ============================ -->
+<section class="section section--tint" id="tarifas">
+  <div class="wrap">
+    <div class="section-head" data-reveal>
+      <p class="eyebrow">Tarifas para casa</p>
+      <h2>Tres tarifas. Ninguna letra pequeña.</h2>
+      <p>Todas incluyen instalación, alta y router. Puedes cambiar de una a otra cuando quieras y el cambio se aplica en la factura del mes siguiente.</p>
+    </div>
+
+    <div class="plans-switch" role="tablist" aria-label="Tipo de tarifa" data-plans-switch>
+      <button type="button" role="tab" aria-selected="true" aria-controls="panel-convergente" id="tab-convergente" data-plan-tab="convergente">Fibra + móvil</button>
+      <button type="button" role="tab" aria-selected="false" aria-controls="panel-fibra" id="tab-fibra" data-plan-tab="fibra">Solo fibra</button>
+    </div>
+
+    <!-- Fibra + móvil -->
+    <div class="plans" id="panel-convergente" role="tabpanel" aria-labelledby="tab-convergente" data-plan-panel="convergente">
+      <article class="glass plan" data-reveal>
+        <h3 class="plan-name">Bàsica</h3>
+        <p class="plan-summary">Para una casa de dos, con teletrabajo puntual.</p>
+        <p class="plan-price"><b>28</b><span>€ / mes · IVA incluido</span></p>
+        <p class="plan-was">Precio fijo mientras mantengas la tarifa</p>
+        <ul class="plan-list">
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6"/></svg>600 Mb simétricos de fibra</li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6"/></svg>1 línea móvil con 25 GB en 5G</li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6"/></svg>Llamadas ilimitadas a fijos y móviles</li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6"/></svg>Router Wi-Fi 6 en propiedad</li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6"/></svg>Instalación y alta gratuitas</li>
+        </ul>
+        <div class="plan-cta"><a class="btn btn--ghost btn--block" href="#contacto">Quiero la Bàsica</a></div>
+      </article>
+
+      <article class="glass plan plan--featured" data-reveal data-delay="1">
+        <span class="tag plan-badge">La más contratada</span>
+        <h3 class="plan-name">Comarca</h3>
+        <p class="plan-summary">La que contratan 6 de cada 10 hogares.</p>
+        <p class="plan-price"><b>38</b><span>€ / mes · IVA incluido</span></p>
+        <p class="plan-was">Antes <s>45 €</s> · precio revisado en enero</p>
+        <ul class="plan-list">
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6"/></svg>1 Gb simétrico de fibra</li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6"/></svg>2 líneas móviles con 60 GB en 5G</li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6"/></svg>Llamadas ilimitadas y roaming en la UE</li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6"/></svg>Router Wi-Fi 6 + repetidor mallado</li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6"/></svg>IP fija sin coste si la pides</li>
+        </ul>
+        <div class="plan-cta"><a class="btn btn--accent btn--block" href="#contacto" data-magnetic data-magnetic-strength="0.18">Quiero la Comarca</a></div>
+      </article>
+
+      <article class="glass plan" data-reveal data-delay="2">
+        <h3 class="plan-name">Total</h3>
+        <p class="plan-summary">Casas grandes, familias numerosas, gente que sube vídeo.</p>
+        <p class="plan-price"><b>59</b><span>€ / mes · IVA incluido</span></p>
+        <p class="plan-was">Precio fijo mientras mantengas la tarifa</p>
+        <ul class="plan-list">
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6"/></svg>10 Gb simétricos de fibra</li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6"/></svg>4 líneas móviles ilimitadas en 5G</li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6"/></svg>Wi-Fi mallado en toda la casa (3 puntos)</li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6"/></svg>IP fija y puertos abiertos a petición</li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6"/></svg>Prioridad de avería en menos de 8 h</li>
+        </ul>
+        <div class="plan-cta"><a class="btn btn--ghost btn--block" href="#contacto">Quiero la Total</a></div>
+      </article>
+    </div>
+
+    <!-- Solo fibra -->
+    <div class="plans" id="panel-fibra" role="tabpanel" aria-labelledby="tab-fibra" data-plan-panel="fibra" hidden>
+      <article class="glass plan">
+        <h3 class="plan-name">Fibra 600</h3>
+        <p class="plan-summary">Suficiente para dos personas y una tele.</p>
+        <p class="plan-price"><b>22</b><span>€ / mes · IVA incluido</span></p>
+        <p class="plan-was">Precio fijo mientras mantengas la tarifa</p>
+        <ul class="plan-list">
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6"/></svg>600 Mb simétricos, subida real</li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6"/></svg>Router Wi-Fi 6 en propiedad</li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6"/></svg>Instalación y alta gratuitas</li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6"/></svg>Sin permanencia, nunca</li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6"/></svg>Soporte técnico local</li>
+        </ul>
+        <div class="plan-cta"><a class="btn btn--ghost btn--block" href="#contacto">Quiero la Fibra 600</a></div>
+      </article>
+
+      <article class="glass plan plan--featured">
+        <span class="tag plan-badge">La más contratada</span>
+        <h3 class="plan-name">Fibra 1 Gb</h3>
+        <p class="plan-summary">El punto dulce entre precio y margen.</p>
+        <p class="plan-price"><b>29</b><span>€ / mes · IVA incluido</span></p>
+        <p class="plan-was">Antes <s>34 €</s> · precio revisado en enero</p>
+        <ul class="plan-list">
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6"/></svg>1 Gb simétrico, subida real</li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6"/></svg>Router Wi-Fi 6 + repetidor mallado</li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6"/></svg>IP fija sin coste si la pides</li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6"/></svg>Sin permanencia, nunca</li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6"/></svg>Soporte técnico local</li>
+        </ul>
+        <div class="plan-cta"><a class="btn btn--accent btn--block" href="#contacto">Quiero la Fibra 1 Gb</a></div>
+      </article>
+
+      <article class="glass plan">
+        <h3 class="plan-name">Fibra 10 Gb</h3>
+        <p class="plan-summary">Para quien mueve archivos, no páginas.</p>
+        <p class="plan-price"><b>45</b><span>€ / mes · IVA incluido</span></p>
+        <p class="plan-was">Precio fijo mientras mantengas la tarifa</p>
+        <ul class="plan-list">
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6"/></svg>10 Gb simétricos, subida real</li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6"/></svg>Wi-Fi mallado en toda la casa (3 puntos)</li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6"/></svg>IP fija y puertos abiertos a petición</li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6"/></svg>Prioridad de avería en menos de 8 h</li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6"/></svg>Soporte técnico local</li>
+        </ul>
+        <div class="plan-cta"><a class="btn btn--ghost btn--block" href="#contacto">Quiero la Fibra 10 Gb</a></div>
+      </article>
+    </div>
+
+    <p class="plans-legal">
+      Precios con IVA incluido para instalaciones dentro de nuestra cobertura directa.
+      La velocidad indicada es la del acceso; en Wi-Fi depende del dispositivo y de la casa.
+      Ninguna tarifa lleva permanencia: puedes irte con treinta días de aviso y los equipos se quedan contigo.
+    </p>
+
+    <!-- Móvil suelto -->
+    <h3 class="h3" style="margin-top:clamp(2.6rem,5vw,4rem)" data-reveal>Solo móvil, sin fibra</h3>
+    <div class="sims">
+      <article class="glass sim" data-reveal>
+        <div>
+          <p class="sim-name">Justa</p>
+          <p class="sim-data">25 GB · 5G · llamadas ilimitadas</p>
+        </div>
+        <p class="sim-price">8 <small>€/mes</small></p>
+      </article>
+      <article class="glass sim" data-reveal data-delay="1">
+        <div>
+          <p class="sim-name">Holgada</p>
+          <p class="sim-data">60 GB · 5G · llamadas ilimitadas</p>
+        </div>
+        <p class="sim-price">12 <small>€/mes</small></p>
+      </article>
+      <article class="glass sim" data-reveal data-delay="2">
+        <div>
+          <p class="sim-name">Sin contar</p>
+          <p class="sim-data">Datos ilimitados · 5G · llamadas ilimitadas</p>
+        </div>
+        <p class="sim-price">18 <small>€/mes</small></p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ LA RED ============================ -->
+<section class="section" id="red">
+  <div class="wrap split">
+    <figure class="split-figure" data-reveal>
+      <img src="assets/img/fiber-optic.webp" alt="Haz de fibras ópticas iluminadas en azul y verde" loading="lazy" decoding="async" width="1600" height="1067">
+      <figcaption>Anillo troncal · empalme en el nodo de Ripoll</figcaption>
+    </figure>
+
+    <div data-reveal data-delay="1">
+      <p class="eyebrow">Cómo está hecha</p>
+      <h2 class="h2">Una red que se puede visitar.</h2>
+      <p class="lead" style="margin-top:1rem">
+        Si eres cliente y quieres ver dónde acaba tu fibra, te enseñamos el nodo.
+        No es una metáfora: hacemos visitas guiadas dos veces al año.
+      </p>
+
+      <div class="pillars">
+        <div class="pillar">
+          <h3>480 km de anillo propio</h3>
+          <p>Doble camino entre Girona, Vic y Ripoll. Si una zanja se corta, el tráfico da la vuelta por el otro lado en menos de cincuenta milisegundos.</p>
+        </div>
+        <div class="pillar">
+          <h3>Dos centros de datos, no uno</h3>
+          <p>Girona y Vic, con energía redundante y refrigeración libre nueve meses al año. Cada servicio corre en los dos a la vez.</p>
+        </div>
+        <div class="pillar">
+          <h3>Salida a internet por dos ciudades</h3>
+          <p>Peering en Barcelona y Marsella con tránsito de dos operadores distintos. Ningún proveedor puede dejarnos a oscuras él solo.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap split split--flip" style="margin-top:clamp(3rem,6vw,5rem)">
+    <figure class="split-figure" data-reveal>
+      <img src="assets/img/technician.webp" alt="Técnico trabajando en un repartidor de fibra con centenares de latiguillos" loading="lazy" decoding="async" width="683" height="1024">
+      <figcaption>Repartidor óptico · central de Vic</figcaption>
+    </figure>
+
+    <div data-reveal data-delay="1">
+      <p class="eyebrow">Instalación</p>
+      <h2 class="h2">De la llamada al primer test de velocidad, tres pasos.</h2>
+
+      <div class="steps" style="margin-top:1.8rem;grid-template-columns:1fr">
+        <article class="glass step">
+          <h3>Compruebas y eliges</h3>
+          <p>Metes tu municipio arriba, ves qué velocidad llega a tu calle y escoges tarifa. Si prefieres hablarlo, llamas y lo hacemos por teléfono en diez minutos.</p>
+        </article>
+        <article class="glass step">
+          <h3>Te damos día y franja de dos horas</h3>
+          <p>No «entre las nueve y las seis». Una franja de dos horas, y si el técnico va a llegar tarde te llama él mismo antes de la hora.</p>
+        </article>
+        <article class="glass step">
+          <h3>Instalamos y no nos vamos hasta medirlo</h3>
+          <p>Tiramos la fibra, montamos el router, medimos la velocidad en cada habitación y te dejamos el papel con los números. La portabilidad la coordinamos nosotros.</p>
+        </article>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ COBERTURA ============================ -->
+<section class="section section--tint" id="cobertura">
+  <div class="wrap">
+    <div class="section-head" data-reveal>
+      <p class="eyebrow">Dónde llegamos</p>
+      <h2>41 municipios, y cada año tres o cuatro más.</h2>
+      <p>Priorizamos por solicitudes acumuladas, no por número de habitantes. Por eso Setcases entró antes que barrios enteros de la capital.</p>
+    </div>
+
+    <div class="cover-layout">
+      <div class="glass cover-panel" data-reveal>
+        <label class="cover-filter">
+          <span class="sr-only">Buscar municipio o código postal</span>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+          <input type="text" data-cover-filter placeholder="Buscar municipio o código postal" autocomplete="off">
+        </label>
+
+        <ul class="cover-list" data-cover-list>
+          <li class="cover-item" data-estado="10g"><span>Girona</span><span class="cp">17001</span><span class="estado">10 Gb</span></li>
+          <li class="cover-item" data-estado="10g"><span>Salt</span><span class="cp">17190</span><span class="estado">10 Gb</span></li>
+          <li class="cover-item" data-estado="10g"><span>Sarrià de Ter</span><span class="cp">17840</span><span class="estado">10 Gb</span></li>
+          <li class="cover-item" data-estado="1g"><span>Sant Gregori</span><span class="cp">17150</span><span class="estado">1 Gb</span></li>
+          <li class="cover-item" data-estado="1g"><span>Bescanó</span><span class="cp">17162</span><span class="estado">1 Gb</span></li>
+          <li class="cover-item" data-estado="10g"><span>Celrà</span><span class="cp">17460</span><span class="estado">10 Gb</span></li>
+          <li class="cover-item" data-estado="1g"><span>Bordils</span><span class="cp">17462</span><span class="estado">1 Gb</span></li>
+          <li class="cover-item" data-estado="1g"><span>Flaçà</span><span class="cp">17463</span><span class="estado">1 Gb</span></li>
+          <li class="cover-item" data-estado="10g"><span>Cassà de la Selva</span><span class="cp">17244</span><span class="estado">10 Gb</span></li>
+          <li class="cover-item" data-estado="1g"><span>Llagostera</span><span class="cp">17240</span><span class="estado">1 Gb</span></li>
+          <li class="cover-item" data-estado="1g"><span>Quart</span><span class="cp">17242</span><span class="estado">1 Gb</span></li>
+          <li class="cover-item" data-estado="10g"><span>Fornells de la Selva</span><span class="cp">17458</span><span class="estado">10 Gb</span></li>
+          <li class="cover-item" data-estado="10g"><span>Vilablareix</span><span class="cp">17180</span><span class="estado">10 Gb</span></li>
+          <li class="cover-item" data-estado="1g"><span>Aiguaviva</span><span class="cp">17181</span><span class="estado">1 Gb</span></li>
+          <li class="cover-item" data-estado="10g"><span>Riudellots de la Selva</span><span class="cp">17457</span><span class="estado">10 Gb</span></li>
+          <li class="cover-item" data-estado="10g"><span>Vic</span><span class="cp">08500</span><span class="estado">10 Gb</span></li>
+          <li class="cover-item" data-estado="10g"><span>Manlleu</span><span class="cp">08560</span><span class="estado">10 Gb</span></li>
+          <li class="cover-item" data-estado="1g"><span>Torelló</span><span class="cp">08570</span><span class="estado">1 Gb</span></li>
+          <li class="cover-item" data-estado="1g"><span>Roda de Ter</span><span class="cp">08510</span><span class="estado">1 Gb</span></li>
+          <li class="cover-item" data-estado="1g"><span>Centelles</span><span class="cp">08540</span><span class="estado">1 Gb</span></li>
+          <li class="cover-item" data-estado="1g"><span>Tona</span><span class="cp">08551</span><span class="estado">1 Gb</span></li>
+          <li class="cover-item" data-estado="1g"><span>Taradell</span><span class="cp">08552</span><span class="estado">1 Gb</span></li>
+          <li class="cover-item" data-estado="obras"><span>Sant Hipòlit de Voltregà</span><span class="cp">08512</span><span class="estado">En obras</span></li>
+          <li class="cover-item" data-estado="1g"><span>Folgueroles</span><span class="cp">08519</span><span class="estado">1 Gb</span></li>
+          <li class="cover-item" data-estado="1g"><span>Calldetenes</span><span class="cp">08506</span><span class="estado">1 Gb</span></li>
+          <li class="cover-item" data-estado="10g"><span>Gurb</span><span class="cp">08503</span><span class="estado">10 Gb</span></li>
+          <li class="cover-item" data-estado="obras"><span>Seva</span><span class="cp">08553</span><span class="estado">En obras</span></li>
+          <li class="cover-item" data-estado="1g"><span>Sant Julià de Vilatorta</span><span class="cp">08504</span><span class="estado">1 Gb</span></li>
+          <li class="cover-item" data-estado="10g"><span>Ripoll</span><span class="cp">17500</span><span class="estado">10 Gb</span></li>
+          <li class="cover-item" data-estado="1g"><span>Campdevànol</span><span class="cp">17530</span><span class="estado">1 Gb</span></li>
+          <li class="cover-item" data-estado="1g"><span>Sant Joan de les Abadesses</span><span class="cp">17860</span><span class="estado">1 Gb</span></li>
+          <li class="cover-item" data-estado="1g"><span>Ribes de Freser</span><span class="cp">17534</span><span class="estado">1 Gb</span></li>
+          <li class="cover-item" data-estado="obras"><span>Queralbs</span><span class="cp">17539</span><span class="estado">En obras</span></li>
+          <li class="cover-item" data-estado="1g"><span>Camprodon</span><span class="cp">17867</span><span class="estado">1 Gb</span></li>
+          <li class="cover-item" data-estado="obras"><span>Setcases</span><span class="cp">17869</span><span class="estado">En obras</span></li>
+          <li class="cover-item" data-estado="1g"><span>Llanars</span><span class="cp">17869</span><span class="estado">1 Gb</span></li>
+          <li class="cover-item" data-estado="obras"><span>Vilallonga de Ter</span><span class="cp">17869</span><span class="estado">En obras</span></li>
+          <li class="cover-item" data-estado="obras"><span>Gombrèn</span><span class="cp">17531</span><span class="estado">En obras</span></li>
+          <li class="cover-item" data-estado="1g"><span>Planoles</span><span class="cp">17535</span><span class="estado">1 Gb</span></li>
+          <li class="cover-item" data-estado="obras"><span>Pardines</span><span class="cp">17537</span><span class="estado">En obras</span></li>
+          <li class="cover-item" data-estado="1g"><span>Vallfogona de Ripollès</span><span class="cp">17862</span><span class="estado">1 Gb</span></li>
+        </ul>
+
+        <p class="cover-legend">
+          <span><i></i>Fibra de 10 Gb disponible</span>
+          <span><i class="l1g"></i>Fibra de 1 Gb disponible</span>
+          <span><i class="lob"></i>Obra abierta este año</span>
+        </p>
+      </div>
+
+      <div data-reveal data-delay="1">
+        <figure class="cover-figure">
+          <img src="assets/img/hero-rooftops.webp" alt="Tejados apiñados de una ciudad mediterránea vistos desde arriba" loading="lazy" decoding="async" width="1600" height="1067">
+        </figure>
+        <p class="lead" style="margin-top:1.4rem">
+          ¿Tu calle no sale? Escríbenos igualmente. Cada solicitud entra en el mapa
+          de prioridades del año siguiente y te avisamos el día que abrimos el nodo,
+          aunque tarde dos años.
+        </p>
+        <p style="margin-top:1.4rem">
+          <a class="btn btn--primary" href="#contacto" data-magnetic data-magnetic-strength="0.2">
+            Pedir cobertura para mi calle
+            <span class="btn-arrow" aria-hidden="true">→</span>
+          </a>
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ EMPRESAS ============================ -->
+<section class="section" id="empresas">
+  <div class="wrap">
+    <div class="biz" data-reveal>
+      <div class="biz-inner">
+        <div>
+          <p class="eyebrow">Para empresas</p>
+          <h2>Cuando el corte de una hora cuesta un día de trabajo.</h2>
+          <p>
+            Fibra dedicada con ancho garantizado, centralita en la nube, backup 5G automático
+            y una persona con nombre que conoce tu instalación. Sin ticket número 48.291.
+          </p>
+          <ul class="biz-list">
+            <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6"/></svg>SLA del 99,95 % con compensación automática en factura</li>
+            <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6"/></svg>Salto a 5G en menos de tres segundos si cae la fibra</li>
+            <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6"/></svg>Racks en Girona y Vic: tus datos no salen de la comarca</li>
+          </ul>
+          <p style="margin-top:1.8rem">
+            <a class="btn btn--ghost" href="empresas.html">
+              Ver soluciones para empresas
+              <span class="btn-arrow" aria-hidden="true">→</span>
+            </a>
+          </p>
+        </div>
+
+        <figure class="biz-figure">
+          <img src="assets/img/tower.webp" alt="Torre de telecomunicaciones recortada contra un cielo azul limpio" loading="lazy" decoding="async" width="768" height="1024">
+        </figure>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ TESTIMONIOS ============================ -->
+<section class="section section--tight">
+  <div class="wrap">
+    <div class="section-head" data-reveal>
+      <p class="eyebrow">Clientes</p>
+      <h2>Lo que dicen cuando no preguntamos nosotros.</h2>
+    </div>
+
+    <div class="quotes">
+      <blockquote class="glass quote" data-reveal>
+        <p class="quote-mark" aria-hidden="true">“</p>
+        <p>Vivimos a cuatro kilómetros del pueblo y llevábamos ocho años con un radioenlace que se caía cada tormenta. Tornarem tendió la fibra hasta la masía en once días.</p>
+        <footer>
+          <p class="quote-name">Roser Puigdemunt</p>
+          <p class="quote-role">Ganadería Can Serrat · Vallfogona de Ripollès</p>
+        </footer>
+      </blockquote>
+
+      <blockquote class="glass quote" data-reveal data-delay="1">
+        <p class="quote-mark" aria-hidden="true">“</p>
+        <p>Llamé un domingo a las nueve de la noche por una avería. Me cogió una persona, no un menú de opciones. El lunes a primera hora tenía técnico en casa.</p>
+        <footer>
+          <p class="quote-name">Marc Aleñà</p>
+          <p class="quote-role">Cliente desde 2019 · Manlleu</p>
+        </footer>
+      </blockquote>
+
+      <blockquote class="glass quote" data-reveal data-delay="2">
+        <p class="quote-mark" aria-hidden="true">“</p>
+        <p>Somos doce en la oficina y subimos vídeo todo el día. Pasamos de esperar la subida a no pensar en ella. Y la factura no ha cambiado en tres años.</p>
+        <footer>
+          <p class="quote-name">Núria Bosch</p>
+          <p class="quote-role">Estudio Ramal · Girona</p>
+        </footer>
+      </blockquote>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ FAQ ============================ -->
+<section class="section" id="ayuda">
+  <div class="wrap">
+    <div class="section-head" data-reveal>
+      <p class="eyebrow">Dudas razonables</p>
+      <h2>Preguntas que nos hacen antes de firmar.</h2>
+    </div>
+
+    <div class="faq" data-reveal>
+      <details open>
+        <summary>¿La fibra es vuestra o la alquiláis?</summary>
+        <div class="faq-body">Es nuestra. Desplegamos y mantenemos 480 km de anillo propio y damos servicio directamente sobre él. En los cuatro municipios donde todavía no hemos llegado usamos red mayorista, y lo decimos antes de firmar.</div>
+      </details>
+      <details>
+        <summary>¿Qué pasa si me mudo dentro de la zona?</summary>
+        <div class="faq-body">El traslado es gratuito y no reinicia nada: mismo precio, mismo contrato. Si te mudas fuera de nuestra cobertura, cancelas sin penalización ni devolución de equipos.</div>
+      </details>
+      <details>
+        <summary>¿Me vais a subir el precio dentro de un año?</summary>
+        <div class="faq-body">No. El precio que firmas es el que pagas mientras mantengas la tarifa. No aplicamos subidas por IPC ni descuentos de bienvenida que caducan a los doce meses.</div>
+      </details>
+      <details>
+        <summary>¿Cuánto tarda la instalación?</summary>
+        <div class="faq-body">72 horas laborables desde que confirmas, si tu calle ya tiene nodo abierto. Si hace falta obra en la fachada o acometida nueva, entre una y tres semanas, y te damos fecha cerrada antes de empezar.</div>
+      </details>
+      <details>
+        <summary>¿Puedo mantener mi número?</summary>
+        <div class="faq-body">Sí, de fijo y de móvil. Nos ocupamos nosotros de la portabilidad y coordinamos el corte para que no pierdas servicio más de unos minutos.</div>
+      </details>
+      <details>
+        <summary>¿Tenéis atención en catalán?</summary>
+        <div class="faq-body">Sí, y en castellano. Todo el equipo de atención y los técnicos están en Girona y Vic: no hay centro de llamadas externo ni horario de otro huso.</div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ CTA / CONTACTO ============================ -->
+<section class="section cta" id="contacto">
+  <div class="mesh" aria-hidden="true" style="opacity:.5"></div>
+  <div class="wrap">
+    <div class="glass cta-card" data-reveal>
+      <div class="cta-grid">
+
+        <div>
+          <p class="eyebrow">Hablemos</p>
+          <h2 class="h2" style="margin-bottom:1.4rem">Déjanos tu calle y te decimos qué llega.</h2>
+
+          <form class="cta-form" data-contact-form novalidate>
+            <div class="cta-form-row">
+              <label class="field" for="c-nombre">
+                <input id="c-nombre" name="nombre" type="text" placeholder=" " autocomplete="name" required>
+                <span>Nombre y apellidos</span>
+              </label>
+              <label class="field" for="c-tel">
+                <input id="c-tel" name="telefono" type="tel" placeholder=" " autocomplete="tel" required>
+                <span>Teléfono</span>
+              </label>
+            </div>
+
+            <div class="cta-form-row">
+              <label class="field" for="c-municipio">
+                <input id="c-municipio" name="municipio" type="text" placeholder=" " required>
+                <span>Municipio</span>
+              </label>
+              <label class="field" for="c-interes">
+                <select id="c-interes" name="interes" required>
+                  <option value="" selected disabled></option>
+                  <option>Fibra + móvil</option>
+                  <option>Solo fibra</option>
+                  <option>Solo móvil</option>
+                  <option>Empresa</option>
+                  <option>Todavía no llegáis a mi calle</option>
+                </select>
+                <span>Qué te interesa</span>
+              </label>
+            </div>
+
+            <label class="field" for="c-mensaje">
+              <textarea id="c-mensaje" name="mensaje" placeholder=" "></textarea>
+              <span>Cuéntanos lo que necesites (opcional)</span>
+            </label>
+
+            <button class="btn btn--accent cta-submit" type="submit">
+              <span class="cta-label">Enviar y que me llamen</span>
+              <span class="cta-spinner" aria-hidden="true"></span>
+            </button>
+
+            <p class="cta-consent">
+              Usamos estos datos solo para responderte. Puedes pedirnos que los borremos cuando quieras.
+              <a href="#privacidad">Aviso de privacidad</a>.
+            </p>
+          </form>
+
+          <div class="cta-success" data-contact-success role="status" aria-live="polite">
+            <svg class="cta-check" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6" pathLength="1"/></svg>
+            <h3 data-contact-success-title>Recibido.</h3>
+            <p data-contact-success-msg></p>
+          </div>
+        </div>
+
+        <aside class="cta-aside">
+          <p class="eyebrow">O directamente</p>
+          <dl>
+            <div>
+              <dt>Teléfono</dt>
+              <dd><a href="tel:+34900000000">900 000 000</a></dd>
+            </div>
+            <div>
+              <dt>Correo</dt>
+              <dd><a href="mailto:hola@tornarem.cat">hola@tornarem.cat</a></dd>
+            </div>
+            <div>
+              <dt>Averías</dt>
+              <dd>24 h, todos los días del año</dd>
+            </div>
+            <div>
+              <dt>Oficina</dt>
+              <dd>Carrer del Portal Nou, 12<br>17001 Girona</dd>
+            </div>
+            <div>
+              <dt>Horario de atención</dt>
+              <dd>Lunes a viernes, 8:00–21:00<br>Sábados, 9:00–14:00</dd>
+            </div>
+          </dl>
+        </aside>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ============================ PIE ============================ -->
+<footer class="footer" id="privacidad">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a class="brand" href="index.html">
+          <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true">
+            <circle cx="16" cy="16" r="3.4" fill="#0f7b6c"/>
+            <path d="M23.4 8.6a10.5 10.5 0 1 1-14.8 0" fill="none" stroke="#14181c" stroke-width="2.2" stroke-linecap="round"/>
+            <path d="M23.9 3.6v5.3h-5.3" fill="none" stroke="#0f7b6c" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span>Tornarem</span>
+        </a>
+        <p>Operador de fibra y móvil con red propia en el Gironès, Osona y el Ripollès. Desde 2016.</p>
+      </div>
+
+      <div>
+        <h3>Particulares</h3>
+        <ul>
+          <li><a href="#tarifas">Tarifas de fibra y móvil</a></li>
+          <li><a href="#cobertura">Consultar cobertura</a></li>
+          <li><a href="#red">Cómo es la red</a></li>
+          <li><a href="#ayuda">Preguntas frecuentes</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h3>Empresas</h3>
+        <ul>
+          <li><a href="empresas.html">Fibra dedicada</a></li>
+          <li><a href="empresas.html#centralita">Centralita virtual</a></li>
+          <li><a href="empresas.html#multisede">Red multisede</a></li>
+          <li><a href="empresas.html#contacto-empresas">Pedir presupuesto</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h3>Contacto</h3>
+        <ul>
+          <li><a href="tel:+34900000000">900 000 000</a></li>
+          <li><a href="mailto:hola@tornarem.cat">hola@tornarem.cat</a></li>
+          <li><a href="mailto:averias@tornarem.cat">averias@tornarem.cat</a></li>
+          <li>Carrer del Portal Nou, 12 · Girona</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>© 2026 Tornarem Telecom · Aviso legal · Privacidad · Cookies · Condiciones del servicio</p>
+      <p>Hecho en Girona</p>
+    </div>
+
+    <p class="credits-note" data-credits>
+      Fotografías bajo licencia Creative Commons vía Openverse.
+    </p>
+  </div>
+</footer>
+
+<!-- Librerías primero; defer conserva el orden -->
+<script defer src="lib/gsap.min.js"></script>
+<script defer src="lib/ScrollTrigger.min.js"></script>
+<script defer src="lib/manifest.js?v=20260810"></script>
+<script defer src="main.js?v=20260810"></script>
+</body>
+</html>
