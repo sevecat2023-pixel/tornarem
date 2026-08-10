@@ -851,6 +851,17 @@ em { font-style: normal; color: var(--accent); }
 .cta-consent { font-size: .78rem; color: var(--ink-mute); margin-top: .2rem; }
 .cta-consent a { text-decoration: underline; text-underline-offset: 2px; }
 
+/* Cazabobos: fuera de la pantalla, nunca con display:none —
+   los robots ignoran los campos ocultos de verdad. */
+.hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
+.cta-error {
+  font-size: .88rem; color: #8c2f1c;
+  padding: .8rem 1rem; border-radius: var(--r-md);
+  background: rgba(216, 82, 58, .1); border: 1px solid rgba(216, 82, 58, .3);
+}
+.cta-error a { text-decoration: underline; text-underline-offset: 2px; }
+
 .cta-success {
   display: none;
   padding: 1.4rem 1.5rem; border-radius: var(--r-lg);

@@ -272,7 +272,9 @@
           <p class="eyebrow">Presupuesto</p>
           <h2 class="h2" style="margin-bottom:1.4rem">Cuéntanos qué tienes hoy y te decimos qué cambiaría.</h2>
 
-          <form class="cta-form" data-contact-form novalidate>
+          <form class="cta-form" data-contact-form action="enviar.php" method="post">
+            <input type="hidden" name="origen" value="empresas">
+
             <div class="cta-form-row">
               <label class="field" for="e-empresa">
                 <input id="e-empresa" name="empresa" type="text" placeholder=" " autocomplete="organization" required>
@@ -289,34 +291,48 @@
                 <input id="e-tel" name="telefono" type="tel" placeholder=" " autocomplete="tel" required>
                 <span>Teléfono</span>
               </label>
-              <label class="field" for="e-municipio">
-                <input id="e-municipio" name="municipio" type="text" placeholder=" " required>
-                <span>Municipio de la sede principal</span>
+              <label class="field" for="e-email">
+                <input id="e-email" name="email" type="email" placeholder=" " autocomplete="email">
+                <span>Correo (opcional)</span>
               </label>
             </div>
 
-            <label class="field" for="e-servicio">
-              <select id="e-servicio" name="servicio" required>
-                <option value="" selected disabled></option>
-                <option>Fibra dedicada</option>
-                <option>Centralita virtual</option>
-                <option>Backup 5G</option>
-                <option>Red multisede</option>
-                <option>Housing y nube local</option>
-                <option>Todavía no lo sé</option>
-              </select>
-              <span>Qué necesitas</span>
-            </label>
+            <div class="cta-form-row">
+              <label class="field" for="e-municipio">
+                <input id="e-municipio" name="municipio" type="text" placeholder=" " autocomplete="address-level2" required>
+                <span>Municipio de la sede principal</span>
+              </label>
+              <label class="field" for="e-servicio">
+                <select id="e-servicio" name="servicio" required>
+                  <option value="" selected disabled></option>
+                  <option>Fibra dedicada</option>
+                  <option>Centralita virtual</option>
+                  <option>Backup 5G</option>
+                  <option>Red multisede</option>
+                  <option>Housing y nube local</option>
+                  <option>Todavía no lo sé</option>
+                </select>
+                <span>Qué necesitas</span>
+              </label>
+            </div>
 
             <label class="field" for="e-mensaje">
               <textarea id="e-mensaje" name="mensaje" placeholder=" "></textarea>
               <span>Número de sedes, velocidad actual, lo que quieras contarnos</span>
             </label>
 
+            <!-- Cazabobos: invisible para personas, irresistible para robots -->
+            <div class="hp" aria-hidden="true">
+              <label for="e-hp">No rellenes este campo</label>
+              <input id="e-hp" name="empresa_web" type="text" tabindex="-1" autocomplete="off">
+            </div>
+
             <button class="btn btn--accent cta-submit" type="submit">
               <span class="cta-label">Pedir presupuesto</span>
               <span class="cta-spinner" aria-hidden="true"></span>
             </button>
+
+            <p class="cta-error" data-contact-error role="alert" hidden></p>
 
             <p class="cta-consent">
               Usamos estos datos solo para preparar tu propuesta.

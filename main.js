@@ -337,42 +337,91 @@
     var btn = $("[type=submit]", form);
     var msg = $("[data-contact-success-msg]", success);
     var title = $("[data-contact-success-title]", success);
+    var errBox = $("[data-contact-error]", form);
+    var TEL = (data.contacto && data.contacto.telefono) || "900 000 000";
+
+    function mostrarError(texto) {
+      form.classList.remove("is-sending");
+      if (btn) btn.disabled = false;
+      if (!errBox) { window.alert(texto); return; }
+      errBox.textContent = texto;
+      errBox.hidden = false;
+    }
+
+    function mostrarAcuse() {
+      var nombre = (form.elements.nombre && form.elements.nombre.value || "").trim();
+      var municipio = (form.elements.municipio && form.elements.municipio.value || "").trim();
+      var pila = nombre.split(/\s+/)[0] || "Hola";
+      var hit = municipio ? findCobertura(municipio) : null;
+      var esEmpresa = !!(form.elements.origen && form.elements.origen.value === "empresas");
+
+      if (title) title.textContent = pila + ", recibido.";
+      if (msg) {
+        if (esEmpresa) {
+          msg.textContent = hit
+            ? "En " + hit.m + " ya tenemos red propia, así que la propuesta te llega en 48 horas laborables con los precios cerrados."
+            : "Te preparamos la propuesta en 48 horas laborables. Si necesitas hablarlo antes, marca el " + TEL + ", extensión 2.";
+        } else {
+          msg.textContent = hit && hit.estado !== "obras"
+            ? "En " + hit.m + " ya tenemos nodo abierto, así que te llamamos hoy mismo en horario de oficina para cerrar día de instalación."
+            : "Te llamamos en menos de un día laborable. Si prefieres adelantarlo, marca el " + TEL + " y pregunta por el equipo de altas.";
+        }
+      }
+
+      form.classList.add("is-sent");
+
+      /* Al acabar el desvanecido retiramos el formulario del flujo:
+         si sólo bajase la opacidad, el acuse quedaría fuera de pantalla. */
+      setTimeout(function () {
+        form.hidden = true;
+        success.classList.add("is-visible");
+        try {
+          success.scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "center" });
+        } catch (_) {
+          success.scrollIntoView();
+        }
+      }, 480);
+    }
 
     form.addEventListener("submit", function (e) {
+      if (form.classList.contains("is-sending")) { e.preventDefault(); return; }
+
+      /* Sin fetch (navegador antiguo) dejamos que el formulario se envíe
+         a enviar.php como toda la vida: recarga y página de gracias. */
+      if (!window.fetch || !window.FormData || !form.getAttribute("action")) return;
+
       e.preventDefault();
-      if (form.classList.contains("is-sending")) return;
       if (!form.reportValidity()) return;
+      if (errBox) errBox.hidden = true;
 
       form.classList.add("is-sending");
       if (btn) btn.disabled = true;
 
-      setTimeout(function () {
-        var nombre = (form.elements.nombre && form.elements.nombre.value || "").trim();
-        var municipio = (form.elements.municipio && form.elements.municipio.value || "").trim();
-        var pila = nombre.split(/\s+/)[0] || "Hola";
-        var hit = municipio ? findCobertura(municipio) : null;
+      var vencido = false;
+      var reloj = setTimeout(function () {
+        vencido = true;
+        mostrarError("El envío está tardando demasiado. Vuelve a intentarlo o llámanos al " + TEL + ".");
+      }, 12000);
 
-        if (title) title.textContent = pila + ", recibido.";
-        if (msg) {
-          msg.textContent = hit && hit.estado !== "obras"
-            ? "En " + hit.m + " ya tenemos nodo abierto, así que te llamamos hoy mismo en horario de oficina para cerrar día de instalación."
-            : "Te llamamos en menos de un día laborable. Si prefieres adelantarlo, marca el 900 000 000 y pregunta por el equipo de altas.";
-        }
-
-        form.classList.add("is-sent");
-
-        /* Al acabar el desvanecido retiramos el formulario del flujo:
-           si sólo bajase la opacidad, el acuse quedaría fuera de pantalla. */
-        setTimeout(function () {
-          form.hidden = true;
-          success.classList.add("is-visible");
-          try {
-            success.scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "center" });
-          } catch (_) {
-            success.scrollIntoView();
-          }
-        }, 480);
-      }, 850);
+      fetch(form.getAttribute("action"), {
+        method: "POST",
+        body: new FormData(form),
+        headers: { "Accept": "application/json", "X-Requested-With": "fetch" }
+      })
+        .then(function (r) {
+          return r.json().catch(function () { return { ok: r.ok, mensaje: "" }; });
+        })
+        .then(function (res) {
+          if (vencido) return;
+          clearTimeout(reloj);
+          if (res && res.ok) mostrarAcuse();
+          else mostrarError((res && res.mensaje) || ("No hemos podido enviarlo. Llámanos al " + TEL + " y lo resolvemos al momento."));
+        })
+        .catch(function () {
+          if (vencido) return;
+          clearTimeout(reloj);
+          mostrarError("No hemos podido enviarlo: parece que no hay conexión. Prueba otra vez o llámanos al " + TEL + ".");
+        });
     });
   }
 

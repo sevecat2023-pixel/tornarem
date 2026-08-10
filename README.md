@@ -1,7 +1,8 @@
 # Tornarem Telecom — web
 
-Sitio estático de dos páginas. No necesita Node, ni npm, ni compilación:
-se sube la carpeta tal cual por FTP y funciona.
+Sitio estático de tres páginas más un pequeño PHP que recibe los
+formularios. No necesita Node, ni npm, ni compilación: se sube la carpeta
+tal cual por FTP y funciona.
 
 ---
 
@@ -25,9 +26,11 @@ estático. En Netlify y Cloudflare el `.htaccess` se ignora: usa un archivo
 ```
 index.html          Portada: tarifas, cobertura, la red, FAQ, contacto
 empresas.html       Página para empresas: servicios, SLA, presupuesto
+gracias.html        Acuse tras enviar el formulario sin JavaScript
+enviar.php          ← RECEPCIÓN DE LOS FORMULARIOS: configúralo (ver abajo)
 styles.css          Toda la hoja de estilo (incluye las tipografías)
 main.js             Comportamiento: menú, comprobador, filtros, formularios
-.htaccess           Cabeceras de caché y tipos MIME para Apache/LiteSpeed
+.htaccess           Caché, tipos MIME y protección del registro de solicitudes
 lib/
   manifest.js       ← DATOS EDITABLES: municipios, tarifas, contacto, FAQ
   gsap.min.js       Animación (local, no se carga de ningún CDN)
@@ -47,8 +50,8 @@ Los datos de la empresa son de ejemplo. Sustitúyelos por los reales:
 
 | Dato | Dónde |
 |---|---|
-| Teléfono `900 000 000` | `index.html`, `empresas.html` y `lib/manifest.js` |
-| Correos `hola@` y `averias@tornarem.cat` | los mismos tres archivos |
+| Teléfono `900 000 000` | `index.html`, `empresas.html`, `gracias.html`, `enviar.php` y `lib/manifest.js` |
+| Correos `hola@` y `averias@tornarem.cat` | los mismos archivos, y sobre todo la cabecera de `enviar.php` |
 | Dirección de la oficina | `index.html` y `empresas.html` (bloque «O directamente» y pie) |
 | Precios y contenido de las tarifas | `index.html` (sección `#tarifas`) y `lib/manifest.js` |
 | Municipios con cobertura | `index.html` (lista `data-cover-list`) **y** `lib/manifest.js` (array `cobertura`) |
@@ -64,17 +67,49 @@ propias, borra `assets/credits.json` y quita el párrafo `data-credits`.
 
 ---
 
-## Los formularios no envían nada todavía
+## Los formularios (ya funcionan)
 
-Los dos formularios simulan el envío y muestran un acuse. Es intencionado:
-un sitio estático no puede mandar correo por sí solo. Para que lleguen de
-verdad tienes tres caminos, de menos a más trabajo:
+Los dos formularios envían a `enviar.php`, que te manda un correo con la
+solicitud. Funciona en Hostinger tal cual, sin cuentas de terceros ni
+librerías.
 
-1. **Formspree, Basin o similar** — cambia `<form ...>` por
-   `<form action="https://formspree.io/f/TU_ID" method="POST">` y borra el
-   `data-contact-form` para que el JavaScript no intercepte el envío.
-2. **El formulario de Hostinger** (hPanel → Correo → Formularios).
-3. **Un PHP propio** en `public_html/enviar.php` y `action="enviar.php"`.
+**Lo único que hay que configurar** son las cuatro primeras líneas de
+`enviar.php`:
+
+```php
+$DESTINO          = 'hola@tornarem.cat';   // a dónde llegan los avisos
+$DESTINO_EMPRESAS = 'hola@tornarem.cat';   // idem, para el formulario de empresas
+$REMITENTE        = 'web@tornarem.cat';    // desde qué dirección salen
+$REGISTRO         = __DIR__ . '/solicitudes.log';
+```
+
+`$REMITENTE` **tiene que ser una cuenta real de tu propio dominio**
+(créala en hPanel → Correos). Si pones un Gmail o una dirección inventada,
+los servidores del destinatario tratarán el correo como falsificado y
+acabará en spam.
+
+Cómo se comporta:
+
+- **Con JavaScript**: envía por detrás y muestra el acuse sin recargar.
+- **Sin JavaScript**: se envía como un formulario de toda la vida y
+  aterriza en `gracias.html`. Si algo falla, sale una página con el motivo.
+- **Si el correo no sale** (servidor mal configurado, cuota, lo que sea),
+  la solicitud queda igualmente guardada en `solicitudes.log` y el visitante
+  ve un aviso con el teléfono. No se pierde ninguna.
+- **Anti-spam**: un campo trampa invisible. Los robots lo rellenan y su
+  envío se descarta en silencio.
+- El `.htaccess` bloquea el acceso web a `solicitudes.log`: contiene datos
+  personales de tus clientes y nadie debe poder leerlo desde el navegador.
+
+### Si tu hosting no tiene PHP
+
+En Netlify, Cloudflare Pages o GitHub Pages no hay PHP. Cambia el `action`
+de los dos formularios por un servicio tipo Formspree
+(`action="https://formspree.io/f/TU_ID"`) y borra el atributo
+`data-contact-form` para que el JavaScript no intercepte el envío.
+
+> Al abrir la web con doble clic (sin servidor) el formulario no puede
+> enviar: verás el aviso de error. Es lo esperado; en el hosting funciona.
 
 ---
 
@@ -88,7 +123,7 @@ Es la caché, casi siempre. En `index.html` y `empresas.html` verás:
 ```
 
 **Cada vez que toques el CSS o el JS, sube esa fecha** (`?v=20260811`, etc.)
-en los dos archivos HTML. El navegador lo lee como una dirección nueva y
+en los tres archivos HTML. El navegador lo lee como una dirección nueva y
 descarga la versión buena. El `.htaccess` ya pide al servidor que no cachee
 el HTML, el CSS ni el JS; las imágenes y tipografías sí, un mes.
 

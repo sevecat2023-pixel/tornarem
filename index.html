@@ -644,7 +644,9 @@
           <p class="eyebrow">Hablemos</p>
           <h2 class="h2" style="margin-bottom:1.4rem">Déjanos tu calle y te decimos qué llega.</h2>
 
-          <form class="cta-form" data-contact-form novalidate>
+          <form class="cta-form" data-contact-form action="enviar.php" method="post">
+            <input type="hidden" name="origen" value="portada">
+
             <div class="cta-form-row">
               <label class="field" for="c-nombre">
                 <input id="c-nombre" name="nombre" type="text" placeholder=" " autocomplete="name" required>
@@ -657,32 +659,45 @@
             </div>
 
             <div class="cta-form-row">
+              <label class="field" for="c-email">
+                <input id="c-email" name="email" type="email" placeholder=" " autocomplete="email">
+                <span>Correo (opcional)</span>
+              </label>
               <label class="field" for="c-municipio">
-                <input id="c-municipio" name="municipio" type="text" placeholder=" " required>
+                <input id="c-municipio" name="municipio" type="text" placeholder=" " autocomplete="address-level2" required>
                 <span>Municipio</span>
               </label>
-              <label class="field" for="c-interes">
-                <select id="c-interes" name="interes" required>
-                  <option value="" selected disabled></option>
-                  <option>Fibra + móvil</option>
-                  <option>Solo fibra</option>
-                  <option>Solo móvil</option>
-                  <option>Empresa</option>
-                  <option>Todavía no llegáis a mi calle</option>
-                </select>
-                <span>Qué te interesa</span>
-              </label>
             </div>
+
+            <label class="field" for="c-interes">
+              <select id="c-interes" name="interes" required>
+                <option value="" selected disabled></option>
+                <option>Fibra + móvil</option>
+                <option>Solo fibra</option>
+                <option>Solo móvil</option>
+                <option>Empresa</option>
+                <option>Todavía no llegáis a mi calle</option>
+              </select>
+              <span>Qué te interesa</span>
+            </label>
 
             <label class="field" for="c-mensaje">
               <textarea id="c-mensaje" name="mensaje" placeholder=" "></textarea>
               <span>Cuéntanos lo que necesites (opcional)</span>
             </label>
 
+            <!-- Cazabobos: invisible para personas, irresistible para robots -->
+            <div class="hp" aria-hidden="true">
+              <label for="c-hp">No rellenes este campo</label>
+              <input id="c-hp" name="empresa_web" type="text" tabindex="-1" autocomplete="off">
+            </div>
+
             <button class="btn btn--accent cta-submit" type="submit">
               <span class="cta-label">Enviar y que me llamen</span>
               <span class="cta-spinner" aria-hidden="true"></span>
             </button>
+
+            <p class="cta-error" data-contact-error role="alert" hidden></p>
 
             <p class="cta-consent">
               Usamos estos datos solo para responderte. Puedes pedirnos que los borremos cuando quieras.

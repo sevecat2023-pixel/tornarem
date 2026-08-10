@@ -94,3 +94,17 @@
 #   RewriteCond %{REQUEST_FILENAME}.html -f
 #   RewriteRule ^(.+?)/?$ $1.html [L]
 # </IfModule>
+
+# ----- Protege el registro de solicitudes del formulario -----
+# enviar.php guarda una copia de cada solicitud en solicitudes.log.
+# Sin esto, cualquiera podría leerlo escribiendo la dirección en el
+# navegador: son datos personales de tus clientes.
+<FilesMatch "\.(log|sql|bak|ini|env)$">
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+  <IfModule !mod_authz_core.c>
+    Order allow,deny
+    Deny from all
+  </IfModule>
+</FilesMatch>
