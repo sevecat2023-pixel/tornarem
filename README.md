@@ -89,6 +89,16 @@ no hay fotos de stock que licenciar ni pesos que optimizar.
 - Checkout de una sola pantalla, sin registro, con total siempre visible.
 - CTA fija en móvil y avisos de «sale hoy» repetidos en el resumen.
 
+## Pensada para el móvil primero
+
+- Cajas y opiniones en **carrusel deslizable** (scroll-snap) con puntos de
+  posición y asomo de la siguiente tarjeta.
+- Checkout con **resumen compacto arriba** y **barra de pago fija abajo**:
+  el total y el botón de confirmar siempre a un pulgar.
+- Objetivos táctiles de 48 px, inputs de 16 px (iOS no hace zoom al
+  enfocar), sin scroll horizontal y con respeto de las zonas seguras
+  del notch (`viewport-fit=cover` + `safe-area-inset`).
+
 ## Mantenimiento semanal (2 minutos)
 
 1. Actualiza `stockRestante` de cada caja en `lib/manifest.js`.

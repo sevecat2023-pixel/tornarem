@@ -83,10 +83,10 @@
       var restante = (corte * 60) - (now.getHours() * 60 + now.getMinutes());
       var h = Math.floor(restante / 60), m = restante % 60;
       var tiempo = h > 0 ? h + " h " + String(m).padStart(2, "0") + " min" : m + " min";
-      return "Confírmalo en " + tiempo + " y sale hoy del almacén";
+      return "Sale HOY si confirmas en " + tiempo;
     }
-    if (day === 5 || day === 6 || day === 0) return "Pídelo ahora y sale el lunes a primera hora";
-    return "Pídelo ahora y sale mañana a primera hora";
+    if (day === 5 || day === 6 || day === 0) return "Pídelo ahora: sale el lunes a primera hora";
+    return "Pídelo ahora: sale mañana a primera hora";
   }
   function initCutoff() {
     var els = $$("[data-cutoff-msg]");
@@ -125,6 +125,37 @@
     onScroll();
   }
 
+  /* ---------- Puntos de posición de los carruseles móviles ---------- */
+  function initSnapDots() {
+    $$("[data-snap]").forEach(function (car) {
+      var dots = $('[data-dots="' + car.getAttribute("data-snap") + '"]');
+      if (!dots || dots.children.length) return;
+      var items = car.children;
+      Array.prototype.forEach.call(items, function (item, i) {
+        var b = document.createElement("button");
+        b.type = "button";
+        b.setAttribute("aria-label", "Ir a la tarjeta " + (i + 1));
+        b.addEventListener("click", function () {
+          item.scrollIntoView({ behavior: "smooth", inline: "start", block: "nearest" });
+        });
+        dots.appendChild(b);
+      });
+      var paint = function () {
+        if (car.scrollWidth <= car.clientWidth + 8) { dots.hidden = true; return; }
+        dots.hidden = false;
+        var gap = parseFloat(getComputedStyle(car).columnGap) || 14;
+        var i = Math.round(car.scrollLeft / (items[0].offsetWidth + gap));
+        i = Math.max(0, Math.min(items.length - 1, i));
+        Array.prototype.forEach.call(dots.children, function (d, j) {
+          d.classList.toggle("is-on", j === i);
+        });
+      };
+      car.addEventListener("scroll", function () { requestAnimationFrame(paint); }, { passive: true });
+      window.addEventListener("resize", paint);
+      paint();
+    });
+  }
+
   /* =============================================================
      CHECKOUT
      ============================================================= */
@@ -144,14 +175,14 @@
     if (!CAJAS[cajaId]) cajaId = "grande";
     var caja = CAJAS[cajaId];
 
-    // 2. Pintar el resumen
-    var thumb = $("[data-r-thumb]");
-    if (thumb) thumb.style.setProperty("--tape", caja.color);
-    var set = function (sel, txt) { var el = $(sel); if (el) el.textContent = txt; };
+    // 2. Pintar el resumen (lateral, mini de móvil y barra de pago a la vez)
+    $$("[data-r-thumb]").forEach(function (th) { th.style.setProperty("--tape", caja.color); });
+    var set = function (sel, txt) { $$(sel).forEach(function (el) { el.textContent = txt; }); };
     set("[data-r-nombre]", caja.nombre);
     set("[data-r-meta]", caja.articulos + " · " + caja.etiqueta);
-    var valorEl = $("[data-r-valor]");
-    if (valorEl) valorEl.innerHTML = "Valor orientativo: <s>" + caja.valorMin + "–" + caja.valorMax + "&nbsp;€</s>";
+    $$("[data-r-valor]").forEach(function (el) {
+      el.innerHTML = "Valor orientativo: <s>" + caja.valorMin + "–" + caja.valorMax + "&nbsp;€</s>";
+    });
 
     var inputCaja = $("[name=caja]", form);
     if (inputCaja) inputCaja.value = cajaId;
@@ -168,19 +199,17 @@
     var pintarTotales = function () {
       var t = totales();
       set("[data-r-precio]", eur(caja.precio));
-      var envioEl = $("[data-r-envio]");
-      if (envioEl) {
+      $$("[data-r-envio]").forEach(function (envioEl) {
         envioEl.textContent = t.envio === 0 ? "Gratis" : eur(t.envio);
         envioEl.classList.toggle("line-free", t.envio === 0);
-      }
-      var recRow = $("[data-r-recargo-row]");
-      if (recRow) recRow.hidden = t.recargo === 0;
+      });
+      $$("[data-r-recargo-row]").forEach(function (row) { row.hidden = t.recargo === 0; });
       set("[data-r-recargo]", eur(t.recargo));
       set("[data-r-total]", eur(t.total));
-      var btn = $("[data-submit-label]");
-      if (btn) btn.textContent = t.metodo === "tarjeta"
+      set("[data-submit-label]", t.metodo === "tarjeta"
         ? "Pagar " + eur(t.total) + " con tarjeta"
-        : "Confirmar pedido · " + eur(t.total);
+        : "Confirmar pedido · " + eur(t.total));
+      set("[data-submit-short]", t.metodo === "tarjeta" ? "Pagar con tarjeta" : "Confirmar pedido");
     };
 
     // 4. Radios de pago (clase de respaldo para navegadores sin :has)
@@ -232,8 +261,9 @@
       };
       try { localStorage.setItem("tb_pedido", JSON.stringify(pedido)); } catch (e) {}
 
-      var btn = $(".btn-submit", form);
-      if (btn) { btn.disabled = true; $("[data-submit-label]").textContent = "Enviando pedido…"; }
+      $$(".btn-submit, .paybar button").forEach(function (b) { b.disabled = true; });
+      set("[data-submit-label]", "Enviando pedido…");
+      set("[data-submit-short]", "Enviando…");
 
       var irAGracias = function (n) {
         var q = "?p=" + encodeURIComponent(n || numPedido) + "&pago=" + t.metodo;
@@ -291,6 +321,7 @@
     safe(initCutoff, "initCutoff");
     safe(initStock, "initStock");
     safe(initStickyCta, "initStickyCta");
+    safe(initSnapDots, "initSnapDots");
     safe(initCheckout, "initCheckout");
     safe(initGracias, "initGracias");
     document.documentElement.classList.add("is-ready");

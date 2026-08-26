@@ -2,7 +2,7 @@
 <html lang="es" class="no-js">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Finalizar pedido · TornaBox</title>
 <meta name="description" content="Completa tu pedido en un minuto: dirección, método de pago y listo. Tarjeta o contra reembolso.">
 <meta name="robots" content="noindex">
@@ -10,7 +10,7 @@
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="preload" as="font" type="font/woff2" href="assets/fonts/space-grotesk-700-latin.woff2" crossorigin>
 <link rel="preload" as="font" type="font/woff2" href="assets/fonts/inter-400-latin.woff2" crossorigin>
-<link rel="stylesheet" href="styles.css?v=20260826">
+<link rel="stylesheet" href="styles.css?v=20260826b">
 <script>document.documentElement.classList.remove("no-js");</script>
 </head>
 
@@ -53,7 +53,7 @@
     <h1 class="checkout-title">Último paso: ¿dónde la enviamos?</h1>
     <p class="checkout-lead">Sin crear cuenta. Solo usamos tus datos para entregarte la caja y avisarte del envío.</p>
 
-    <form class="checkout-grid" data-checkout-form action="pedido.php" method="post" novalidate>
+    <form class="checkout-grid" id="checkout-form" data-checkout-form action="pedido.php" method="post" novalidate>
       <input type="hidden" name="caja" value="grande">
       <input type="hidden" name="ajax" value="">
       <!-- señuelo antispam: si un bot lo rellena, el pedido se descarta -->
@@ -62,6 +62,16 @@
       </p>
 
       <div class="checkout-col">
+        <!-- Resumen compacto: en móvil el total se ve antes de rellenar nada -->
+        <div class="resumen-mini">
+          <svg class="resumen-mini-thumb" data-r-thumb style="--tape:#ff4b26" aria-hidden="true"><use href="#box-mini"/></svg>
+          <p class="resumen-mini-txt">
+            <b data-r-nombre>Caja Grande</b>
+            <span>Total <b data-r-total>62,90 €</b> · IVA incluido</span>
+          </p>
+          <a href="#resumen">Detalle</a>
+        </div>
+
         <section class="panel">
           <h2><span class="paso-chip">1</span> Datos de entrega</h2>
           <div class="form-grid">
@@ -132,7 +142,7 @@
         </section>
       </div>
 
-      <aside class="resumen">
+      <aside class="resumen" id="resumen">
         <div class="resumen-card">
           <h2>Tu caja</h2>
           <div class="resumen-caja">
@@ -164,13 +174,19 @@
   </div>
 </main>
 
+<!-- Barra de pago fija (móvil): el total y el botón siempre a la vista -->
+<div class="paybar">
+  <p class="paybar-total"><span>Total · IVA incluido</span><b data-r-total>62,90 €</b></p>
+  <button class="btn btn-primary" type="submit" form="checkout-form"><span data-submit-short>Confirmar pedido</span></button>
+</div>
+
 <footer class="footer">
   <div class="container footer-bottom">
     <p>© 2026 TornaBox · <a href="condiciones.html">Condiciones de compra</a> · <a href="privacidad.html">Privacidad</a></p>
   </div>
 </footer>
 
-<script defer src="lib/manifest.js?v=20260826"></script>
-<script defer src="main.js?v=20260826"></script>
+<script defer src="lib/manifest.js?v=20260826b"></script>
+<script defer src="main.js?v=20260826b"></script>
 </body>
 </html>

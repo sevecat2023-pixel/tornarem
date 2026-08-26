@@ -2,7 +2,7 @@
 <html lang="es" class="no-js">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>TornaBox · Cajas sorpresa de devoluciones desde 34,95 €</title>
 <meta name="description" content="Cajas sorpresa con devoluciones y excedentes de grandes tiendas online, revisadas una a una en Barcelona. Envío 24–72 h y pago con tarjeta o contra reembolso: solo pagas cuando la tienes en la mano.">
 <meta name="theme-color" content="#14131a">
@@ -17,7 +17,7 @@
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="preload" as="font" type="font/woff2" href="assets/fonts/space-grotesk-700-latin.woff2" crossorigin>
 <link rel="preload" as="font" type="font/woff2" href="assets/fonts/inter-400-latin.woff2" crossorigin>
-<link rel="stylesheet" href="styles.css?v=20260826">
+<link rel="stylesheet" href="styles.css?v=20260826b">
 <script>document.documentElement.classList.remove("no-js");</script>
 
 <script type="application/ld+json">
@@ -108,9 +108,9 @@
         <a class="btn btn-ghost btn-xl" href="#como">Cómo funciona</a>
       </div>
       <p class="hero-micro reveal">
-        <svg class="ic ok"><use href="#i-check"/></svg> Sin crear cuenta
-        <svg class="ic ok"><use href="#i-check"/></svg> Pides en 60 segundos
-        <svg class="ic ok"><use href="#i-check"/></svg> Pagas al recibir si quieres
+        <span class="micro-item"><svg class="ic ok"><use href="#i-check"/></svg> Sin crear cuenta</span>
+        <span class="micro-item"><svg class="ic ok"><use href="#i-check"/></svg> Pides en 60 segundos</span>
+        <span class="micro-item"><svg class="ic ok"><use href="#i-check"/></svg> Pagas al recibir si quieres</span>
       </p>
       <div class="hero-trust reveal">
         <span class="stars" aria-label="4,6 sobre 5">
@@ -205,8 +205,9 @@
       <h2>Cuatro cajas. Cero relleno.</h2>
       <p class="section-sub">Cuando un lote se agota no se repite: el siguiente es distinto. El valor orientativo es la suma del PVP de artículos nuevos equivalentes.</p>
     </header>
+    <p class="swipe-hint" aria-hidden="true">Desliza para comparar las cuatro →</p>
 
-    <div class="cajas-grid">
+    <div class="cajas-grid" data-snap="cajas">
 
       <!-- CAJA INICIO -->
       <article class="caja-card reveal" style="--tape:#b45309">
@@ -277,6 +278,7 @@
       </article>
 
     </div>
+    <div class="snap-dots" data-dots="cajas" hidden></div>
     <p class="cajas-nota reveal">¿Dudas entre dos? La <a href="checkout.html?caja=grande">Caja Grande</a> es la que más repite la gente: equilibrio entre precio y sorpresa.</p>
   </div>
 </section>
@@ -342,7 +344,7 @@
       <h2>Lo que sale al abrirlas</h2>
       <p class="section-sub"><b>4,6 sobre 5</b> · 2.118 valoraciones</p>
     </header>
-    <div class="opiniones-grid">
+    <div class="opiniones-grid" data-snap="opiniones">
       <figure class="opinion reveal">
         <p class="stars-line" aria-label="5 de 5">★★★★★</p>
         <blockquote>Pedí la Grande medio en broma y salieron unos auriculares Sony, una freidora y un teclado que ya he revendido. Repetiré fijo.</blockquote>
@@ -374,6 +376,7 @@
         <figcaption>Ana T. · A Coruña <span class="verificada"><svg class="ic"><use href="#i-check"/></svg> Compra verificada</span></figcaption>
       </figure>
     </div>
+    <div class="snap-dots" data-dots="opiniones" hidden></div>
   </div>
 </section>
 
@@ -483,7 +486,7 @@
   <a class="btn btn-primary" href="#cajas">Elegir caja</a>
 </div>
 
-<script defer src="lib/manifest.js?v=20260826"></script>
-<script defer src="main.js?v=20260826"></script>
+<script defer src="lib/manifest.js?v=20260826b"></script>
+<script defer src="main.js?v=20260826b"></script>
 </body>
 </html>
