@@ -1,0 +1,44 @@
+# Activa GitHub Pages sirviendo esta rama tal cual (sitio estático).
+# Se ejecuta en cada push a la rama de la tienda; la primera ejecución
+# crea el sitio y las siguientes no cambian nada (idempotente).
+name: Activar GitHub Pages
+
+on:
+  push:
+    branches: [claude/tienda-minimalista-psicologia-9q5ku3]
+  workflow_dispatch:
+
+permissions:
+  pages: write
+
+jobs:
+  activar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Crear o actualizar el sitio de Pages
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+        run: |
+          BODY='{"build_type":"legacy","source":{"branch":"claude/tienda-minimalista-psicologia-9q5ku3","path":"/"}}'
+          code=$(curl -s -o resp.json -w '%{http_code}' -X POST \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/$REPO/pages" -d "$BODY")
+          echo "POST /pages -> $code"; cat resp.json; echo
+          if [ "$code" = "409" ] || [ "$code" = "422" ]; then
+            code=$(curl -s -o resp.json -w '%{http_code}' -X PUT \
+              -H "Authorization: Bearer $GH_TOKEN" \
+              -H "Accept: application/vnd.github+json" \
+              "https://api.github.com/repos/$REPO/pages" -d "$BODY")
+            echo "PUT /pages -> $code"; cat resp.json; echo
+          fi
+          case "$code" in 201|204) echo "Pages activo" ;; *) echo "Fallo activando Pages"; exit 1 ;; esac
+      - name: Mostrar URL del sitio
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+        run: |
+          curl -s -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/$REPO/pages" | grep -o '"html_url"[^,]*' || true
