@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /checkout.html
+Disallow: /gracias.html
+Disallow: /pedido.php
+
+Sitemap: https://tornabox.es/sitemap.xml

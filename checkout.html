@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="es" class="no-js">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Finalizar pedido · TornaBox</title>
+<meta name="description" content="Completa tu pedido en un minuto: dirección, método de pago y listo. Tarjeta o contra reembolso.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#ffffff">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="preload" as="font" type="font/woff2" href="assets/fonts/space-grotesk-700-latin.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="assets/fonts/inter-400-latin.woff2" crossorigin>
+<link rel="stylesheet" href="styles.css?v=20260826">
+<script>document.documentElement.classList.remove("no-js");</script>
+</head>
+
+<body class="page-checkout">
+<a class="skip-link" href="#main">Saltar al contenido</a>
+
+<svg class="sprite" aria-hidden="true" focusable="false">
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M4.5 12.5l5 5 10-11" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4.5" y="10" width="15" height="10.5" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8 10V7.5a4 4 0 018 0V10" fill="none" stroke="currentColor" stroke-width="1.8"/></symbol>
+  <symbol id="i-cash" viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M5.5 9.5h.01M18.5 14.5h.01" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></symbol>
+  <symbol id="i-card" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M2 9.5h20" stroke="currentColor" stroke-width="1.8"/><path d="M5.5 14.5H10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 6.8V12l3.4 2.1" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+  <symbol id="box-mini" viewBox="0 0 240 210">
+    <ellipse cx="120" cy="188" rx="92" ry="14" fill="rgba(20,19,26,.10)"/>
+    <polygon points="120,22 210,62 120,102 30,62" fill="#e2c298"/>
+    <polygon points="30,62 120,102 120,190 30,150" fill="#c99f6d"/>
+    <polygon points="210,62 120,102 120,190 210,150" fill="#d9b485"/>
+    <polygon points="120,22 210,62 120,102 30,62" fill="none" stroke="rgba(94,68,41,.22)" stroke-width="2"/>
+    <polygon points="108,27 198,67 187,72 97,32" fill="rgba(94,68,41,.14)"/>
+    <polygon points="63,47 153,87 153,101 63,61" fill="var(--tape, #ff4b26)"/>
+    <polygon points="153,87 165,82 165,96 153,101" fill="var(--tape, #ff4b26)" opacity=".75"/>
+    <rect x="42" y="112" width="40" height="26" rx="4" transform="matrix(1,.44,0,1,0,0)" fill="#fffdf8"/>
+    <g transform="matrix(1,.44,0,1,0,0)" stroke="#5e4429" stroke-width="2"><path d="M48 118v14M54 118v9M60 118v14M66 118v9M72 118v14"/></g>
+  </symbol>
+</svg>
+
+<header class="checkout-top">
+  <div class="container checkout-top-inner">
+    <a class="brand" href="index.html" aria-label="TornaBox, volver a la tienda">
+      <svg class="brand-mark" viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 7.5L12 3.5l8.5 4v9l-8.5 4-8.5-4z" fill="#ff4b26"/><path d="M3.5 7.5L12 11.5l8.5-4M12 11.5v9" fill="none" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/></svg>
+      <span class="brand-name">Torna<b>Box</b></span>
+    </a>
+    <p class="checkout-steps">Caja elegida <b>✓</b> &nbsp;→&nbsp; <b>Datos y pago</b> &nbsp;→&nbsp; Confirmación</p>
+    <p class="checkout-secure"><svg class="ic"><use href="#i-lock"/></svg> Pago seguro</p>
+  </div>
+</header>
+
+<main id="main" class="checkout-main">
+  <div class="container">
+    <h1 class="checkout-title">Último paso: ¿dónde la enviamos?</h1>
+    <p class="checkout-lead">Sin crear cuenta. Solo usamos tus datos para entregarte la caja y avisarte del envío.</p>
+
+    <form class="checkout-grid" data-checkout-form action="pedido.php" method="post" novalidate>
+      <input type="hidden" name="caja" value="grande">
+      <input type="hidden" name="ajax" value="">
+      <!-- señuelo antispam: si un bot lo rellena, el pedido se descarta -->
+      <p class="sr-hp" style="position:absolute;left:-5000px" aria-hidden="true">
+        <label>No rellenes este campo <input type="text" name="web" tabindex="-1" autocomplete="off"></label>
+      </p>
+
+      <div class="checkout-col">
+        <section class="panel">
+          <h2><span class="paso-chip">1</span> Datos de entrega</h2>
+          <div class="form-grid">
+            <div class="field">
+              <label for="f-nombre">Nombre y apellidos</label>
+              <input id="f-nombre" name="nombre" type="text" required autocomplete="name" placeholder="Ana García López">
+              <p class="field-error">Necesitamos un nombre para el paquete.</p>
+            </div>
+            <div class="field-row">
+              <div class="field">
+                <label for="f-telefono">Teléfono <span>(para el repartidor)</span></label>
+                <input id="f-telefono" name="telefono" type="tel" required autocomplete="tel" inputmode="tel" pattern="[0-9+ ]{9,15}" placeholder="600 123 456">
+                <p class="field-error">Un teléfono válido, por ejemplo 600 123 456.</p>
+              </div>
+              <div class="field">
+                <label for="f-email">Email <span>(seguimiento del envío)</span></label>
+                <input id="f-email" name="email" type="email" required autocomplete="email" placeholder="ana@email.com">
+                <p class="field-error">Revisa el email: ahí va el seguimiento.</p>
+              </div>
+            </div>
+            <div class="field">
+              <label for="f-direccion">Dirección completa</label>
+              <input id="f-direccion" name="direccion" type="text" required autocomplete="street-address" placeholder="Calle, número, piso y puerta">
+              <p class="field-error">Calle, número y piso: que el repartidor no se pierda.</p>
+            </div>
+            <div class="field-row row-cp">
+              <div class="field">
+                <label for="f-cp">Código postal</label>
+                <input id="f-cp" name="cp" type="text" required autocomplete="postal-code" inputmode="numeric" pattern="[0-9]{5}" placeholder="08001">
+                <p class="field-error">Cinco dígitos.</p>
+              </div>
+              <div class="field">
+                <label for="f-poblacion">Población</label>
+                <input id="f-poblacion" name="poblacion" type="text" required autocomplete="address-level2" placeholder="Barcelona">
+                <p class="field-error">¿En qué población entregamos?</p>
+              </div>
+            </div>
+            <div class="field">
+              <label for="f-notas">Notas para el repartidor <span>(opcional)</span></label>
+              <input id="f-notas" name="notas" type="text" placeholder="Portero automático, horario, etc.">
+            </div>
+          </div>
+          <p class="form-hint"><svg class="ic"><use href="#i-lock"/></svg> Tus datos viajan cifrados y no se ceden a nadie fuera del transporte del pedido.</p>
+        </section>
+
+        <section class="panel">
+          <h2><span class="paso-chip">2</span> ¿Cómo prefieres pagar?</h2>
+          <div class="pay-options">
+            <label class="pay-option">
+              <input type="radio" name="pago" value="reembolso" checked>
+              <span class="pay-radio" aria-hidden="true"></span>
+              <span class="pay-txt">
+                <b><svg class="ic"><use href="#i-cash"/></svg> Contra reembolso <span class="pay-rec">El favorito</span></b>
+                <p>Pagas al repartidor cuando la caja ya está en tu mano, en efectivo o con tarjeta.</p>
+              </span>
+              <span class="pay-fee">+2,95&nbsp;€</span>
+            </label>
+            <label class="pay-option">
+              <input type="radio" name="pago" value="tarjeta">
+              <span class="pay-radio" aria-hidden="true"></span>
+              <span class="pay-txt">
+                <b><svg class="ic"><use href="#i-card"/></svg> Tarjeta</b>
+                <p>Pago ahora mediante pasarela cifrada. Nunca vemos ni guardamos tu número de tarjeta.</p>
+              </span>
+              <span class="pay-fee">Sin recargo</span>
+            </label>
+          </div>
+        </section>
+      </div>
+
+      <aside class="resumen">
+        <div class="resumen-card">
+          <h2>Tu caja</h2>
+          <div class="resumen-caja">
+            <svg class="resumen-thumb" data-r-thumb style="--tape:#ff4b26" aria-hidden="true"><use href="#box-mini"/></svg>
+            <div>
+              <h3 data-r-nombre>Caja Grande</h3>
+              <p data-r-meta>15–20 productos · La más pedida</p>
+              <p class="resumen-valor" data-r-valor>Valor orientativo: <s>180–350&nbsp;€</s></p>
+              <a class="resumen-cambiar" href="index.html#cajas">Cambiar de caja</a>
+            </div>
+          </div>
+          <div class="resumen-lines">
+            <p class="line">Caja <b data-r-precio>59,95 €</b></p>
+            <p class="line">Envío 24–72 h <b data-r-envio class="line-free">Gratis</b></p>
+            <p class="line" data-r-recargo-row>Gestión contra reembolso <b data-r-recargo>2,95 €</b></p>
+            <p class="line line-total">Total <b data-r-total>62,90 €</b></p>
+          </div>
+          <ul class="resumen-garantias">
+            <li><svg class="ic"><use href="#i-check"/></svg> 14 días de devolución, también abierta</li>
+            <li><svg class="ic"><use href="#i-check"/></svg> Contenido revisado unidad a unidad</li>
+            <li><svg class="ic"><use href="#i-check"/></svg> <span data-cutoff-msg>Pedidos antes de las 18:00 salen hoy</span></li>
+          </ul>
+          <button class="btn btn-primary btn-submit" type="submit"><span data-submit-label>Confirmar pedido · 62,90 €</span></button>
+          <p class="resumen-nota"><svg class="ic"><use href="#i-lock"/></svg> Compra protegida · Sin permanencias ni sorpresas</p>
+          <p class="resumen-wa">¿Alguna duda antes de pedir? <a href="https://wa.me/34600000000" rel="noopener">Escríbenos por WhatsApp</a></p>
+        </div>
+      </aside>
+    </form>
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="container footer-bottom">
+    <p>© 2026 TornaBox · <a href="condiciones.html">Condiciones de compra</a> · <a href="privacidad.html">Privacidad</a></p>
+  </div>
+</footer>
+
+<script defer src="lib/manifest.js?v=20260826"></script>
+<script defer src="main.js?v=20260826"></script>
+</body>
+</html>

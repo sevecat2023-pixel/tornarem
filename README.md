@@ -1,141 +1,101 @@
-# Tornarem Telecom — web
+# TornaBox — tienda de cajas sorpresa de devoluciones
 
-Sitio estático de tres páginas más un pequeño PHP que recibe los
-formularios. No necesita Node, ni npm, ni compilación: se sube la carpeta
-tal cual por FTP y funciona.
+Tienda estática minimalista, lista para arrastrar a **Hostinger** (o cualquier
+hosting con PHP) y empezar a recibir pedidos. Sin Node, sin npm, sin compilar.
+
+La compra son **dos clics y un formulario**: portada → checkout → confirmación.
+Pago con **tarjeta** (pasarela externa) o **contra reembolso**.
+
+> «TornaBox», el dominio tornabox.es y todas las cifras/opiniones son
+> **contenido de plantilla inventado**. Antes de lanzar: comprueba la
+> disponibilidad del dominio y de la marca, y sustituye los datos de ejemplo
+> por los reales.
 
 ---
 
-## Cómo publicarlo en Hostinger
+## Publicar en Hostinger
 
-1. Entra en **hPanel → Administrador de archivos** (o conéctate por FTP).
-2. Abre la carpeta `public_html`.
-3. Arrastra **todo el contenido** de esta carpeta dentro, incluido el
-   archivo `.htaccess` (empieza por punto; si tu cliente FTP no lo muestra,
-   activa «ver archivos ocultos»).
+1. hPanel → **Administrador de archivos** (o FTP) → carpeta `public_html`.
+2. Arrastra **todo el contenido** de esta carpeta, incluido `.htaccess`
+   (empieza por punto: activa «mostrar archivos ocultos» si no lo ves).
+3. Abre `pedido.php` y pon tu email real en las dos primeras variables.
 4. Listo. `index.html` es la portada.
 
-Sirve igual para Netlify, Cloudflare Pages, Vercel o cualquier hosting
-estático. En Netlify y Cloudflare el `.htaccess` se ignora: usa un archivo
-`_headers` equivalente si quieres el mismo control de caché.
+En Netlify/Vercel/Cloudflare Pages la web también funciona, pero `pedido.php`
+no (no ejecutan PHP): allí conecta el formulario a un servicio tipo FormSubmit
+o usa solo los enlaces de pago de Stripe.
+
+---
+
+## Configuración imprescindible (10 minutos)
+
+| Qué | Dónde |
+|---|---|
+| Email que recibe los pedidos | `pedido.php` (líneas 10–11) |
+| WhatsApp, emails visibles, hora de corte | `lib/manifest.js` |
+| **Stock semanal de cada caja** | `lib/manifest.js` → `cajas.*.stockRestante` |
+| Enlaces de pago con tarjeta (Stripe Payment Links) | `lib/manifest.js` → `pagoTarjeta` |
+| Titular, NIF y dirección (marcados `[así]` en amarillo) | `aviso-legal.html`, `privacidad.html`, `condiciones.html`, `contacto.html` |
+| Cifras de confianza (cajas entregadas, valoraciones) y opiniones | `index.html` + `lib/manifest.js` → sustitúyelas por las reales |
+| Dominio real (si no es tornabox.es) | `index.html` (canonical), `robots.txt`, `sitemap.xml` |
+
+### Cómo funciona el pago
+
+- **Contra reembolso**: el pedido te llega por email (y queda copia en
+  `pedidos.log`); cobra el repartidor. Recargo de 2,95 € ya calculado.
+- **Tarjeta**: crea un *Payment Link* en [stripe.com](https://stripe.com) por
+  caja y pégalo en `lib/manifest.js` → el cliente salta a la pasarela al
+  confirmar. Sin enlace configurado, el pedido se registra igual y tú le
+  envías el enlace de pago (el email del pedido te lo recuerda).
+  La web **nunca pide ni almacena números de tarjeta**.
+
+### Si cambias un precio
+
+Cámbialo en los tres sitios: `index.html` (tarjeta del producto),
+`lib/manifest.js` y `pedido.php` (tabla de precios del servidor).
 
 ---
 
 ## Qué hay dentro
 
 ```
-index.html          Portada: tarifas, cobertura, la red, FAQ, contacto
-empresas.html       Página para empresas: servicios, SLA, presupuesto
-gracias.html        Acuse tras enviar el formulario sin JavaScript
-enviar.php          ← RECEPCIÓN DE LOS FORMULARIOS: configúralo (ver abajo)
-styles.css          Toda la hoja de estilo (incluye las tipografías)
-main.js             Comportamiento: menú, comprobador, filtros, formularios
-.htaccess           Caché, tipos MIME y protección del registro de solicitudes
-lib/
-  manifest.js       ← DATOS EDITABLES: municipios, tarifas, contacto, FAQ
-  gsap.min.js       Animación (local, no se carga de ningún CDN)
-  ScrollTrigger.min.js
-assets/
-  img/              Fotografías en WebP
-  fonts/            Manrope, Inter y JetBrains Mono alojadas aquí
-  credits.json      Autoría de las fotos (aparece al pie de la web)
-  favicon.svg
+index.html          Portada: hero, pasos, 4 cajas, opiniones, FAQ, CTA
+checkout.html       Pedido en una pantalla: datos + método de pago
+gracias.html        Confirmación con nº de pedido y siguientes pasos
+pedido.php          ← RECIBE LOS PEDIDOS: configura tu email aquí
+envios.html         Política de envíos      devoluciones.html  Devoluciones
+condiciones.html    Condiciones de compra   aviso-legal.html   Aviso legal
+privacidad.html     RGPD                    cookies.html       Cookies
+contacto.html       WhatsApp y email        404.html           Error con marca
+styles.css          Toda la hoja de estilos (tipografías incluidas)
+main.js             Contadores, stock, checkout, confirmación (vanilla JS)
+lib/manifest.js     ← DATOS EDITABLES: stock, WhatsApp, enlaces de pago
+assets/fonts/       Space Grotesk + Inter autoalojadas (sin Google Fonts CDN)
+assets/favicon.svg  Icono de la marca
+.htaccess           Caché, MIME, 404 y protección de pedidos.log
+robots.txt / sitemap.xml
 ```
 
----
+Toda la imagen de producto es SVG dibujado a medida (las cajas isométricas):
+no hay fotos de stock que licenciar ni pesos que optimizar.
 
-## Qué tienes que cambiar antes de publicar
+## Detalles de conversión ya incluidos
 
-Los datos de la empresa son de ejemplo. Sustitúyelos por los reales:
+- Anclaje de precio (valor orientativo tachado frente al precio).
+- Escasez real por lote semanal (barras de stock desde `manifest.js`).
+- Urgencia honesta: cuenta atrás hasta la hora de corte de envío del día.
+- Prueba social (valoraciones, contador de cajas, opiniones verificadas).
+- Reversión de riesgo: contra reembolso por defecto, 14 días de devolución.
+- Checkout de una sola pantalla, sin registro, con total siempre visible.
+- CTA fija en móvil y avisos de «sale hoy» repetidos en el resumen.
 
-| Dato | Dónde |
-|---|---|
-| Teléfono `900 000 000` | `index.html`, `empresas.html`, `gracias.html`, `enviar.php` y `lib/manifest.js` |
-| Correos `hola@` y `averias@tornarem.cat` | los mismos archivos, y sobre todo la cabecera de `enviar.php` |
-| Dirección de la oficina | `index.html` y `empresas.html` (bloque «O directamente» y pie) |
-| Precios y contenido de las tarifas | `index.html` (sección `#tarifas`) y `lib/manifest.js` |
-| Municipios con cobertura | `index.html` (lista `data-cover-list`) **y** `lib/manifest.js` (array `cobertura`) |
-| Textos legales del pie | `index.html`, `empresas.html` |
+## Mantenimiento semanal (2 minutos)
 
-> Los municipios están en dos sitios a propósito: en el HTML para que la
-> lista se vea aunque falle el JavaScript, y en `manifest.js` para que el
-> comprobador del hero sepa qué responder. **Si cambias uno, cambia el otro.**
+1. Actualiza `stockRestante` de cada caja en `lib/manifest.js`.
+2. Si cambias CSS o JS, sube el número de versión `?v=AAAAMMDD` en los HTML.
 
-Las fotografías son de Openverse con licencia Creative Commons y la
-atribución sale automáticamente al pie. Si las sustituyes por fotos
-propias, borra `assets/credits.json` y quita el párrafo `data-credits`.
+## Aviso importante
 
----
-
-## Los formularios (ya funcionan)
-
-Los dos formularios envían a `enviar.php`, que te manda un correo con la
-solicitud. Funciona en Hostinger tal cual, sin cuentas de terceros ni
-librerías.
-
-**Lo único que hay que configurar** son las cuatro primeras líneas de
-`enviar.php`:
-
-```php
-$DESTINO          = 'hola@tornarem.cat';   // a dónde llegan los avisos
-$DESTINO_EMPRESAS = 'hola@tornarem.cat';   // idem, para el formulario de empresas
-$REMITENTE        = 'web@tornarem.cat';    // desde qué dirección salen
-$REGISTRO         = __DIR__ . '/solicitudes.log';
-```
-
-`$REMITENTE` **tiene que ser una cuenta real de tu propio dominio**
-(créala en hPanel → Correos). Si pones un Gmail o una dirección inventada,
-los servidores del destinatario tratarán el correo como falsificado y
-acabará en spam.
-
-Cómo se comporta:
-
-- **Con JavaScript**: envía por detrás y muestra el acuse sin recargar.
-- **Sin JavaScript**: se envía como un formulario de toda la vida y
-  aterriza en `gracias.html`. Si algo falla, sale una página con el motivo.
-- **Si el correo no sale** (servidor mal configurado, cuota, lo que sea),
-  la solicitud queda igualmente guardada en `solicitudes.log` y el visitante
-  ve un aviso con el teléfono. No se pierde ninguna.
-- **Anti-spam**: un campo trampa invisible. Los robots lo rellenan y su
-  envío se descarta en silencio.
-- El `.htaccess` bloquea el acceso web a `solicitudes.log`: contiene datos
-  personales de tus clientes y nadie debe poder leerlo desde el navegador.
-
-### Si tu hosting no tiene PHP
-
-En Netlify, Cloudflare Pages o GitHub Pages no hay PHP. Cambia el `action`
-de los dos formularios por un servicio tipo Formspree
-(`action="https://formspree.io/f/TU_ID"`) y borra el atributo
-`data-contact-form` para que el JavaScript no intercepte el envío.
-
-> Al abrir la web con doble clic (sin servidor) el formulario no puede
-> enviar: verás el aviso de error. Es lo esperado; en el hosting funciona.
-
----
-
-## Si cambias algo y no lo ves en la web publicada
-
-Es la caché, casi siempre. En `index.html` y `empresas.html` verás:
-
-```html
-<link rel="stylesheet" href="styles.css?v=20260810">
-<script defer src="main.js?v=20260810"></script>
-```
-
-**Cada vez que toques el CSS o el JS, sube esa fecha** (`?v=20260811`, etc.)
-en los tres archivos HTML. El navegador lo lee como una dirección nueva y
-descarga la versión buena. El `.htaccess` ya pide al servidor que no cachee
-el HTML, el CSS ni el JS; las imágenes y tipografías sí, un mes.
-
----
-
-## Detalles técnicos, por si los necesitas
-
-- Sin frameworks, sin build, sin dependencias en tiempo de ejecución.
-- Las tipografías están alojadas aquí: ninguna petición a Google. Una cosa
-  menos que declarar en la política de cookies.
-- Todo el contenido está escrito en el HTML. Si el JavaScript falla, la web
-  se sigue leyendo entera y se sigue navegando; sólo se pierden las
-  animaciones y el comprobador de cobertura.
-- Peso de la portada: unos 300 KB la primera visita (fuentes incluidas).
-- Funciona abriendo `index.html` con doble clic, sin servidor.
+Las opiniones y cifras incluidas son **ejemplo de maquetación**. Publicar
+reseñas o estadísticas inventadas como si fueran reales es contrario a la
+normativa de consumo: sustitúyelas por datos verificables antes de lanzar.

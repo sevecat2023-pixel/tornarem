@@ -1,493 +1,298 @@
 /* =============================================================
-   TORNAREM TELECOM — main.js
-   Script clásico, patrón IIFE. Sin imports: funciona en file://,
-   en FTP y detrás de cualquier CDN.
-   El HTML ya contiene todo el contenido; esto sólo lo enriquece.
+   TornaBox — main.js
+   Todo vanilla, sin dependencias. El contenido vive en el HTML;
+   este archivo solo lo enriquece (contadores, stock, checkout…).
    ============================================================= */
 (function () {
   "use strict";
 
-  var data = window.__BRAND__ || {};
-
-  /* ---------- helpers ---------- */
-  function $(sel, scope) { return (scope || document).querySelector(sel); }
-  function $$(sel, scope) { return Array.prototype.slice.call((scope || document).querySelectorAll(sel)); }
+  var BRAND = window.__BRAND__ || {};
+  var CAJAS = BRAND.cajas || {};
+  var $ = function (sel, scope) { return (scope || document).querySelector(sel); };
+  var $$ = function (sel, scope) { return Array.prototype.slice.call((scope || document).querySelectorAll(sel)); };
   function safe(fn, name) { try { fn(); } catch (e) { console.warn("[" + name + "]", e); } }
 
-  var fineHover = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
-  var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-  /* Quita acentos y mayúsculas para comparar textos escritos a mano */
-  function norm(s) {
-    return String(s == null ? "" : s)
-      .toLowerCase()
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .replace(/[^a-z0-9\s]/g, " ")
-      .replace(/\s+/g, " ")
-      .trim();
+  function eur(n) {
+    return n.toLocaleString("es-ES", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " €";
   }
+  function num(n) { return Math.round(n).toLocaleString("es-ES"); }
 
-  function fmt(value, decimals) {
-    try {
-      return value.toLocaleString("es-ES", {
-        minimumFractionDigits: decimals,
-        maximumFractionDigits: decimals
-      });
-    } catch (e) {
-      return decimals ? value.toFixed(decimals) : String(Math.round(value));
-    }
-  }
-
-  /* =============================================================
-     Navegación
-     ============================================================= */
+  /* ---------- Nav: sombra al hacer scroll ---------- */
   function initNav() {
     var nav = $("[data-nav]");
     if (!nav) return;
-
-    var onScroll = function () {
-      if (window.scrollY > 60) nav.classList.add("is-scrolled");
-      else nav.classList.remove("is-scrolled");
-    };
-    onScroll();
+    var onScroll = function () { nav.classList.toggle("is-scrolled", window.scrollY > 8); };
     window.addEventListener("scroll", onScroll, { passive: true });
-
-    var toggle = $(".nav-toggle", nav);
-    var drawer = $("#menu-movil");
-    if (!toggle || !drawer) return;
-
-    var setOpen = function (open) {
-      toggle.setAttribute("aria-expanded", open ? "true" : "false");
-      toggle.setAttribute("aria-label", open ? "Cerrar menú" : "Abrir menú");
-      drawer.setAttribute("data-open", open ? "true" : "false");
-      document.body.style.overflow = open ? "hidden" : "";
-    };
-
-    toggle.addEventListener("click", function () {
-      setOpen(toggle.getAttribute("aria-expanded") !== "true");
-    });
-
-    drawer.addEventListener("click", function (e) {
-      if (e.target.closest("a")) setOpen(false);
-    });
-
-    document.addEventListener("keydown", function (e) {
-      if (e.key === "Escape") setOpen(false);
-    });
-
-    window.addEventListener("resize", function () {
-      if (window.innerWidth >= 960) setOpen(false);
-    });
+    onScroll();
   }
 
-  /* =============================================================
-     Anclas con desplazamiento nativo
-     ============================================================= */
-  function initAnchors() {
-    document.addEventListener("click", function (e) {
-      var a = e.target.closest('a[href^="#"]');
-      if (!a) return;
-      var id = a.getAttribute("href");
-      if (!id || id === "#") return;
-      var el = document.querySelector(id);
-      if (!el) return;
-      e.preventDefault();
-      var top = el.getBoundingClientRect().top + window.scrollY - 88;
-      window.scrollTo({ top: top, behavior: reduced ? "auto" : "smooth" });
-      if (el.id === "hero-cp" || el.tagName === "INPUT") {
-        setTimeout(function () { try { el.focus({ preventScroll: true }); } catch (_) { el.focus(); } }, 500);
-      }
-    });
-  }
-
-  /* =============================================================
-     Revelado al hacer scroll
-     ============================================================= */
+  /* ---------- Revelado de secciones ---------- */
   function initReveals() {
-    var els = $$("[data-reveal]");
-    if (!els.length) return;
-
+    var targets = $$(".reveal");
+    if (!targets.length) return;
     if (!("IntersectionObserver" in window)) {
-      els.forEach(function (el) { el.classList.add("is-revealed"); });
+      targets.forEach(function (el) { el.classList.add("is-visible"); });
       return;
     }
-
     var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("is-revealed");
-          io.unobserve(entry.target);
-        }
+      entries.forEach(function (e) {
+        if (e.isIntersecting) { e.target.classList.add("is-visible"); io.unobserve(e.target); }
       });
-    }, { threshold: 0.01, rootMargin: "0px 0px -2% 0px" });
-
-    els.forEach(function (el) { io.observe(el); });
-
-    /* Red de seguridad: a los 6 s, nada que esté en pantalla sigue oculto */
+    }, { threshold: 0.01, rootMargin: "0px 0px -4% 0px" });
+    targets.forEach(function (el) { io.observe(el); });
+    // Red de seguridad: a los 6 s, nada puede quedarse invisible
     setTimeout(function () {
-      $$("[data-reveal]:not(.is-revealed)").forEach(function (el) {
-        if (el.getBoundingClientRect().top < window.innerHeight * 1.2) {
-          el.classList.add("is-revealed");
-        }
-      });
+      $$(".reveal:not(.is-visible)").forEach(function (el) { el.classList.add("is-visible"); });
     }, 6000);
   }
 
-  /* =============================================================
-     Cifras que cuentan hacia arriba
-     ============================================================= */
+  /* ---------- Contadores animados (cajas entregadas) ---------- */
   function initCountUp() {
-    var els = $$("[data-count-to]");
+    var els = $$("[data-count]");
     if (!els.length) return;
-
+    var reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
     els.forEach(function (el) {
-      var raw = el.getAttribute("data-count-to");
-      var target = parseFloat(raw);
-      if (isNaN(target)) return;
-      var decimals = (raw.split(".")[1] || "").length;
-      var final = fmt(target, decimals);
-
-      var run = function () {
-        if (reduced || !window.gsap || target === 0) { el.textContent = final; return; }
-        var obj = { v: 0 };
-        window.gsap.to(obj, {
-          v: target,
-          duration: 1.5,
-          ease: "power2.out",
-          onUpdate: function () { el.textContent = fmt(obj.v, decimals); },
-          onComplete: function () { el.textContent = final; }
-        });
-      };
-
-      if (!("IntersectionObserver" in window)) { run(); return; }
+      var target = parseInt(el.getAttribute("data-count"), 10);
+      if (!target) return;
+      if (reduced || !("IntersectionObserver" in window)) { el.textContent = num(target); return; }
+      var done = false;
       var io = new IntersectionObserver(function (entries) {
-        entries.forEach(function (entry) {
-          if (entry.isIntersecting) { run(); io.unobserve(entry.target); }
+        entries.forEach(function (e) {
+          if (!e.isIntersecting || done) return;
+          done = true; io.unobserve(el);
+          var t0 = performance.now(), dur = 1400;
+          (function tick(t) {
+            var p = Math.min(1, (t - t0) / dur);
+            var eased = 1 - Math.pow(1 - p, 3);
+            el.textContent = num(target * eased);
+            if (p < 1) requestAnimationFrame(tick);
+          })(t0);
         });
-      }, { threshold: 0.3 });
+      }, { threshold: 0.1 });
       io.observe(el);
     });
   }
 
-  /* =============================================================
-     Botones magnéticos (sólo con ratón fino)
-     ============================================================= */
-  function initMagnetic() {
-    if (!fineHover) return;
-
-    $$("[data-magnetic]").forEach(function (el) {
-      if (el.dataset.magneticBound) return;
-      el.dataset.magneticBound = "1";
-
-      var strength = parseFloat(el.getAttribute("data-magnetic-strength") || "0.22");
-      var inner = document.createElement("span");
-      inner.className = "magnetic-inner";
-      while (el.firstChild) inner.appendChild(el.firstChild);
-      el.appendChild(inner);
-      el.classList.add("has-magnetic");
-
-      var tx = 0, ty = 0, cx = 0, cy = 0, raf = null;
-
-      function loop() {
-        cx += (tx - cx) * 0.2;
-        cy += (ty - cy) * 0.2;
-        inner.style.transform = "translate3d(" + cx.toFixed(2) + "px," + cy.toFixed(2) + "px,0)";
-        raf = (Math.abs(tx - cx) > 0.1 || Math.abs(ty - cy) > 0.1) ? requestAnimationFrame(loop) : null;
-      }
-
-      el.addEventListener("mousemove", function (e) {
-        var r = el.getBoundingClientRect();
-        tx = ((e.clientX - r.left) - r.width / 2) * strength;
-        ty = ((e.clientY - r.top) - r.height / 2) * strength;
-        if (!raf) raf = requestAnimationFrame(loop);
-      });
-
-      el.addEventListener("mouseleave", function () {
-        tx = 0; ty = 0;
-        if (!raf) raf = requestAnimationFrame(loop);
-      });
-    });
-  }
-
-  /* =============================================================
-     Conmutador de tarifas
-     ============================================================= */
-  function initPlansSwitch() {
-    var group = $("[data-plans-switch]");
-    if (!group) return;
-    var tabs = $$("[data-plan-tab]", group);
-    if (!tabs.length) return;
-
-    function select(key) {
-      tabs.forEach(function (t) {
-        t.setAttribute("aria-selected", t.getAttribute("data-plan-tab") === key ? "true" : "false");
-      });
-      $$("[data-plan-panel]").forEach(function (panel) {
-        panel.hidden = panel.getAttribute("data-plan-panel") !== key;
-      });
-      if (window.ScrollTrigger) { try { window.ScrollTrigger.refresh(); } catch (_) {} }
+  /* ---------- Hora de corte: «sale hoy» honesto ---------- */
+  function cutoffText() {
+    var corte = BRAND.horaCorte || 18;
+    var now = new Date();
+    var day = now.getDay(); // 0 dom … 6 sáb
+    var esLaborable = day >= 1 && day <= 5;
+    if (esLaborable && now.getHours() < corte) {
+      var restante = (corte * 60) - (now.getHours() * 60 + now.getMinutes());
+      var h = Math.floor(restante / 60), m = restante % 60;
+      var tiempo = h > 0 ? h + " h " + String(m).padStart(2, "0") + " min" : m + " min";
+      return "Confírmalo en " + tiempo + " y sale hoy del almacén";
     }
+    if (day === 5 || day === 6 || day === 0) return "Pídelo ahora y sale el lunes a primera hora";
+    return "Pídelo ahora y sale mañana a primera hora";
+  }
+  function initCutoff() {
+    var els = $$("[data-cutoff-msg]");
+    if (!els.length) return;
+    var paint = function () {
+      var txt = cutoffText();
+      els.forEach(function (el) { el.textContent = txt; });
+    };
+    paint();
+    setInterval(paint, 30000);
+  }
 
-    tabs.forEach(function (tab) {
-      tab.addEventListener("click", function () { select(tab.getAttribute("data-plan-tab")); });
-      tab.addEventListener("keydown", function (e) {
-        if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
-        e.preventDefault();
-        var i = tabs.indexOf(tab);
-        var next = tabs[(i + (e.key === "ArrowRight" ? 1 : tabs.length - 1)) % tabs.length];
-        next.focus();
-        select(next.getAttribute("data-plan-tab"));
-      });
+  /* ---------- Barras de stock (escasez con datos del manifest) ---------- */
+  function initStock() {
+    $$("[data-stock]").forEach(function (el) {
+      var caja = CAJAS[el.getAttribute("data-stock")];
+      if (!caja || !caja.stockTotal) return;
+      var resto = Math.max(0, caja.stockRestante);
+      var pct = Math.max(4, Math.round((resto / caja.stockTotal) * 100));
+      var fill = $(".stock-fill", el);
+      var label = $(".stock-label", el);
+      if (fill) requestAnimationFrame(function () { fill.style.width = pct + "%"; });
+      if (label) label.textContent = resto > 0
+        ? "Quedan " + resto + " de " + caja.stockTotal + " esta semana"
+        : "Agotada esta semana — vuelve el lunes";
+      if (pct <= 30) el.classList.add("is-low");
     });
+  }
+
+  /* ---------- CTA fija en móvil ---------- */
+  function initStickyCta() {
+    var bar = $("[data-sticky-cta]");
+    if (!bar) return;
+    var onScroll = function () { bar.classList.toggle("is-on", window.scrollY > 520); };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
   }
 
   /* =============================================================
-     Comprobador de cobertura
+     CHECKOUT
      ============================================================= */
-  function findCobertura(query) {
-    var list = data.cobertura || [];
-    var q = norm(query);
-    if (!q) return null;
-
-    /* Código postal exacto o por prefijo */
-    var digits = q.replace(/\D/g, "");
-    if (digits.length >= 3) {
-      var byCp = list.filter(function (row) { return row.cp.indexOf(digits) === 0; });
-      if (byCp.length) return byCp[0];
-    }
-
-    /* Nombre del municipio */
-    var exact = null, partial = null;
-    list.forEach(function (row) {
-      var n = norm(row.m);
-      if (n === q) exact = exact || row;
-      else if (n.indexOf(q) === 0 || n.indexOf(" " + q) > -1) partial = partial || row;
-    });
-    return exact || partial;
+  function pedidoNum() {
+    var y = new Date().getFullYear();
+    var r = Math.floor(10000 + Math.random() * 89999);
+    return "TB-" + y + "-" + r;
   }
 
-  function initCoverCheck() {
-    var form = $("[data-cover-check]");
+  function initCheckout() {
+    var form = $("[data-checkout-form]");
     if (!form) return;
-    var box = $("[data-cover-result]", form);
-    var titleEl = $("[data-cover-title]", form);
-    var textEl = $("[data-cover-text]", form);
-    var input = $("input", form);
-    if (!box || !titleEl || !textEl || !input) return;
 
-    var msgs = data.coberturaMsg || {};
+    // 1. Caja elegida por URL (?caja=grande). Si no existe, la más pedida.
+    var params = new URLSearchParams(location.search);
+    var cajaId = params.get("caja");
+    if (!CAJAS[cajaId]) cajaId = "grande";
+    var caja = CAJAS[cajaId];
 
-    form.addEventListener("submit", function (e) {
-      e.preventDefault();
-      var value = input.value.trim();
-      if (!value) { input.focus(); return; }
+    // 2. Pintar el resumen
+    var thumb = $("[data-r-thumb]");
+    if (thumb) thumb.style.setProperty("--tape", caja.color);
+    var set = function (sel, txt) { var el = $(sel); if (el) el.textContent = txt; };
+    set("[data-r-nombre]", caja.nombre);
+    set("[data-r-meta]", caja.articulos + " · " + caja.etiqueta);
+    var valorEl = $("[data-r-valor]");
+    if (valorEl) valorEl.innerHTML = "Valor orientativo: <s>" + caja.valorMin + "–" + caja.valorMax + "&nbsp;€</s>";
 
-      var hit = findCobertura(value);
-      var state = hit ? hit.estado : "no";
-      var msg = msgs[state] || msgs.no || { titulo: "", texto: "" };
+    var inputCaja = $("[name=caja]", form);
+    if (inputCaja) inputCaja.value = cajaId;
 
-      box.setAttribute("data-state", state);
-      titleEl.textContent = hit ? hit.m + " — " + msg.titulo : msg.titulo;
-      textEl.textContent = msg.texto;
-      box.classList.add("is-open");
-    });
+    // 3. Totales según método de pago
+    var totales = function () {
+      var envio = caja.envioGratis ? 0 : (BRAND.envio ? BRAND.envio.estandar : 4.95);
+      var metodoEl = $("input[name=pago]:checked", form);
+      var metodo = metodoEl ? metodoEl.value : "reembolso";
+      var recargo = metodo === "reembolso" ? (BRAND.envio ? BRAND.envio.recargoCOD : 2.95) : 0;
+      return { envio: envio, recargo: recargo, metodo: metodo, total: caja.precio + envio + recargo };
+    };
 
-    /* Al reescribir, el resultado anterior deja de tener sentido */
-    input.addEventListener("input", function () {
-      box.classList.remove("is-open");
-    });
-  }
-
-  /* =============================================================
-     Filtro del listado de cobertura
-     ============================================================= */
-  function initCoverFilter() {
-    var input = $("[data-cover-filter]");
-    var list = $("[data-cover-list]");
-    if (!input || !list) return;
-
-    var items = $$(".cover-item", list);
-    var empty = document.createElement("li");
-    empty.className = "cover-empty";
-    empty.hidden = true;
-    empty.textContent = "Ahí todavía no llegamos. Escríbenos y entras en el plan del año que viene.";
-    list.appendChild(empty);
-
-    input.addEventListener("input", function () {
-      var q = norm(input.value);
-      var visible = 0;
-      items.forEach(function (item) {
-        var match = !q || norm(item.textContent).indexOf(q) > -1;
-        item.hidden = !match;
-        if (match) visible++;
-      });
-      empty.hidden = visible > 0;
-    });
-  }
-
-  /* =============================================================
-     Formulario de contacto (envío simulado)
-     ============================================================= */
-  function initContactForm() {
-    var form = $("[data-contact-form]");
-    var success = $("[data-contact-success]");
-    if (!form || !success) return;
-
-    var btn = $("[type=submit]", form);
-    var msg = $("[data-contact-success-msg]", success);
-    var title = $("[data-contact-success-title]", success);
-    var errBox = $("[data-contact-error]", form);
-    var TEL = (data.contacto && data.contacto.telefono) || "900 000 000";
-
-    function mostrarError(texto) {
-      form.classList.remove("is-sending");
-      if (btn) btn.disabled = false;
-      if (!errBox) { window.alert(texto); return; }
-      errBox.textContent = texto;
-      errBox.hidden = false;
-    }
-
-    function mostrarAcuse() {
-      var nombre = (form.elements.nombre && form.elements.nombre.value || "").trim();
-      var municipio = (form.elements.municipio && form.elements.municipio.value || "").trim();
-      var pila = nombre.split(/\s+/)[0] || "Hola";
-      var hit = municipio ? findCobertura(municipio) : null;
-      var esEmpresa = !!(form.elements.origen && form.elements.origen.value === "empresas");
-
-      if (title) title.textContent = pila + ", recibido.";
-      if (msg) {
-        if (esEmpresa) {
-          msg.textContent = hit
-            ? "En " + hit.m + " ya tenemos red propia, así que la propuesta te llega en 48 horas laborables con los precios cerrados."
-            : "Te preparamos la propuesta en 48 horas laborables. Si necesitas hablarlo antes, marca el " + TEL + ", extensión 2.";
-        } else {
-          msg.textContent = hit && hit.estado !== "obras"
-            ? "En " + hit.m + " ya tenemos nodo abierto, así que te llamamos hoy mismo en horario de oficina para cerrar día de instalación."
-            : "Te llamamos en menos de un día laborable. Si prefieres adelantarlo, marca el " + TEL + " y pregunta por el equipo de altas.";
-        }
+    var pintarTotales = function () {
+      var t = totales();
+      set("[data-r-precio]", eur(caja.precio));
+      var envioEl = $("[data-r-envio]");
+      if (envioEl) {
+        envioEl.textContent = t.envio === 0 ? "Gratis" : eur(t.envio);
+        envioEl.classList.toggle("line-free", t.envio === 0);
       }
+      var recRow = $("[data-r-recargo-row]");
+      if (recRow) recRow.hidden = t.recargo === 0;
+      set("[data-r-recargo]", eur(t.recargo));
+      set("[data-r-total]", eur(t.total));
+      var btn = $("[data-submit-label]");
+      if (btn) btn.textContent = t.metodo === "tarjeta"
+        ? "Pagar " + eur(t.total) + " con tarjeta"
+        : "Confirmar pedido · " + eur(t.total);
+    };
 
-      form.classList.add("is-sent");
+    // 4. Radios de pago (clase de respaldo para navegadores sin :has)
+    $$(".pay-option", form).forEach(function (opt) {
+      var radio = $("input", opt);
+      radio.addEventListener("change", function () {
+        $$(".pay-option", form).forEach(function (o) { o.classList.remove("is-checked"); });
+        opt.classList.add("is-checked");
+        pintarTotales();
+      });
+      if (radio.checked) opt.classList.add("is-checked");
+    });
+    pintarTotales();
 
-      /* Al acabar el desvanecido retiramos el formulario del flujo:
-         si sólo bajase la opacidad, el acuse quedaría fuera de pantalla. */
-      setTimeout(function () {
-        form.hidden = true;
-        success.classList.add("is-visible");
-        try {
-          success.scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "center" });
-        } catch (_) {
-          success.scrollIntoView();
-        }
-      }, 480);
+    // 5. Validación amable
+    var marcar = function (input, mal) {
+      input.classList.toggle("is-invalid", mal);
+      var field = input.closest(".field");
+      if (field) field.classList.toggle("has-error", mal);
+    };
+    $$("input[required]", form).forEach(function (input) {
+      input.addEventListener("input", function () { marcar(input, false); });
+      input.addEventListener("blur", function () { marcar(input, !input.checkValidity()); });
+    });
+
+    // 6. Envío del pedido
+    form.addEventListener("submit", function (ev) {
+      ev.preventDefault();
+      var valido = true;
+      $$("input[required]", form).forEach(function (input) {
+        var mal = !input.checkValidity();
+        marcar(input, mal);
+        if (mal && valido) { input.focus(); valido = false; }
+      });
+      if (!valido) return;
+
+      var t = totales();
+      var numPedido = pedidoNum();
+      var fd = new FormData(form);
+      fd.set("num", numPedido);
+      fd.set("total", t.total.toFixed(2));
+      fd.set("caja_nombre", caja.nombre);
+      fd.set("ajax", "1");
+
+      var pedido = {
+        num: numPedido, caja: cajaId, cajaNombre: caja.nombre,
+        precio: caja.precio, envio: t.envio, recargo: t.recargo,
+        total: t.total, pago: t.metodo, fecha: new Date().toISOString()
+      };
+      try { localStorage.setItem("tb_pedido", JSON.stringify(pedido)); } catch (e) {}
+
+      var btn = $(".btn-submit", form);
+      if (btn) { btn.disabled = true; $("[data-submit-label]").textContent = "Enviando pedido…"; }
+
+      var irAGracias = function (n) {
+        var q = "?p=" + encodeURIComponent(n || numPedido) + "&pago=" + t.metodo;
+        // Con enlace de pago configurado, la tarjeta salta a la pasarela
+        var link = (BRAND.pagoTarjeta || {})[cajaId];
+        if (t.metodo === "tarjeta" && link) { location.href = link; return; }
+        location.href = "gracias.html" + q;
+      };
+
+      // pedido.php envía el aviso por email; si no hay PHP (previa local),
+      // el pedido queda igualmente registrado en el navegador y seguimos.
+      fetch("pedido.php", { method: "POST", body: fd })
+        .then(function (r) { return r.ok ? r.json() : Promise.reject(new Error("HTTP " + r.status)); })
+        .then(function (json) { irAGracias(json && json.num); })
+        .catch(function () { irAGracias(numPedido); });
+    });
+  }
+
+  /* =============================================================
+     GRACIAS
+     ============================================================= */
+  function initGracias() {
+    var root = $("[data-gracias]");
+    if (!root) return;
+    var params = new URLSearchParams(location.search);
+    var pedido = null;
+    try { pedido = JSON.parse(localStorage.getItem("tb_pedido") || "null"); } catch (e) {}
+
+    var numP = params.get("p") || (pedido && pedido.num) || pedidoNum();
+    var set = function (sel, txt) { var el = $(sel); if (el) el.textContent = txt; };
+    set("[data-g-num]", numP);
+
+    if (pedido && pedido.cajaNombre) {
+      set("[data-g-caja]", pedido.cajaNombre);
+      set("[data-g-envio]", pedido.envio === 0 ? "Gratis" : eur(pedido.envio));
+      set("[data-g-total]", eur(pedido.total));
+      set("[data-g-pago]", pedido.pago === "tarjeta" ? "Tarjeta" : "Contra reembolso (+" + eur(pedido.recargo) + ")");
+    } else {
+      var res = $("[data-g-resumen]");
+      if (res) res.hidden = true;
     }
 
-    form.addEventListener("submit", function (e) {
-      if (form.classList.contains("is-sending")) { e.preventDefault(); return; }
-
-      /* Sin fetch (navegador antiguo) dejamos que el formulario se envíe
-         a enviar.php como toda la vida: recarga y página de gracias. */
-      if (!window.fetch || !window.FormData || !form.getAttribute("action")) return;
-
-      e.preventDefault();
-      if (!form.reportValidity()) return;
-      if (errBox) errBox.hidden = true;
-
-      form.classList.add("is-sending");
-      if (btn) btn.disabled = true;
-
-      var vencido = false;
-      var reloj = setTimeout(function () {
-        vencido = true;
-        mostrarError("El envío está tardando demasiado. Vuelve a intentarlo o llámanos al " + TEL + ".");
-      }, 12000);
-
-      fetch(form.getAttribute("action"), {
-        method: "POST",
-        body: new FormData(form),
-        headers: { "Accept": "application/json", "X-Requested-With": "fetch" }
-      })
-        .then(function (r) {
-          return r.json().catch(function () { return { ok: r.ok, mensaje: "" }; });
-        })
-        .then(function (res) {
-          if (vencido) return;
-          clearTimeout(reloj);
-          if (res && res.ok) mostrarAcuse();
-          else mostrarError((res && res.mensaje) || ("No hemos podido enviarlo. Llámanos al " + TEL + " y lo resolvemos al momento."));
-        })
-        .catch(function () {
-          if (vencido) return;
-          clearTimeout(reloj);
-          mostrarError("No hemos podido enviarlo: parece que no hay conexión. Prueba otra vez o llámanos al " + TEL + ".");
-        });
-    });
+    var pago = params.get("pago") || (pedido && pedido.pago) || "reembolso";
+    var avisoTarjeta = $("[data-g-tarjeta]");
+    var avisoCod = $("[data-g-cod]");
+    if (avisoTarjeta) avisoTarjeta.hidden = pago !== "tarjeta";
+    if (avisoCod) avisoCod.hidden = pago === "tarjeta";
   }
 
-  /* =============================================================
-     Créditos de las fotografías (enriquecimiento, no contenido)
-     ============================================================= */
-  function initCredits() {
-    var node = $("[data-credits]");
-    if (!node || !window.fetch) return;
-
-    fetch("assets/credits.json")
-      .then(function (r) { return r.ok ? r.json() : null; })
-      .then(function (credits) {
-        if (!credits) return;
-        var parts = Object.keys(credits).map(function (key) {
-          var c = credits[key];
-          var licencia = String(c.license || "").toUpperCase();
-          return '<a href="' + c.foreign_landing_url + '" rel="noopener nofollow">' + c.title + "</a>"
-            + " de " + c.creator + " (CC " + licencia + " " + (c.license_version || "") + ")";
-        });
-        if (parts.length) {
-          node.innerHTML = "Fotografías bajo licencia Creative Commons vía Openverse: " + parts.join(" · ") + ".";
-        }
-      })
-      .catch(function () { /* en file:// el fetch falla; el texto de respaldo ya está en el HTML */ });
-  }
-
-  /* =============================================================
-     Profundidad de la malla de color al hacer scroll
-     ============================================================= */
-  function initMeshParallax() {
-    if (!window.gsap || !window.ScrollTrigger) return;
-    $$(".hero .mesh").forEach(function (mesh) {
-      window.gsap.to(mesh, {
-        yPercent: 14,
-        ease: "none",
-        scrollTrigger: {
-          trigger: mesh.parentElement,
-          start: "top top",
-          end: "bottom top",
-          scrub: true
-        }
-      });
-    });
-  }
-
-  /* =============================================================
-     Arranque
-     ============================================================= */
+  /* ---------- Arranque ---------- */
   function boot() {
     safe(initNav, "initNav");
-    safe(initAnchors, "initAnchors");
     safe(initReveals, "initReveals");
     safe(initCountUp, "initCountUp");
-    safe(initMagnetic, "initMagnetic");
-    safe(initPlansSwitch, "initPlansSwitch");
-    safe(initCoverCheck, "initCoverCheck");
-    safe(initCoverFilter, "initCoverFilter");
-    safe(initContactForm, "initContactForm");
-    safe(initCredits, "initCredits");
-
-    if (window.gsap && window.ScrollTrigger) {
-      try { window.gsap.registerPlugin(window.ScrollTrigger); } catch (_) {}
-      safe(initMeshParallax, "initMeshParallax");
-    }
-
+    safe(initCutoff, "initCutoff");
+    safe(initStock, "initStock");
+    safe(initStickyCta, "initStickyCta");
+    safe(initCheckout, "initCheckout");
+    safe(initGracias, "initGracias");
     document.documentElement.classList.add("is-ready");
   }
 
