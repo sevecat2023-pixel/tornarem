@@ -13,6 +13,22 @@ Pago con **tarjeta** (pasarela externa) o **contra reembolso**.
 
 ---
 
+## Verla en línea sin instalar nada
+
+- **Vista rápida (ya activa):** el repositorio es público, así que cualquier
+  commit se puede ver servido por CDN en
+  `https://rawcdn.githack.com/sevecat2023-pixel/tornarem/<sha-del-commit>/index.html`.
+- **URL fija gratis (un clic):** en GitHub, `Settings → Pages → Build and
+  deployment → Source: Deploy from a branch` → elige la rama
+  `claude/tienda-minimalista-psicologia-9q5ku3` y carpeta `/ (root)` → Save.
+  En un minuto tendrás `https://sevecat2023-pixel.github.io/tornarem/`.
+  (El archivo `.nojekyll` ya está incluido para que se sirva tal cual.)
+- En ambos casos `pedido.php` no se ejecuta (son estáticos): la web entera
+  funciona para verla y probarla, y los pedidos reales necesitan un host
+  con PHP como Hostinger.
+
+---
+
 ## Publicar en Hostinger
 
 1. hPanel → **Administrador de archivos** (o FTP) → carpeta `public_html`.
