@@ -10,7 +10,7 @@
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="preload" as="font" type="font/woff2" href="assets/fonts/space-grotesk-700-latin.woff2" crossorigin>
 <link rel="preload" as="font" type="font/woff2" href="assets/fonts/inter-400-latin.woff2" crossorigin>
-<link rel="stylesheet" href="styles.css?v=20260827">
+<link rel="stylesheet" href="styles.css?v=20260827b">
 <script>document.documentElement.classList.remove("no-js");</script>
 </head>
 
@@ -23,6 +23,9 @@
   <symbol id="i-cash" viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M5.5 9.5h.01M18.5 14.5h.01" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></symbol>
   <symbol id="i-card" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M2 9.5h20" stroke="currentColor" stroke-width="1.8"/><path d="M5.5 14.5H10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
   <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 6.8V12l3.4 2.1" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+  <symbol id="i-truck" viewBox="0 0 24 24"><path d="M1.8 5.5h12.4v11H1.8zM14.2 9h4.3l3 3.4v4.1h-7.3zM6 20a2 2 0 100-4 2 2 0 000 4zm12 0a2 2 0 100-4 2 2 0 000 4z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 2.8l7.5 2.9v5.5c0 5-3.2 8.6-7.5 10-4.3-1.4-7.5-5-7.5-10V5.7z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M8.8 12l2.3 2.3 4.2-4.6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-box" viewBox="0 0 24 24"><path d="M3.5 7.5L12 3.5l8.5 4v9l-8.5 4-8.5-4z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M3.5 7.5L12 11.5l8.5-4M12 11.5v9" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
   <symbol id="box-mini" viewBox="0 0 240 210">
     <ellipse cx="120" cy="188" rx="92" ry="14" fill="rgba(20,19,26,.10)"/>
     <polygon points="120,22 210,62 120,102 30,62" fill="#e2c298"/>
@@ -118,25 +121,49 @@
         </section>
 
         <section class="panel">
-          <h2><span class="paso-chip">2</span> ¿Cómo prefieres pagar?</h2>
+          <h2><span class="paso-chip">2</span> Mejora tu pedido <span class="panel-opc">(opcional)</span></h2>
+          <div class="pay-options">
+            <label class="pay-option extra-option" data-extra-segunda>
+              <input type="checkbox" name="segunda" value="1">
+              <span class="pay-radio pay-check" aria-hidden="true"></span>
+              <span class="pay-txt">
+                <b><svg class="ic"><use href="#i-box"/></svg> <span data-segunda-txt>Añade una 2ª Caja Inicio <b>+34,95&nbsp;€</b> y el envío sale <b>GRATIS</b></span></b>
+                <p>Doble sorpresa en el mismo paquete. El pedido supera los 50&nbsp;€ y te ahorras los 4,95&nbsp;€ de envío.</p>
+              </span>
+            </label>
+            <label class="pay-option extra-option">
+              <input type="checkbox" name="seguro" value="1">
+              <span class="pay-radio pay-check" aria-hidden="true"></span>
+              <span class="pay-txt">
+                <b><svg class="ic"><use href="#i-shield"/></svg> <b>Seguro de devolución</b> <span class="pay-rec">Tranquilidad total</span></b>
+                <p><strong>30 días</strong> para devolverla (en vez de 14), <strong>venimos a recogerla gratis</strong> a tu casa y la cambias por otra caja o te devolvemos <strong>el 100&nbsp;% del dinero</strong>. Sin preguntas.</p>
+              </span>
+              <span class="pay-fee">+4,95&nbsp;€</span>
+            </label>
+          </div>
+          <p class="form-hint">Sin el seguro también estás cubierto: 14 días de devolución sin preguntas (el envío de vuelta corre de tu cuenta).</p>
+        </section>
+
+        <section class="panel">
+          <h2><span class="paso-chip">3</span> ¿Cómo prefieres pagar?</h2>
           <div class="pay-options">
             <label class="pay-option">
-              <input type="radio" name="pago" value="reembolso" checked>
+              <input type="radio" name="pago" value="tarjeta" checked>
               <span class="pay-radio" aria-hidden="true"></span>
               <span class="pay-txt">
-                <b><svg class="ic"><use href="#i-cash"/></svg> Contra reembolso <span class="pay-rec">El favorito</span></b>
-                <p>Pagas al repartidor cuando la caja ya está en tu mano, en efectivo o con tarjeta.</p>
+                <b><svg class="ic"><use href="#i-card"/></svg> Tarjeta <span class="pay-rec">Recomendado</span></b>
+                <p>Pago inmediato mediante pasarela cifrada. Nunca vemos ni guardamos tu número de tarjeta.</p>
               </span>
-              <span class="pay-fee">+2,95&nbsp;€</span>
+              <span class="pay-fee is-ok">Sin recargo · 0&nbsp;€</span>
             </label>
             <label class="pay-option">
-              <input type="radio" name="pago" value="tarjeta">
+              <input type="radio" name="pago" value="reembolso">
               <span class="pay-radio" aria-hidden="true"></span>
               <span class="pay-txt">
-                <b><svg class="ic"><use href="#i-card"/></svg> Tarjeta</b>
-                <p>Pago ahora mediante pasarela cifrada. Nunca vemos ni guardamos tu número de tarjeta.</p>
+                <b><svg class="ic"><use href="#i-cash"/></svg> Contra reembolso</b>
+                <p>Pagas al repartidor cuando la caja ya está en tu mano, en efectivo o con tarjeta.</p>
               </span>
-              <span class="pay-fee">Sin recargo</span>
+              <span class="pay-fee">+4,95&nbsp;€ gestión</span>
             </label>
           </div>
         </section>
@@ -155,15 +182,18 @@
             </div>
           </div>
           <div class="resumen-lines">
-            <p class="line">Caja <b data-r-precio>59,95 €</b></p>
-            <p class="line">Envío 24–72 h <b data-r-envio class="line-free">Gratis</b></p>
-            <p class="line" data-r-recargo-row>Gestión contra reembolso <b data-r-recargo>2,95 €</b></p>
-            <p class="line line-total">Total <b data-r-total>62,90 €</b></p>
+            <p class="line"><span data-r-cajalabel>Caja</span> <b data-r-precio>59,95 €</b></p>
+            <p class="line">Envío 24/48 h · Correos <b data-r-envio class="line-free">Gratis</b></p>
+            <p class="free-hint" data-r-freehint hidden>Te faltan 15,05 € para el envío GRATIS</p>
+            <p class="line" data-r-seguro-row hidden>Seguro de devolución <b data-r-seguro>4,95 €</b></p>
+            <p class="line" data-r-recargo-row hidden>Gestión contra reembolso <b data-r-recargo>4,95 €</b></p>
+            <p class="line line-total">Total <b data-r-total>59,95 €</b></p>
           </div>
+          <p class="resumen-entrega"><svg class="ic"><use href="#i-truck"/></svg> <span data-entrega-msg>Recíbelo mañana si lo pides ahora</span></p>
           <ul class="resumen-garantias">
-            <li><svg class="ic"><use href="#i-check"/></svg> 14 días de devolución, también abierta</li>
+            <li><svg class="ic"><use href="#i-check"/></svg> Devoluciones aceptadas <strong>sin preguntas</strong></li>
             <li><svg class="ic"><use href="#i-check"/></svg> Contenido revisado unidad a unidad</li>
-            <li><svg class="ic"><use href="#i-check"/></svg> <span data-cutoff-msg>Pedidos antes de las 18:00 salen hoy</span></li>
+            <li><svg class="ic"><use href="#i-check"/></svg> Seguimiento del envío por email</li>
           </ul>
           <button class="btn btn-primary btn-submit" type="submit"><span data-submit-label>Confirmar pedido · 62,90 €</span></button>
           <p class="resumen-nota"><svg class="ic"><use href="#i-lock"/></svg> Compra protegida · Sin permanencias ni sorpresas</p>
@@ -182,11 +212,11 @@
 
 <footer class="footer">
   <div class="container footer-bottom">
-    <p>© 2026 TornaBox · <a href="condiciones.html">Condiciones de compra</a> · <a href="privacidad.html">Privacidad</a></p>
+    <p>© 2026 TornaBox · <a href="envios-devoluciones.html">Envíos y devoluciones</a> · <a href="condiciones.html">Condiciones de compra</a> · <a href="privacidad.html">Privacidad</a></p>
   </div>
 </footer>
 
-<script defer src="lib/manifest.js?v=20260827"></script>
-<script defer src="main.js?v=20260827"></script>
+<script defer src="lib/manifest.js?v=20260827b"></script>
+<script defer src="main.js?v=20260827b"></script>
 </body>
 </html>

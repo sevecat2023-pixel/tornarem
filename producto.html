@@ -4,12 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Caja Grande · TornaBox</title>
-<meta name="description" content="Caja sorpresa con 15–20 productos de devoluciones revisados y valor de hasta 350 €. Envío 24–72 h. Paga con tarjeta o contra reembolso al recibirla.">
+<meta name="description" content="Caja sorpresa con 15–20 productos de devoluciones revisados y valor de hasta 350 €. Envío 24/48 h con Correos y devoluciones sin preguntas.">
 <meta name="theme-color" content="#ffffff">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="preload" as="font" type="font/woff2" href="assets/fonts/space-grotesk-700-latin.woff2" crossorigin>
 <link rel="preload" as="font" type="font/woff2" href="assets/fonts/inter-400-latin.woff2" crossorigin>
-<link rel="stylesheet" href="styles.css?v=20260827">
+<link rel="stylesheet" href="styles.css?v=20260827b">
 <script>document.documentElement.classList.remove("no-js");</script>
 </head>
 
@@ -73,7 +73,9 @@
 
         <p class="pdp-valor">Valor del contenido: <s data-p-hasta>hasta 350&nbsp;€</s></p>
         <p class="pdp-precio">Tú pagas <b data-p-precio>59,95&nbsp;€</b> <span>IVA incluido</span></p>
-        <p class="caja-envio is-free" data-p-envio><svg class="ic"><use href="#i-truck"/></svg> Envío gratis · 24–72&nbsp;h</p>
+        <p class="caja-envio is-free" data-p-envio><svg class="ic"><use href="#i-truck"/></svg> Envío gratis · 24/48&nbsp;h</p>
+
+        <p class="pdp-entrega"><svg class="ic"><use href="#i-truck"/></svg> <span data-entrega-msg>Recíbelo mañana si lo pides ahora</span></p>
 
         <div class="stock" data-stock="grande">
           <span class="stock-bar"><span class="stock-fill"></span></span>
@@ -83,7 +85,7 @@
         <ul class="pdp-puntos" data-p-puntos>
           <li><svg class="ic ok"><use href="#i-check"/></svg> 15–20 productos de todas las categorías</li>
           <li><svg class="ic ok"><use href="#i-check"/></svg> Valor del contenido de hasta 350&nbsp;€ (suma de PVP)</li>
-          <li><svg class="ic ok"><use href="#i-check"/></svg> Envío GRATIS en 24–72&nbsp;h laborables</li>
+          <li><svg class="ic ok"><use href="#i-check"/></svg> Envío GRATIS en 24/48&nbsp;h con Correos</li>
           <li><svg class="ic ok"><use href="#i-check"/></svg> La favorita para pedir entre dos y repartir la sorpresa</li>
         </ul>
 
@@ -99,13 +101,25 @@
       <p data-p-claim>El equilibrio perfecto: 15–20 productos de todas las categorías con valor de hasta 350&nbsp;€. La caja que más repite la gente.</p>
       <p>Compramos por palés devoluciones y excedentes de grandes tiendas online, revisamos cada artículo a mano en nuestro almacén de Barcelona y montamos con ellos cajas sorpresa. El contenido exacto no lo sabes ni tú ni nosotros hasta que se prepara tu pedido: lo que sí está garantizado es el número de artículos, las categorías del lote y que todo llega revisado y funcional.</p>
       <div class="pdp-garantia">
-        <h3><svg class="ic"><use href="#i-shield"/></svg> Garantía de valor</h3>
-        <ul>
-          <li><svg class="ic ok"><use href="#i-check"/></svg> La suma de PVP de lo que hay dentro <strong>siempre supera lo que pagas</strong> por la caja.</li>
-          <li><svg class="ic ok"><use href="#i-check"/></svg> Productos nuevos o como nuevos, <strong>revisados unidad a unidad</strong> y con garantía legal.</li>
-          <li><svg class="ic ok"><use href="#i-check"/></svg> Si algo llega dañado, foto en 48&nbsp;h y <strong>te compensamos esa pieza</strong>: reposición o reembolso parcial.</li>
-          <li><svg class="ic ok"><use href="#i-check"/></svg> Pagas <strong>al recibirla</strong> si eliges contra reembolso, y tienes <strong>14 días</strong> para devolverla, también abierta.</li>
-        </ul>
+        <h3><svg class="ic"><use href="#i-shield"/></svg> Compras con red: esto es lo que te garantizamos</h3>
+        <div class="garantia-cards">
+          <article class="garantia-card">
+            <h4><svg class="ic"><use href="#i-check"/></svg> Siempre vale más de lo que pagas</h4>
+            <p>La suma de PVP de los productos que van dentro supera el precio de la caja. Si no fuera así, te devolvemos el dinero.</p>
+          </article>
+          <article class="garantia-card">
+            <h4><svg class="ic"><use href="#i-check"/></svg> Revisado unidad a unidad</h4>
+            <p>Cada artículo pasa por nuestras manos antes de entrar en la caja: llega funcionando y con su garantía legal.</p>
+          </article>
+          <article class="garantia-card">
+            <h4><svg class="ic"><use href="#i-check"/></svg> Devoluciones sin preguntas</h4>
+            <p>14 días para devolverla, también abierta. Con el seguro opcional son 30 días, recogida gratis en tu casa y el 100&nbsp;% del dinero de vuelta.</p>
+          </article>
+          <article class="garantia-card">
+            <h4><svg class="ic"><use href="#i-check"/></svg> Si algo llega dañado, lo arreglamos</h4>
+            <p>Mándanos una foto en 48&nbsp;h y elegimos contigo: reposición de la pieza o reembolso de su valor. Sin formularios.</p>
+          </article>
+        </div>
       </div>
       <h3>Categorías del lote</h3>
       <ul class="chips pdp-chips" data-p-categorias>
@@ -145,7 +159,7 @@
 
 <footer class="footer">
   <div class="container footer-bottom">
-    <p>© 2026 TornaBox · <a href="envios.html">Envíos</a> · <a href="devoluciones.html">Devoluciones</a> · <a href="condiciones.html">Condiciones</a> · <a href="privacidad.html">Privacidad</a></p>
+    <p>© 2026 TornaBox · <a href="envios-devoluciones.html">Envíos y devoluciones</a> · <a href="devoluciones.html">Devoluciones</a> · <a href="condiciones.html">Condiciones</a> · <a href="privacidad.html">Privacidad</a></p>
   </div>
 </footer>
 
@@ -155,7 +169,7 @@
   <a class="btn btn-primary" data-p-cta href="checkout.html?caja=grande">Pedir esta caja</a>
 </div>
 
-<script defer src="lib/manifest.js?v=20260827"></script>
-<script defer src="main.js?v=20260827"></script>
+<script defer src="lib/manifest.js?v=20260827b"></script>
+<script defer src="main.js?v=20260827b"></script>
 </body>
 </html>

@@ -13,12 +13,15 @@ $DESDE  = 'web@tornabox.es';       // ← remitente (un buzón de tu dominio)
    en lo que venga del navegador. Si cambias precios, cámbialos
    también en index.html y lib/manifest.js. */
 $CAJAS = [
-  'inicio' => ['nombre' => 'Caja Inicio',       'precio' => 34.95, 'envio' => 4.95],
-  'grande' => ['nombre' => 'Caja Grande',       'precio' => 59.95, 'envio' => 0.00],
-  'tech'   => ['nombre' => 'Caja Tech',         'precio' => 89.95, 'envio' => 0.00],
-  'xxl'    => ['nombre' => 'Caja XXL Reventa',  'precio' => 149.95,'envio' => 0.00],
+  'inicio' => ['nombre' => 'Caja Inicio',       'precio' => 34.95, 'envio_gratis' => false],
+  'grande' => ['nombre' => 'Caja Grande',       'precio' => 59.95, 'envio_gratis' => true],
+  'tech'   => ['nombre' => 'Caja Tech',         'precio' => 89.95, 'envio_gratis' => true],
+  'xxl'    => ['nombre' => 'Caja XXL Reventa',  'precio' => 149.95,'envio_gratis' => true],
 ];
-$RECARGO_COD = 2.95;
+$ENVIO        = 4.95;   // gastos de envío cuando no toca gratis
+$GRATIS_DESDE = 50.00;  // envío gratis a partir de este subtotal
+$RECARGO_COD  = 4.95;   // gestión del contra reembolso (tarjeta: sin recargo)
+$SEGURO       = 4.95;   // seguro de devolución opcional
 
 /* ------------------------------------------------------------- */
 header('X-Content-Type-Options: nosniff');
@@ -58,7 +61,9 @@ $direccion = limpiar($_POST['direccion'] ?? '');
 $cp        = limpiar($_POST['cp']        ?? '');
 $poblacion = limpiar($_POST['poblacion'] ?? '');
 $notas     = limpiar($_POST['notas']     ?? '');
-$pago      = ($_POST['pago'] ?? '') === 'tarjeta' ? 'tarjeta' : 'reembolso';
+$pago      = ($_POST['pago'] ?? '') === 'reembolso' ? 'reembolso' : 'tarjeta';
+$unidades  = !empty($_POST['segunda']) ? 2 : 1;
+$conSeguro = !empty($_POST['seguro']);
 $num       = limpiar($_POST['num'] ?? '');
 
 if (!$caja || $nombre === '' || $telefono === '' || $direccion === '' || $cp === '' || $poblacion === ''
@@ -78,15 +83,19 @@ if (!preg_match('/^TB-\d{4}-\d{5}$/', $num)) {
   $num = 'TB-' . date('Y') . '-' . random_int(10000, 99999);
 }
 
-$recargo = $pago === 'reembolso' ? $RECARGO_COD : 0.0;
-$total   = $caja['precio'] + $caja['envio'] + $recargo;
+$subtotal = $caja['precio'] * $unidades;
+$envio    = ($caja['envio_gratis'] || $subtotal >= $GRATIS_DESDE) ? 0.0 : $ENVIO;
+$recargo  = $pago === 'reembolso' ? $RECARGO_COD : 0.0;
+$seguro   = $conSeguro ? $SEGURO : 0.0;
+$total    = $subtotal + $envio + $recargo + $seguro;
 $e       = fn($n) => number_format($n, 2, ',', '.') . ' €';
 
 $cuerpo = "NUEVO PEDIDO {$num}\n"
         . str_repeat('=', 46) . "\n\n"
-        . "Caja:       {$caja['nombre']}\n"
-        . "Precio:     {$e($caja['precio'])}\n"
-        . "Envío:      " . ($caja['envio'] > 0 ? $e($caja['envio']) : 'Gratis') . "\n"
+        . "Caja:       {$caja['nombre']}" . ($unidades > 1 ? " x{$unidades}" : '') . "\n"
+        . "Precio:     {$e($subtotal)}\n"
+        . "Envío:      " . ($envio > 0 ? $e($envio) : 'Gratis') . "\n"
+        . ($seguro > 0 ? "Seguro dev: {$e($seguro)}  (30 días + recogida a domicilio)\n" : '')
         . ($recargo > 0 ? "Reembolso:  {$e($recargo)}\n" : '')
         . "TOTAL:      {$e($total)}\n"
         . "Pago:       " . ($pago === 'tarjeta'

@@ -722,3 +722,105 @@ html.no-js .check-ring circle, html.no-js .check-ring path { animation: none; st
 @media (min-width: 1280px) {
   .resenas-masonry { columns: 3; }
 }
+
+/* =============================================================
+   14. Extras del checkout, envío gratis y entrega con fecha
+   ============================================================= */
+.panel-opc { font-family: var(--sans); font-weight: 400; font-size: .82rem; color: var(--ink-mute); }
+
+/* Casilla (extras) frente al radio (métodos de pago) */
+.pay-check { border-radius: 6px; }
+.pay-check::after { border-radius: 3px; inset: 2px; }
+.extra-option .pay-txt b { flex-wrap: wrap; }
+.extra-option.is-checked, .extra-option:has(input:checked) {
+  border-color: var(--ok); background: var(--ok-soft);
+  box-shadow: 0 8px 22px -14px rgba(14,138,95,.5);
+}
+.extra-option.is-checked .pay-radio, .extra-option:has(input:checked) .pay-radio { border-color: var(--ok); }
+.extra-option.is-checked .pay-radio::after, .extra-option:has(input:checked) .pay-radio::after { background: var(--ok); }
+
+/* «Sin recargo» en verde para empujar hacia la tarjeta */
+.pay-fee.is-ok { color: var(--ok); font-weight: 700; }
+.pay-option:has(input[value="tarjeta"]:checked) { border-color: var(--ok); background: var(--ok-soft); box-shadow: 0 8px 22px -14px rgba(14,138,95,.5); }
+.pay-option.is-checked:has(input[value="tarjeta"]) .pay-radio { border-color: var(--ok); }
+.pay-option:has(input[value="tarjeta"]:checked) .pay-radio { border-color: var(--ok); }
+.pay-option:has(input[value="tarjeta"]:checked) .pay-radio::after { background: var(--ok); }
+.pay-option:has(input[value="tarjeta"]) .pay-rec { background: var(--ok); }
+
+/* Aviso «te faltan X para el envío gratis» */
+.free-hint {
+  background: var(--accent-soft); border: 1px dashed var(--accent);
+  border-radius: 8px; padding: .5em .7em; font-size: .8rem;
+  color: var(--accent-dark); font-weight: 600; margin-top: -.1rem;
+}
+
+/* Línea de entrega con fecha */
+.resumen-entrega {
+  display: flex; gap: .5em; align-items: baseline;
+  background: var(--ok-soft); border-radius: 8px; padding: .6em .8em;
+  font-size: .87rem; color: var(--ink-soft); margin-bottom: .8rem;
+}
+.resumen-entrega .ic { color: var(--ok); flex-shrink: 0; }
+.resumen-entrega b { color: var(--ink); }
+
+/* Entrega destacada en la página de producto */
+.pdp-entrega {
+  display: flex; gap: .6em; align-items: baseline;
+  background: var(--ok-soft); border: 1px solid rgba(14,138,95,.25);
+  border-radius: var(--radius-s); padding: .8em 1em; margin-top: 1.1rem;
+  font-size: .95rem; color: var(--ink-soft);
+}
+.pdp-entrega .ic { color: var(--ok); flex-shrink: 0; }
+.pdp-entrega b { color: var(--ink); }
+
+/* Garantía reescrita: tarjetas limpias en vez de lista apretada */
+.garantia-cards { display: grid; gap: .8rem; margin-top: 1rem; }
+.garantia-card {
+  background: #fff; border: 1px solid rgba(14,138,95,.22);
+  border-radius: var(--radius-s); padding: 1rem 1.1rem;
+}
+.garantia-card h4 {
+  font-family: var(--display); font-weight: 700; font-size: 1rem;
+  display: flex; align-items: center; gap: .5em;
+}
+.garantia-card h4 .ic { color: var(--ok); flex-shrink: 0; }
+.garantia-card p { margin-top: .4rem; font-size: .9rem; color: var(--ink-soft); }
+
+/* Seguimiento del pedido */
+.track-box {
+  background: var(--bg-soft); border: 1px solid var(--line-soft);
+  border-radius: var(--radius); padding: 1.3rem 1.3rem 1.4rem; margin-block: 1.4rem;
+}
+.track-box h3 { font-size: 1.1rem; }
+.track-box p { font-size: .92rem; color: var(--ink-soft); margin-top: .5rem; }
+.track-form { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: .9rem; }
+.track-form input {
+  flex: 1 1 220px; min-width: 0; font: inherit; font-size: 16px;
+  background: #fff; border: 1.5px solid var(--line); border-radius: var(--radius-s);
+  padding: .7em .95em; min-height: 48px;
+}
+.track-form input:focus { outline: none; border-color: var(--ink); }
+
+@media (min-width: 720px) {
+  .garantia-cards { grid-template-columns: 1fr 1fr; }
+}
+
+/* El título de los extras fluye como texto normal (no como fila flex) */
+.extra-option .pay-txt > b { display: block; font-weight: 400; color: var(--ink-soft); }
+.extra-option .pay-txt > b b { font-weight: 700; color: var(--ink); white-space: nowrap; }
+.extra-option .pay-txt > b .ic { color: var(--ok); margin-right: .35em; }
+.extra-option .pay-txt > b [data-segunda-txt] { font-family: var(--display); font-weight: 500; color: var(--ink); }
+.extra-option .pay-txt > b > .pay-rec { margin-left: .4em; vertical-align: .1em; }
+.extra-option .pay-txt b b,
+.extra-option .pay-txt b span { display: inline; }
+
+/* Los hijos de un grid no encogen por debajo de su contenido salvo que
+   se les diga: sin esto, el resumen desbordaba en móvil. */
+.checkout-grid > *, .pdp-grid > *, .form-grid > *, .field-row > * { min-width: 0; }
+
+/* En móvil, el precio del extra baja bajo su descripción (no suelto arriba) */
+@media (max-width: 719px) {
+  .pay-option { display: grid; grid-template-columns: auto 1fr; column-gap: .85rem; align-items: start; }
+  .pay-txt { grid-column: 2; }
+  .pay-fee { grid-column: 2; margin-left: 0; margin-top: .4rem; }
+}

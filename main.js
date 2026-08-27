@@ -104,6 +104,52 @@
     setInterval(paint, 30000);
   }
 
+  /* ---------- Entrega con fecha, estilo «recíbelo mañana» ---------- */
+  function entregaHTML() {
+    var corte = BRAND.horaCorte || 18;
+    var now = new Date();
+    var esLab = function (d) { return d.getDay() >= 1 && d.getDay() <= 5; };
+    var sale = new Date(now);
+    var saleHoy = esLab(now) && now.getHours() < corte;
+    if (!saleHoy) { do { sale.setDate(sale.getDate() + 1); } while (!esLab(sale)); }
+    var entrega = new Date(sale);
+    do { entrega.setDate(entrega.getDate() + 1); } while (!esLab(entrega));
+
+    var fecha = entrega.toLocaleDateString("es-ES", { weekday: "long", day: "numeric", month: "long" });
+    var manana = new Date(now); manana.setDate(manana.getDate() + 1);
+    var etiqueta = entrega.toDateString() === manana.toDateString() ? "mañana, " + fecha : "el " + fecha;
+
+    if (saleHoy) {
+      var restante = (corte * 60) - (now.getHours() * 60 + now.getMinutes());
+      var h = Math.floor(restante / 60), m = restante % 60;
+      var tiempo = h > 0 ? h + " h " + String(m).padStart(2, "0") + " min" : m + " min";
+      return "Recíbelo <b>" + etiqueta + "</b> si lo pides en las próximas <b>" + tiempo + "</b>";
+    }
+    return "Recíbelo <b>" + etiqueta + "</b> — pídelo ahora y sale en el primer reparto";
+  }
+  function initEntrega() {
+    var els = $$("[data-entrega-msg]");
+    if (!els.length) return;
+    var paint = function () {
+      var html = entregaHTML();
+      els.forEach(function (el) { el.innerHTML = html; });
+    };
+    paint();
+    setInterval(paint, 30000);
+  }
+
+  /* ---------- Seguimiento del pedido (localizador de Correos) ---------- */
+  function initSeguimiento() {
+    var form = $("[data-track-form]");
+    if (!form) return;
+    form.addEventListener("submit", function (ev) {
+      ev.preventDefault();
+      var v = ($("input", form).value || "").trim();
+      if (!v) return;
+      window.open("https://www.correos.es/es/es/herramientas/localizador/envios/detalle?tracking-number=" + encodeURIComponent(v), "_blank", "noopener");
+    });
+  }
+
   /* ---------- Barras de stock (escasez con datos del manifest) ---------- */
   function initStock() {
     $$("[data-stock]").forEach(function (el) {
@@ -293,22 +339,39 @@
     var inputCaja = $("[name=caja]", form);
     if (inputCaja) inputCaja.value = cajaId;
 
-    // 3. Totales según método de pago
+    // 3. Totales: unidades, envío gratis desde 50 €, seguro y método de pago
+    var cfgEnvio = BRAND.envio || {};
     var totales = function () {
-      var envio = caja.envioGratis ? 0 : (BRAND.envio ? BRAND.envio.estandar : 4.95);
+      var segundaEl = $("input[name=segunda]", form);
+      var seguroEl = $("input[name=seguro]", form);
+      var unidades = segundaEl && segundaEl.checked ? 2 : 1;
+      var subtotal = caja.precio * unidades;
+      var gratisDesde = cfgEnvio.gratisDesde || 50;
+      var envio = (caja.envioGratis || subtotal >= gratisDesde) ? 0 : (cfgEnvio.estandar || 4.95);
       var metodoEl = $("input[name=pago]:checked", form);
-      var metodo = metodoEl ? metodoEl.value : "reembolso";
-      var recargo = metodo === "reembolso" ? (BRAND.envio ? BRAND.envio.recargoCOD : 2.95) : 0;
-      return { envio: envio, recargo: recargo, metodo: metodo, total: caja.precio + envio + recargo };
+      var metodo = metodoEl ? metodoEl.value : "tarjeta";
+      var recargo = metodo === "reembolso" ? (cfgEnvio.recargoCOD || 4.95) : 0;
+      var seguro = seguroEl && seguroEl.checked ? (cfgEnvio.seguro || 4.95) : 0;
+      return { unidades: unidades, subtotal: subtotal, envio: envio, recargo: recargo,
+               seguro: seguro, metodo: metodo, total: subtotal + envio + recargo + seguro };
     };
 
     var pintarTotales = function () {
       var t = totales();
-      set("[data-r-precio]", eur(caja.precio));
+      set("[data-r-cajalabel]", t.unidades === 2 ? "Caja ×2" : "Caja");
+      set("[data-r-precio]", eur(t.subtotal));
       $$("[data-r-envio]").forEach(function (envioEl) {
         envioEl.textContent = t.envio === 0 ? "Gratis" : eur(t.envio);
         envioEl.classList.toggle("line-free", t.envio === 0);
       });
+      // Aviso «te falta X para el envío gratis» (solo cuando el envío se cobra)
+      $$("[data-r-freehint]").forEach(function (row) {
+        row.hidden = t.envio === 0;
+        var falta = (cfgEnvio.gratisDesde || 50) - t.subtotal;
+        if (!row.hidden) row.textContent = "Te faltan " + eur(falta) + " para el envío GRATIS — añade la 2ª caja de abajo";
+      });
+      $$("[data-r-seguro-row]").forEach(function (row) { row.hidden = t.seguro === 0; });
+      set("[data-r-seguro]", eur(t.seguro));
       $$("[data-r-recargo-row]").forEach(function (row) { row.hidden = t.recargo === 0; });
       set("[data-r-recargo]", eur(t.recargo));
       set("[data-r-total]", eur(t.total));
@@ -319,14 +382,28 @@
     };
 
     // 4. Radios de pago (clase de respaldo para navegadores sin :has)
-    $$(".pay-option", form).forEach(function (opt) {
+    $$(".pay-option:not(.extra-option)", form).forEach(function (opt) {
       var radio = $("input", opt);
       radio.addEventListener("change", function () {
-        $$(".pay-option", form).forEach(function (o) { o.classList.remove("is-checked"); });
+        $$(".pay-option:not(.extra-option)", form).forEach(function (o) { o.classList.remove("is-checked"); });
         opt.classList.add("is-checked");
         pintarTotales();
       });
       if (radio.checked) opt.classList.add("is-checked");
+    });
+    // Extras opcionales: 2ª caja y seguro de devolución
+    $$(".extra-option", form).forEach(function (opt) {
+      var cb = $("input", opt);
+      cb.addEventListener("change", function () {
+        opt.classList.toggle("is-checked", cb.checked);
+        pintarTotales();
+      });
+    });
+    // La 2ª caja solo aplica a las cajas sin envío gratis (la Inicio)
+    $$("[data-extra-segunda]").forEach(function (el) {
+      el.hidden = caja.envioGratis;
+      var lbl = $("[data-segunda-txt]", el);
+      if (lbl) lbl.innerHTML = "Añade una 2ª " + escHTML(caja.nombre) + " <b>+" + eur(caja.precio) + "</b> y el envío sale <b>GRATIS</b>";
     });
     pintarTotales();
 
@@ -362,7 +439,8 @@
 
       var pedido = {
         num: numPedido, caja: cajaId, cajaNombre: caja.nombre,
-        precio: caja.precio, envio: t.envio, recargo: t.recargo,
+        unidades: t.unidades, precio: t.subtotal, envio: t.envio,
+        recargo: t.recargo, seguro: t.seguro,
         total: t.total, pago: t.metodo, fecha: new Date().toISOString()
       };
       try { localStorage.setItem("tb_pedido", JSON.stringify(pedido)); } catch (e) {}
@@ -403,10 +481,13 @@
     set("[data-g-num]", numP);
 
     if (pedido && pedido.cajaNombre) {
-      set("[data-g-caja]", pedido.cajaNombre);
+      set("[data-g-caja]", pedido.cajaNombre + (pedido.unidades === 2 ? " ×2" : ""));
       set("[data-g-envio]", pedido.envio === 0 ? "Gratis" : eur(pedido.envio));
       set("[data-g-total]", eur(pedido.total));
-      set("[data-g-pago]", pedido.pago === "tarjeta" ? "Tarjeta" : "Contra reembolso (+" + eur(pedido.recargo) + ")");
+      set("[data-g-pago]", pedido.pago === "tarjeta" ? "Tarjeta (sin recargo)" : "Contra reembolso (+" + eur(pedido.recargo) + ")");
+      var segRow = $("[data-g-seguro-row]");
+      if (segRow) segRow.hidden = !pedido.seguro;
+      set("[data-g-seguro]", pedido.seguro ? eur(pedido.seguro) : "");
     } else {
       var res = $("[data-g-resumen]");
       if (res) res.hidden = true;
@@ -425,6 +506,8 @@
     safe(initReveals, "initReveals");
     safe(initCountUp, "initCountUp");
     safe(initCutoff, "initCutoff");
+    safe(initEntrega, "initEntrega");
+    safe(initSeguimiento, "initSeguimiento");
     safe(initProducto, "initProducto"); // antes que initStock: fija el data-stock de la caja
     safe(initStock, "initStock");
     safe(initStickyCta, "initStickyCta");
