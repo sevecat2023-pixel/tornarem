@@ -11,6 +11,11 @@
   var $ = function (sel, scope) { return (scope || document).querySelector(sel); };
   var $$ = function (sel, scope) { return Array.prototype.slice.call((scope || document).querySelectorAll(sel)); };
   function safe(fn, name) { try { fn(); } catch (e) { console.warn("[" + name + "]", e); } }
+  function escHTML(s) {
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
 
   function eur(n) {
     return n.toLocaleString("es-ES", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " €";
@@ -154,6 +159,107 @@
       window.addEventListener("resize", paint);
       paint();
     });
+  }
+
+  /* =============================================================
+     PÁGINA DE PRODUCTO
+     ============================================================= */
+  function initProducto() {
+    if (!$(".pdp-main")) return;
+    var params = new URLSearchParams(window.__PV_SEARCH__ || location.search);
+    var id = params.get("id");
+    if (!CAJAS[id]) id = "grande";
+    var caja = CAJAS[id];
+    var resenas = caja.resenas || [];
+    var conFoto = resenas.filter(function (r) { return r.f; }).length;
+    var media = resenas.length
+      ? Math.round((resenas.reduce(function (a, r) { return a + r.e; }, 0) / resenas.length) * 10) / 10
+      : 5;
+    var mediaTxt = String(media).replace(".", ",");
+    if (mediaTxt.indexOf(",") < 0) mediaTxt += ",0";
+
+    document.title = caja.nombre + " · TornaBox";
+    var set = function (sel, txt) { $$(sel).forEach(function (el) { el.textContent = txt; }); };
+    $$("[data-p-thumb]").forEach(function (t) { t.style.setProperty("--tape", caja.color); });
+    set("[data-p-etiqueta]", caja.etiqueta);
+    set("[data-p-nombre]", caja.nombre);
+    $$("[data-p-sticker]").forEach(function (el) {
+      el.innerHTML = "Valor de hasta <b>" + caja.valorMax + "&nbsp;€</b>";
+    });
+    set("[data-p-hasta]", "hasta " + caja.valorMax + " €");
+    set("[data-p-barhasta]", "Valor de hasta " + caja.valorMax + " €");
+    set("[data-p-precio]", eur(caja.precio));
+    set("[data-p-claim]", caja.claim || "");
+    $$("[data-p-envio]").forEach(function (el) {
+      el.classList.toggle("is-free", caja.envioGratis);
+      el.innerHTML = '<svg class="ic"><use href="#i-truck"/></svg> '
+        + (caja.envioGratis ? "Envío gratis" : "Envío " + eur(BRAND.envio ? BRAND.envio.estandar : 4.95))
+        + " · 24–72&nbsp;h";
+    });
+    $$("[data-p-ratingtxt]").forEach(function (el) {
+      el.innerHTML = "<b>" + mediaTxt + "</b> · " + resenas.length + " valoraciones" + (conFoto ? ", " + conFoto + " con foto" : "");
+    });
+    $$("[data-p-resenasavg]").forEach(function (el) {
+      el.innerHTML = "<b>" + mediaTxt + " sobre 5</b> · " + resenas.length + " valoraciones" + (conFoto ? " · " + conFoto + " con foto" : "");
+    });
+    $$("[data-p-puntos]").forEach(function (ul) {
+      ul.innerHTML = (caja.puntos || []).map(function (p) {
+        return '<li><svg class="ic ok"><use href="#i-check"/></svg> ' + escHTML(p) + "</li>";
+      }).join("");
+    });
+    $$("[data-p-categorias]").forEach(function (ul) {
+      ul.innerHTML = (caja.categorias || []).map(function (c) { return "<li>" + escHTML(c) + "</li>"; }).join("");
+    });
+    $$("[data-p-cta]").forEach(function (a) { a.href = "checkout.html?caja=" + id; });
+    $$("[data-stock]").forEach(function (el) { el.setAttribute("data-stock", id); });
+
+    // Reseñas con foto
+    $$("[data-p-resenas]").forEach(function (grid) {
+      grid.innerHTML = resenas.map(function (r) {
+        var estrellas = "★★★★★".slice(0, r.e) + '<span class="star-off">' + "★★★★★".slice(0, 5 - r.e) + "</span>";
+        return '<figure class="resena">'
+          + (r.f ? '<img src="' + escHTML(r.f) + '" alt="Foto de la reseña de ' + escHTML(r.n) + '" loading="lazy" decoding="async">' : "")
+          + '<div class="resena-body">'
+          + '<p class="stars-line" aria-label="' + r.e + ' de 5">' + estrellas + "</p>"
+          + '<p class="resena-head">' + escHTML(r.n)
+          + ' <span class="verificada"><svg class="ic"><use href="#i-check"/></svg> Compra verificada</span></p>'
+          + '<p class="resena-texto">' + escHTML(r.t) + "</p>"
+          + "</div></figure>";
+      }).join("");
+    });
+
+    // Las otras tres cajas
+    $$("[data-p-otras]").forEach(function (grid) {
+      grid.innerHTML = Object.keys(CAJAS).filter(function (k) { return k !== id; }).map(function (k) {
+        var c = CAJAS[k];
+        return '<a class="otra" href="producto.html?id=' + k + '">'
+          + '<svg style="--tape:' + c.color + '" aria-hidden="true"><use href="#box-mini"/></svg>'
+          + '<span class="otra-txt"><b>' + escHTML(c.nombre) + "</b>"
+          + "<span>" + escHTML(c.articulos) + " · hasta " + c.valorMax + " € · " + eur(c.precio) + "</span></span>"
+          + '<svg class="ic"><use href="#i-arrow"/></svg></a>';
+      }).join("");
+    });
+
+    // Datos estructurados del producto
+    try {
+      var ld = {
+        "@context": "https://schema.org", "@type": "Product",
+        name: caja.nombre, description: caja.claim, sku: id,
+        brand: { "@type": "Brand", name: BRAND.nombre || "TornaBox" },
+        offers: {
+          "@type": "Offer", priceCurrency: "EUR", price: caja.precio.toFixed(2),
+          availability: caja.stockRestante > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+          itemCondition: "https://schema.org/RefurbishedCondition"
+        }
+      };
+      if (resenas.length) {
+        ld.aggregateRating = { "@type": "AggregateRating", ratingValue: media, reviewCount: resenas.length, bestRating: 5, worstRating: 1 };
+      }
+      var s = document.createElement("script");
+      s.type = "application/ld+json";
+      s.textContent = JSON.stringify(ld);
+      document.head.appendChild(s);
+    } catch (e) {}
   }
 
   /* =============================================================
@@ -319,6 +425,7 @@
     safe(initReveals, "initReveals");
     safe(initCountUp, "initCountUp");
     safe(initCutoff, "initCutoff");
+    safe(initProducto, "initProducto"); // antes que initStock: fija el data-stock de la caja
     safe(initStock, "initStock");
     safe(initStickyCta, "initStickyCta");
     safe(initSnapDots, "initSnapDots");
