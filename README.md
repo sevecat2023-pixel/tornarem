@@ -29,6 +29,39 @@ Pago con **tarjeta** (pasarela externa) o **contra reembolso**.
 
 ---
 
+## Publicar en tu propio VPS (recomendado: aquí sí funcionan los pedidos)
+
+Un solo comando, como root en el servidor. Instala nginx + PHP, descarga la
+tienda y la deja funcionando:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/sevecat2023-pixel/tornarem/claude/tienda-minimalista-psicologia-9q5ku3/deploy-vps.sh -o deploy-vps.sh
+sudo bash deploy-vps.sh
+```
+
+- `sudo bash deploy-vps.sh` → la web queda en `http://TU-IP/`
+- `sudo bash deploy-vps.sh tienda.local` → responde además a ese nombre
+  (un nombre interno solo funciona dentro de tu red: añádelo al
+  `/etc/hosts` de tus equipos, o al DNS de tu router)
+- `sudo bash deploy-vps.sh tudominio.com --ssl` → dominio público con
+  HTTPS gratis de Let's Encrypt (el dominio debe apuntar ya a la IP)
+
+Volver a lanzarlo **actualiza** la tienda a la última versión.
+
+Después, en el servidor, edita tus datos reales:
+
+```bash
+nano /var/www/tornabox/pedido.php       # tu email de pedidos
+nano /var/www/tornabox/lib/manifest.js  # WhatsApp y stock semanal
+```
+
+Para que los emails salgan del VPS necesitas un envío de correo configurado
+(`sudo apt install msmtp-mta` con tu SMTP, o similar). Mientras tanto, cada
+pedido queda guardado en `/var/www/tornabox/pedidos.log`, que **no** es
+accesible desde la web.
+
+---
+
 ## Publicar en Hostinger
 
 1. hPanel → **Administrador de archivos** (o FTP) → carpeta `public_html`.
