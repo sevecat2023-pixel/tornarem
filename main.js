@@ -233,6 +233,7 @@
       el.innerHTML = "Valor de hasta <b>" + caja.valorMax + "&nbsp;€</b>";
     });
     set("[data-p-hasta]", "hasta " + caja.valorMax + " €");
+    set("[data-p-ahorro]", "Ahorras hasta " + Math.round(caja.valorMax - caja.precio) + " €");
     set("[data-p-barhasta]", "Valor de hasta " + caja.valorMax + " €");
     set("[data-p-precio]", eur(caja.precio));
     set("[data-p-claim]", caja.claim || "");

@@ -872,3 +872,38 @@ html.no-js .check-ring circle, html.no-js .check-ring path { animation: none; st
   font: inherit; color: var(--accent); font-weight: 600;
   text-decoration: underline; text-underline-offset: 3px;
 }
+
+/* =============================================================
+   16. Refuerzo comercial: franja de confianza y anclaje de precio
+   ============================================================= */
+.confianza { background: var(--bg-soft); border-block: 1px solid var(--line-soft); padding-block: 1.4rem; }
+.confianza-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem .8rem; }
+.conf-item { display: grid; justify-items: center; text-align: center; gap: .15rem; }
+.conf-item .ic { width: 1.6rem; height: 1.6rem; color: var(--accent); margin-bottom: .2rem; }
+.conf-item b { font-family: var(--display); font-size: .92rem; line-height: 1.2; }
+.conf-item span { font-size: .78rem; color: var(--ink-mute); line-height: 1.35; }
+
+/* Anclaje de precio en las tarjetas: el valor manda visualmente */
+.caja-valor { display: flex; flex-wrap: wrap; align-items: baseline; gap: .35em; }
+.caja-valor s {
+  font-size: 1.05rem; font-weight: 700; color: var(--ink-soft);
+  text-decoration-color: var(--accent); text-decoration-thickness: 2.5px;
+}
+.caja-ahorro {
+  display: inline-block; margin-top: .35rem;
+  background: var(--ok); color: #fff; border-radius: 99px;
+  padding: .2em .8em; font-size: .78rem; font-weight: 700;
+}
+.pdp-ahorro {
+  display: inline-block; margin-top: .5rem;
+  background: var(--ok); color: #fff; border-radius: 99px;
+  padding: .3em 1em; font-size: .92rem; font-weight: 700;
+}
+
+@media (min-width: 720px) {
+  .confianza { padding-block: 1.6rem; }
+  .confianza-grid { grid-template-columns: repeat(4, 1fr); gap: 1.2rem; }
+  .conf-item b { font-size: 1rem; }
+  .conf-item span { font-size: .84rem; }
+}
+.caja-ahorro, .pdp-ahorro { width: fit-content; align-self: flex-start; }
