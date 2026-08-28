@@ -11,6 +11,14 @@ ErrorDocument 404 /404.html
   Require all denied
 </Files>
 
+# --- Si la web se publica clonando el repositorio (Git de Hostinger),
+#     estos archivos viajan con él pero no deben servirse ---
+<FilesMatch "^(README\.md|deploy-vps\.sh|\.gitignore|\.nojekyll)$">
+  Require all denied
+</FilesMatch>
+RedirectMatch 404 /\.git(/|$)
+RedirectMatch 404 /\.github(/|$)
+
 # --- Caché: HTML/CSS/JS se revalidan; imágenes y fuentes, 1 mes ---
 <IfModule mod_expires.c>
   ExpiresActive On

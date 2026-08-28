@@ -1,0 +1,53 @@
+# =============================================================
+# Despliegue automático a Hostinger por FTP
+#
+# Se ejecuta en cada push a la rama de la tienda y sube los cambios
+# a public_html. Si los secretos no están configurados, no hace nada
+# (no falla, simplemente avisa).
+#
+# Para activarlo, en GitHub → Settings → Secrets and variables →
+# Actions → New repository secret, crea estos tres:
+#   FTP_HOST      p.ej. ftp.tudominio.com
+#   FTP_USER      el usuario FTP de hPanel
+#   FTP_PASSWORD  su contraseña
+# =============================================================
+name: Desplegar en Hostinger
+
+on:
+  push:
+    branches: [claude/tienda-minimalista-psicologia-9q5ku3]
+  workflow_dispatch:
+
+jobs:
+  desplegar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: ¿Están configurados los secretos FTP?
+        id: check
+        env:
+          FTP_HOST: ${{ secrets.FTP_HOST }}
+        run: |
+          if [ -z "$FTP_HOST" ]; then
+            echo "listo=no" >> "$GITHUB_OUTPUT"
+            echo "Secretos FTP sin configurar: no se despliega (esto no es un error)."
+          else
+            echo "listo=si" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Subir a public_html
+        if: steps.check.outputs.listo == 'si'
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USER }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          server-dir: public_html/
+          # Lo que nunca debe subirse a la web
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/README.md
+            **/deploy-vps.sh
+            **/pedidos.log
