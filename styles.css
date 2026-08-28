@@ -1003,19 +1003,6 @@ html.no-js .check-ring circle, html.no-js .check-ring path { animation: none; st
 /* =============================================================
    18. Fotos reales: tira, galería y almacén
    ============================================================= */
-.tira { border-block: 1px solid var(--line-soft); overflow: hidden; padding-block: .9rem .6rem; background: var(--bg); }
-.tira-track {
-  display: flex; gap: .5rem; width: max-content;
-  animation: tira 60s linear infinite;
-}
-.tira-track img {
-  height: 118px; width: auto; border-radius: 10px; object-fit: cover;
-  background: var(--bg-soft);
-}
-@keyframes tira { to { transform: translateX(-50%); } }
-.tira:hover .tira-track { animation-play-state: paused; }
-.tira-pie { text-align: center; font-size: .74rem; color: var(--ink-mute); margin-top: .6rem; }
-
 .galeria { display: grid; grid-template-columns: 1fr 1fr; gap: .6rem; margin-bottom: 1rem; }
 .galeria figure { position: relative; border-radius: var(--radius-s); overflow: hidden; background: var(--bg-soft); }
 .galeria img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; display: block; }
@@ -1034,22 +1021,16 @@ html.no-js .check-ring circle, html.no-js .check-ring path { animation: none; st
 .almacen-grid figcaption b { display: block; font-family: var(--display); font-size: 1rem; color: var(--ink); margin-bottom: .2rem; }
 
 @media (min-width: 720px) {
-  .tira-track img { height: 160px; }
   .galeria { grid-template-columns: repeat(3, 1fr); gap: .8rem; }
   .galeria figcaption { font-size: .86rem; }
   .almacen-grid { grid-template-columns: repeat(3, 1fr); }
 }
 @media (prefers-reduced-motion: reduce) {
-  .tira-track { animation: none; }
-  .tira { overflow-x: auto; }
 }
 .almacen-aviso { margin-top: 1.1rem; font-size: .8rem; color: var(--ink-mute); max-width: 70ch; }
 
 /* --- Móvil: las fotos aportan, pero sin volver a alargar la página --- */
 @media (max-width: 719px) {
-  .tira-track img { height: 96px; }
-  .tira { padding-block: .7rem .4rem; }
-
   /* Galería: cuadrada, 2×2 (las dos últimas se ven en la de producto) */
   .galeria { gap: .45rem; margin-bottom: .8rem; }
   .galeria img { aspect-ratio: 1 / 1; }
@@ -1081,4 +1062,22 @@ html.no-js .check-ring circle, html.no-js .check-ring path { animation: none; st
   .resena-head .verificada { font-size: .66rem; }
   .resena-texto { font-size: .78rem; margin-top: .35rem; line-height: 1.45; }
   .pdp-resenas .contenido-nota { font-size: .76rem; margin-top: .9rem; }
+}
+
+/* --- Producto: fotos reales bajo la caja (rellenan la columna) --- */
+.pdp-fotos { margin-top: 1.4rem; text-align: left; }
+.pdp-fotos-tit {
+  font-family: var(--display); font-weight: 500; font-size: .8rem;
+  letter-spacing: .1em; text-transform: uppercase; color: var(--ink-mute);
+  margin-bottom: .55rem;
+}
+.pdp-fotos-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: .5rem; }
+.pdp-fotos-grid img {
+  width: 100%; aspect-ratio: 1 / 1; object-fit: cover;
+  border-radius: 10px; background: #fff;
+}
+/* Los textos bajo el botón se alinean con él, no sueltos */
+.pdp-info .caja-pago { text-align: left; }
+@media (min-width: 720px) {
+  .pdp-info .caja-pago, .pdp-cutoff { justify-content: flex-start; }
 }

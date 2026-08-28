@@ -264,6 +264,19 @@
     $$("[data-p-cta]").forEach(function (a) { a.href = "checkout.html?caja=" + id; });
     $$("[data-stock]").forEach(function (el) { el.setAttribute("data-stock", id); });
 
+    // Fotos reales de esta caja bajo la imagen (rellenan la columna izquierda)
+    var conFotoLista = resenas.filter(function (r) { return r.f; }).slice(0, 3);
+    $$("[data-p-fotos]").forEach(function (cont) {
+      if (!conFotoLista.length) { cont.hidden = true; return; }
+      cont.hidden = false;
+      cont.innerHTML = '<p class="pdp-fotos-tit">Salió de una ' + escHTML(caja.nombre) + "</p>"
+        + '<div class="pdp-fotos-grid">'
+        + conFotoLista.map(function (r) {
+            return '<img src="' + escHTML(r.f) + '" alt="Foto de un cliente con lo que le tocó" loading="lazy" decoding="async">';
+          }).join("")
+        + "</div>";
+    });
+
     // Reseñas con foto
     $$("[data-p-resenas]").forEach(function (grid) {
       grid.innerHTML = resenas.map(function (r) {
