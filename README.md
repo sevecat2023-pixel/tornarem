@@ -158,6 +158,9 @@ recargo, para reducir los impagos del contra reembolso.
 
 ## Publicar tornabox.eu en el VPS (dos pasos)
 
+> Guion completo, con comprobaciones y qué hacer si algo falla, en
+> **[DESPLIEGUE.md](DESPLIEGUE.md)**.
+
 ### 1 · Apuntar el dominio al VPS
 
 En hPanel, con `tornabox.eu` seleccionado → **DNS/Nameservers** → *Registros DNS*.
