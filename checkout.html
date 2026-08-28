@@ -58,6 +58,7 @@
 
     <form class="checkout-grid" id="checkout-form" data-checkout-form action="pedido.php" method="post" novalidate>
       <input type="hidden" name="caja" value="grande">
+      <input type="hidden" name="mejora" value="">
       <input type="hidden" name="ajax" value="">
       <!-- señuelo antispam: si un bot lo rellena, el pedido se descarta -->
       <p class="sr-hp" style="position:absolute;left:-5000px" aria-hidden="true">
@@ -123,14 +124,24 @@
         <section class="panel">
           <h2><span class="paso-chip">2</span> Mejora tu pedido <span class="panel-opc">(opcional)</span></h2>
           <div class="pay-options">
-            <label class="pay-option extra-option" data-extra-segunda>
-              <input type="checkbox" name="segunda" value="1">
-              <span class="pay-radio pay-check" aria-hidden="true"></span>
-              <span class="pay-txt">
-                <b><svg class="ic"><use href="#i-box"/></svg> <span data-segunda-txt>Añade una 2ª Caja Inicio <b>+34,95&nbsp;€</b> y el envío sale <b>GRATIS</b></span></b>
-                <p>Doble sorpresa en el mismo paquete. El pedido supera los 50&nbsp;€ y te ahorras los 4,95&nbsp;€ de envío.</p>
-              </span>
-            </label>
+            <!-- Escalera de mejora: subir de caja pagando solo la diferencia -->
+            <div class="upsell-mejora" data-mejora hidden>
+              <div class="upsell-top">
+                <p class="upsell-titulo"><svg class="ic"><use href="#i-box"/></svg> <span data-mejora-titulo>Pasa a la Caja Grande</span></p>
+                <p class="upsell-precio">
+                  <s data-mejora-antes>+25,00 €</s>
+                  <b data-mejora-precio>+19,95 €</b>
+                </p>
+              </div>
+              <p class="upsell-ahorro" data-mejora-ahorro>Ahorras 5,05 €</p>
+              <ul class="upsell-gana" data-mejora-gana></ul>
+              <button class="btn btn-mejora" type="button" data-mejora-btn>Sí, quiero la Caja Grande</button>
+            </div>
+            <p class="upsell-undo" data-mejora-undo hidden>
+              <span data-mejora-hecho></span>
+              <button type="button" data-mejora-reset>Volver a la caja original</button>
+            </p>
+
             <label class="pay-option extra-option">
               <input type="checkbox" name="seguro" value="1">
               <span class="pay-radio pay-check" aria-hidden="true"></span>

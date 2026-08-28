@@ -23,6 +23,14 @@ $GRATIS_DESDE = 50.00;  // envío gratis a partir de este subtotal
 $RECARGO_COD  = 4.95;   // gestión del contra reembolso (tarjeta: sin recargo)
 $SEGURO       = 4.95;   // seguro de devolución opcional
 
+/* Escalera de mejora: subir un escalón cuesta lo que dice «precio».
+   Debe coincidir con lib/manifest.js → mejoras. */
+$MEJORAS = [
+  'inicio' => ['a' => 'grande', 'precio' => 19.95],
+  'grande' => ['a' => 'tech',   'precio' => 22.95],
+  'tech'   => ['a' => 'xxl',    'precio' => 44.95],
+];
+
 /* ------------------------------------------------------------- */
 header('X-Content-Type-Options: nosniff');
 
@@ -62,7 +70,7 @@ $cp        = limpiar($_POST['cp']        ?? '');
 $poblacion = limpiar($_POST['poblacion'] ?? '');
 $notas     = limpiar($_POST['notas']     ?? '');
 $pago      = ($_POST['pago'] ?? '') === 'reembolso' ? 'reembolso' : 'tarjeta';
-$unidades  = !empty($_POST['segunda']) ? 2 : 1;
+$mejoraId  = $_POST['mejora'] ?? '';
 $conSeguro = !empty($_POST['seguro']);
 $num       = limpiar($_POST['num'] ?? '');
 
@@ -83,7 +91,22 @@ if (!preg_match('/^TB-\d{4}-\d{5}$/', $num)) {
   $num = 'TB-' . date('Y') . '-' . random_int(10000, 99999);
 }
 
-$subtotal = $caja['precio'] * $unidades;
+/* Recorremos la escalera desde la caja pedida hasta la mejorada, sumando
+   el precio de cada escalón. Si la mejora no es alcanzable, se ignora. */
+$subtotal = $caja['precio'];
+$cajaFinal = $cajaId;
+if ($mejoraId !== '' && isset($CAJAS[$mejoraId]) && $mejoraId !== $cajaId) {
+  $paso = $cajaId; $extra = 0.0; $guarda = 0;
+  while ($paso !== $mejoraId && isset($MEJORAS[$paso]) && $guarda++ < 6) {
+    $extra += $MEJORAS[$paso]['precio'];
+    $paso = $MEJORAS[$paso]['a'];
+  }
+  if ($paso === $mejoraId) {          // escalera válida
+    $subtotal += $extra;
+    $cajaFinal = $mejoraId;
+    $caja = $CAJAS[$cajaFinal];
+  }
+}
 $envio    = ($caja['envio_gratis'] || $subtotal >= $GRATIS_DESDE) ? 0.0 : $ENVIO;
 $recargo  = $pago === 'reembolso' ? $RECARGO_COD : 0.0;
 $seguro   = $conSeguro ? $SEGURO : 0.0;
@@ -92,7 +115,7 @@ $e       = fn($n) => number_format($n, 2, ',', '.') . ' €';
 
 $cuerpo = "NUEVO PEDIDO {$num}\n"
         . str_repeat('=', 46) . "\n\n"
-        . "Caja:       {$caja['nombre']}" . ($unidades > 1 ? " x{$unidades}" : '') . "\n"
+        . "Caja:       {$caja['nombre']}" . ($cajaFinal !== $cajaId ? "  (mejorada desde {$CAJAS[$cajaId]['nombre']})" : '') . "\n"
         . "Precio:     {$e($subtotal)}\n"
         . "Envío:      " . ($envio > 0 ? $e($envio) : 'Gratis') . "\n"
         . ($seguro > 0 ? "Seguro dev: {$e($seguro)}  (30 días + recogida a domicilio)\n" : '')

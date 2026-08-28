@@ -325,42 +325,111 @@
 
     // 1. Caja elegida por URL (?caja=grande). Si no existe, la más pedida.
     var params = new URLSearchParams(location.search);
-    var cajaId = params.get("caja");
-    if (!CAJAS[cajaId]) cajaId = "grande";
-    var caja = CAJAS[cajaId];
-
-    // 2. Pintar el resumen (lateral, mini de móvil y barra de pago a la vez)
-    $$("[data-r-thumb]").forEach(function (th) { th.style.setProperty("--tape", caja.color); });
-    var set = function (sel, txt) { $$(sel).forEach(function (el) { el.textContent = txt; }); };
-    set("[data-r-nombre]", caja.nombre);
-    set("[data-r-meta]", caja.articulos + " · " + caja.etiqueta);
-    $$("[data-r-valor]").forEach(function (el) {
-      el.innerHTML = "Valor orientativo: <s>" + caja.valorMin + "–" + caja.valorMax + "&nbsp;€</s>";
-    });
-
-    var inputCaja = $("[name=caja]", form);
-    if (inputCaja) inputCaja.value = cajaId;
-
-    // 3. Totales: unidades, envío gratis desde 50 €, seguro y método de pago
+    var baseId = params.get("caja");
+    if (!CAJAS[baseId]) baseId = "grande";
+    var MEJORAS = BRAND.mejoras || {};
     var cfgEnvio = BRAND.envio || {};
+    var finalId = baseId;               // caja tras aplicar mejoras
+    var caja = CAJAS[finalId];
+
+    // Escalones de mejora recorridos desde la caja original hasta la actual
+    function pasosHasta(destino) {
+      var pasos = [], id = baseId, guarda = 0;
+      while (id !== destino && MEJORAS[id] && guarda++ < 6) {
+        pasos.push(MEJORAS[id]);
+        id = MEJORAS[id].a;
+      }
+      return id === destino ? pasos : [];
+    }
+    // Lo que cuesta la caja actual: precio base + los escalones pagados
+    function precioCaja() {
+      return pasosHasta(finalId).reduce(function (s, m) { return s + m.precio; },
+                                        CAJAS[baseId].precio);
+    }
+
+    var set = function (sel, txt) { $$(sel).forEach(function (el) { el.textContent = txt; }); };
+
+    // 2. Pintar la caja en el resumen (lateral, mini de móvil y barra de pago)
+    function pintarCaja() {
+      caja = CAJAS[finalId];
+      $$("[data-r-thumb]").forEach(function (th) { th.style.setProperty("--tape", caja.color); });
+      set("[data-r-nombre]", caja.nombre);
+      set("[data-r-meta]", caja.articulos + " · " + caja.etiqueta);
+      $$("[data-r-valor]").forEach(function (el) {
+        el.innerHTML = "Valor de hasta <s>" + caja.valorMax + "&nbsp;€</s>";
+      });
+      var inputCaja = $("[name=caja]", form);
+      if (inputCaja) inputCaja.value = baseId;
+      var inputMejora = $("[name=mejora]", form);
+      if (inputMejora) inputMejora.value = (finalId === baseId ? "" : finalId);
+    }
+
+    // 3. La oferta de mejora: subir a la siguiente caja pagando la diferencia
+    //    con descuento. Al aceptarla se ofrece el siguiente escalón.
+    function pintarMejora() {
+      var caja0 = CAJAS[baseId];
+      var salto = MEJORAS[finalId];
+      var panel = $("[data-mejora]");
+      var vuelta = $("[data-mejora-undo]");
+      if (!panel) return;
+
+      // ¿Ha mejorado ya? Enseñamos de dónde viene y cómo deshacerlo.
+      if (vuelta) {
+        vuelta.hidden = (finalId === baseId);
+        if (finalId !== baseId) {
+          var pagado = precioCaja() - caja0.precio;
+          $("[data-mejora-hecho]", vuelta).innerHTML =
+            "Has mejorado a la <b>" + escHTML(caja.nombre) + "</b> por " + eur(pagado) + " más.";
+        }
+      }
+
+      if (!salto || !CAJAS[salto.a]) {           // ya está en la caja más grande
+        panel.hidden = true;
+        return;
+      }
+      panel.hidden = false;
+      var destino = CAJAS[salto.a];
+      var normal = destino.precio - caja.precio; // lo que costaría subir sin oferta
+      var ahorro = normal - salto.precio;
+
+      set("[data-mejora-titulo]", "Pasa a la " + destino.nombre);
+      set("[data-mejora-precio]", "+" + eur(salto.precio));
+      $$("[data-mejora-antes]").forEach(function (el) {
+        el.textContent = "+" + eur(normal);
+        el.hidden = ahorro <= 0;
+      });
+      set("[data-mejora-ahorro]", ahorro > 0 ? "Ahorras " + eur(ahorro) : "");
+
+      var gana = [];
+      gana.push("<b>" + escHTML(destino.articulos) + "</b> en vez de " + escHTML(caja.articulos));
+      gana.push("Valor de hasta <b>" + destino.valorMax + "&nbsp;€</b> (+" + (destino.valorMax - caja.valorMax) + "&nbsp;€ más)");
+      if (destino.envioGratis && !caja.envioGratis) gana.push("<b>Envío GRATIS</b> incluido");
+      gana.push(escHTML(destino.etiqueta));
+      $$("[data-mejora-gana]").forEach(function (ul) {
+        ul.innerHTML = gana.map(function (g) {
+          return '<li><svg class="ic ok"><use href="#i-check"/></svg> ' + g + "</li>";
+        }).join("");
+      });
+      set("[data-mejora-btn]", "Sí, quiero la " + destino.nombre);
+    }
+
+    // 4. Totales: caja (con mejoras), envío gratis desde 50 €, seguro y pago
     var totales = function () {
-      var segundaEl = $("input[name=segunda]", form);
       var seguroEl = $("input[name=seguro]", form);
-      var unidades = segundaEl && segundaEl.checked ? 2 : 1;
-      var subtotal = caja.precio * unidades;
+      var subtotal = precioCaja();
       var gratisDesde = cfgEnvio.gratisDesde || 50;
       var envio = (caja.envioGratis || subtotal >= gratisDesde) ? 0 : (cfgEnvio.estandar || 4.95);
       var metodoEl = $("input[name=pago]:checked", form);
       var metodo = metodoEl ? metodoEl.value : "tarjeta";
       var recargo = metodo === "reembolso" ? (cfgEnvio.recargoCOD || 4.95) : 0;
       var seguro = seguroEl && seguroEl.checked ? (cfgEnvio.seguro || 4.95) : 0;
-      return { unidades: unidades, subtotal: subtotal, envio: envio, recargo: recargo,
-               seguro: seguro, metodo: metodo, total: subtotal + envio + recargo + seguro };
+      return { subtotal: subtotal, envio: envio, recargo: recargo, seguro: seguro,
+               metodo: metodo, total: subtotal + envio + recargo + seguro };
     };
 
     var pintarTotales = function () {
       var t = totales();
-      set("[data-r-cajalabel]", t.unidades === 2 ? "Caja ×2" : "Caja");
+      set("[data-r-cajalabel]", finalId === baseId ? "Caja" : "Caja mejorada");
       set("[data-r-precio]", eur(t.subtotal));
       $$("[data-r-envio]").forEach(function (envioEl) {
         envioEl.textContent = t.envio === 0 ? "Gratis" : eur(t.envio);
@@ -370,7 +439,7 @@
       $$("[data-r-freehint]").forEach(function (row) {
         row.hidden = t.envio === 0;
         var falta = (cfgEnvio.gratisDesde || 50) - t.subtotal;
-        if (!row.hidden) row.textContent = "Te faltan " + eur(falta) + " para el envío GRATIS — añade la 2ª caja de abajo";
+        if (!row.hidden) row.textContent = "Te faltan " + eur(falta) + " para el envío GRATIS — con la mejora de abajo ya lo tienes";
       });
       $$("[data-r-seguro-row]").forEach(function (row) { row.hidden = t.seguro === 0; });
       set("[data-r-seguro]", eur(t.seguro));
@@ -383,7 +452,25 @@
       set("[data-submit-short]", t.metodo === "tarjeta" ? "Pagar con tarjeta" : "Confirmar pedido");
     };
 
-    // 4. Radios de pago (clase de respaldo para navegadores sin :has)
+    function repintar() { pintarCaja(); pintarMejora(); pintarTotales(); }
+
+    // Aceptar la mejora sube un escalón; «volver» deshace todos
+    $$("[data-mejora-btn]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var salto = MEJORAS[finalId];
+        if (!salto || !CAJAS[salto.a]) return;
+        finalId = salto.a;
+        repintar();
+        var panel = $("[data-mejora]");
+        if (panel && !panel.hidden) panel.classList.add("is-nuevo");
+        setTimeout(function () { if (panel) panel.classList.remove("is-nuevo"); }, 700);
+      });
+    });
+    $$("[data-mejora-reset]").forEach(function (btn) {
+      btn.addEventListener("click", function () { finalId = baseId; repintar(); });
+    });
+
+    // 5. Radios de pago (clase de respaldo para navegadores sin :has)
     $$(".pay-option:not(.extra-option)", form).forEach(function (opt) {
       var radio = $("input", opt);
       radio.addEventListener("change", function () {
@@ -393,7 +480,7 @@
       });
       if (radio.checked) opt.classList.add("is-checked");
     });
-    // Extras opcionales: 2ª caja y seguro de devolución
+    // Extra opcional: seguro de devolución
     $$(".extra-option", form).forEach(function (opt) {
       var cb = $("input", opt);
       cb.addEventListener("change", function () {
@@ -401,13 +488,7 @@
         pintarTotales();
       });
     });
-    // La 2ª caja solo aplica a las cajas sin envío gratis (la Inicio)
-    $$("[data-extra-segunda]").forEach(function (el) {
-      el.hidden = caja.envioGratis;
-      var lbl = $("[data-segunda-txt]", el);
-      if (lbl) lbl.innerHTML = "Añade una 2ª " + escHTML(caja.nombre) + " <b>+" + eur(caja.precio) + "</b> y el envío sale <b>GRATIS</b>";
-    });
-    pintarTotales();
+    repintar();
 
     // 5. Validación amable
     var marcar = function (input, mal) {
@@ -441,7 +522,7 @@
 
       var pedido = {
         num: numPedido, caja: cajaId, cajaNombre: caja.nombre,
-        unidades: t.unidades, precio: t.subtotal, envio: t.envio,
+        mejorada: finalId !== baseId, precio: t.subtotal, envio: t.envio,
         recargo: t.recargo, seguro: t.seguro,
         total: t.total, pago: t.metodo, fecha: new Date().toISOString()
       };

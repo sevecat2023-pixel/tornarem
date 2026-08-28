@@ -123,8 +123,22 @@ en los dos sitios.
 
 ### Los dos upsells del checkout
 
-1. **2ª caja** — solo aparece en las cajas que pagan envío (la Inicio).
-   Al marcarla, el pedido supera los 50 € y el envío pasa a gratis.
+1. **Escalera de mejora** — en vez de ofrecer una segunda caja igual, se
+   ofrece **subir a la siguiente** pagando solo la diferencia con
+   descuento. Al aceptar, se ofrece el escalón siguiente:
+
+   | Salto | Paga | En vez de | Ahorra | Valor que gana |
+   |---|---|---|---|---|
+   | Inicio → Grande | +19,95 € | +25,00 € | 5,05 € | +200 € (y envío gratis) |
+   | Grande → Tech | +22,95 € | +30,00 € | 7,05 € | +150 € |
+   | Tech → XXL | +44,95 € | +60,00 € | 15,05 € | +400 € |
+
+   Encadenando los tres, la XXL sale por 122,80 € en vez de 149,95 €.
+   Los importes se editan en `manifest.js` → `mejoras` **y** en
+   `pedido.php` → `$MEJORAS`. El servidor recorre la escalera desde la
+   caja pedida: una mejora que no sea alcanzable se ignora y se cobra la
+   caja original.
+
 2. **Seguro de devolución (4,95 €)** — amplía a 30 días, recogida gratis a
    domicilio y cambio por otra caja o reembolso del 100 %. Sin él, el
    cliente conserva sus 14 días legales de desistimiento.
@@ -166,7 +180,9 @@ no hay fotos de stock que licenciar ni pesos que optimizar.
 - Checkout de una sola pantalla, sin registro, con total siempre visible.
 - CTA fija en móvil y avisos de «sale hoy» repetidos en el resumen.
 - Entrega con fecha real estilo Prime («Recíbelo mañana si lo pides en 2 h»).
-- Umbral de envío gratis con aviso de cuánto falta y upsell de 2ª caja.
+- Umbral de envío gratis con aviso de cuánto falta, resuelto por la mejora.
+- Escalera de mejora encadenada: cada caja ofrece subir a la siguiente con
+  descuento, mostrando el valor extra que gana.
 - Seguro de devolución como segundo upsell, y devoluciones «sin preguntas»
   como argumento de reversión de riesgo en toda la web.
 
