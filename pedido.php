@@ -6,8 +6,8 @@
 
    CONFIGURA ESTAS DOS LÍNEAS ANTES DE PUBLICAR:
    ============================================================= */
-$PARA   = 'pedidos@tornabox.es';   // ← email donde recibirás los pedidos
-$DESDE  = 'web@tornabox.es';       // ← remitente (un buzón de tu dominio)
+$PARA   = 'pedidos@tornabox.eu';   // ← email donde recibirás los pedidos
+$DESDE  = 'web@tornabox.eu';       // ← remitente (un buzón de tu dominio)
 
 /* Precios autoritativos: el total se calcula aquí, nunca se confía
    en lo que venga del navegador. Si cambias precios, cámbialos

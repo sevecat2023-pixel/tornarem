@@ -7,4 +7,4 @@ Disallow: /admin.html
 Disallow: /admin.js
 Disallow: /datos/
 
-Sitemap: https://tornabox.es/sitemap.xml
+Sitemap: https://tornabox.eu/sitemap.xml

@@ -3,9 +3,10 @@
 # TornaBox — instalación en un VPS (Debian/Ubuntu)
 #
 # Uso, como root en tu VPS:
-#   bash deploy-vps.sh                 → sirve por la IP del servidor
-#   bash deploy-vps.sh tienda.local    → además responde a ese nombre
-#   bash deploy-vps.sh tornabox.es --ssl → dominio público + HTTPS gratis
+#   bash deploy-vps.sh                    → sirve por la IP del servidor
+#   bash deploy-vps.sh tienda.local       → además responde a ese nombre
+#   bash deploy-vps.sh tornabox.eu --ssl  → dominio público + HTTPS gratis
+#                                           (responde también a www.tornabox.eu)
 #
 # Instala nginx + PHP + Node/pm2, clona la tienda, levanta la API de pedidos
 # en /api y deja el CRM en /admin.html protegido con usuario y contraseña.
@@ -18,6 +19,14 @@ set -euo pipefail
 
 DOMINIO="${1:-_}"
 SSL="${2:-}"
+
+# Con un dominio de verdad se atiende también a www. Un nombre interno
+# (tienda.local) o la IP pelada no llevan www.
+SERVIDORES="$DOMINIO"
+case "$DOMINIO" in
+  _|*.local|*.lan) ;;
+  *.*) SERVIDORES="$DOMINIO www.$DOMINIO" ;;
+esac
 RAIZ="/var/www/tornabox"
 RAMA="claude/tienda-minimalista-psicologia-9q5ku3"
 REPO="https://github.com/sevecat2023-pixel/tornarem.git"
@@ -78,7 +87,7 @@ cat > /etc/nginx/sites-available/tornabox <<NGINX
 server {
     listen 80;
     listen [::]:80;
-    server_name ${DOMINIO};
+    server_name ${SERVIDORES};
     root ${RAIZ};
     index index.html;
 
@@ -157,8 +166,14 @@ PANEL="$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1/admin.html || e
 if [ "$SSL" = "--ssl" ] && [ "$DOMINIO" != "_" ]; then
   echo "▶ Extra: certificado HTTPS con Let's Encrypt…"
   apt-get install -y -qq certbot python3-certbot-nginx >/dev/null
-  certbot --nginx -d "$DOMINIO" --non-interactive --agree-tos --register-unsafely-without-email --redirect || \
-    echo "⚠ El certificado ha fallado (¿el dominio apunta ya a esta IP?). La web sigue en http://"
+  DOMS=""
+  for d in $SERVIDORES; do DOMS="$DOMS -d $d"; done
+  # Let's Encrypt comprueba el DNS: si el dominio todavía no apunta aquí, falla
+  # y la web se queda en http:// hasta que se propague. Se puede repetir luego.
+  certbot --nginx $DOMS --non-interactive --agree-tos --register-unsafely-without-email --redirect || \
+    echo "⚠ El certificado ha fallado. Suele ser que el DNS aún no apunta a esta IP:
+   comprueba con  dig +short $DOMINIO  y vuelve a lanzar este script cuando dé la IP correcta.
+   Mientras tanto la web funciona en http://"
 fi
 
 IP="$(curl -s --max-time 5 https://api.ipify.org || hostname -I | awk '{print $1}')"

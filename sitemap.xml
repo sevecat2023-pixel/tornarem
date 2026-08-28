@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://tornabox.es/</loc><priority>1.0</priority></url>
-  <url><loc>https://tornabox.es/producto.html?id=inicio</loc><priority>0.8</priority></url>
-  <url><loc>https://tornabox.es/producto.html?id=grande</loc><priority>0.9</priority></url>
-  <url><loc>https://tornabox.es/producto.html?id=tech</loc><priority>0.8</priority></url>
-  <url><loc>https://tornabox.es/producto.html?id=xxl</loc><priority>0.8</priority></url>
-  <url><loc>https://tornabox.es/envios-devoluciones.html</loc><priority>0.7</priority></url>
-  <url><loc>https://tornabox.es/devoluciones.html</loc><priority>0.6</priority></url>
-  <url><loc>https://tornabox.es/contacto.html</loc><priority>0.5</priority></url>
-  <url><loc>https://tornabox.es/condiciones.html</loc><priority>0.3</priority></url>
-  <url><loc>https://tornabox.es/aviso-legal.html</loc><priority>0.2</priority></url>
-  <url><loc>https://tornabox.es/privacidad.html</loc><priority>0.2</priority></url>
-  <url><loc>https://tornabox.es/cookies.html</loc><priority>0.2</priority></url>
+  <url><loc>https://tornabox.eu/</loc><priority>1.0</priority></url>
+  <url><loc>https://tornabox.eu/producto.html?id=inicio</loc><priority>0.8</priority></url>
+  <url><loc>https://tornabox.eu/producto.html?id=grande</loc><priority>0.9</priority></url>
+  <url><loc>https://tornabox.eu/producto.html?id=tech</loc><priority>0.8</priority></url>
+  <url><loc>https://tornabox.eu/producto.html?id=xxl</loc><priority>0.8</priority></url>
+  <url><loc>https://tornabox.eu/envios-devoluciones.html</loc><priority>0.7</priority></url>
+  <url><loc>https://tornabox.eu/devoluciones.html</loc><priority>0.6</priority></url>
+  <url><loc>https://tornabox.eu/contacto.html</loc><priority>0.5</priority></url>
+  <url><loc>https://tornabox.eu/condiciones.html</loc><priority>0.3</priority></url>
+  <url><loc>https://tornabox.eu/aviso-legal.html</loc><priority>0.2</priority></url>
+  <url><loc>https://tornabox.eu/privacidad.html</loc><priority>0.2</priority></url>
+  <url><loc>https://tornabox.eu/cookies.html</loc><priority>0.2</priority></url>
 </urlset>

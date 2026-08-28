@@ -6,10 +6,9 @@ hosting con PHP) y empezar a recibir pedidos. Sin Node, sin npm, sin compilar.
 La compra son **dos clics y un formulario**: portada → checkout → confirmación.
 Pago con **tarjeta** (pasarela externa) o **contra reembolso**.
 
-> «TornaBox», el dominio tornabox.es y todas las cifras/opiniones son
-> **contenido de plantilla inventado**. Antes de lanzar: comprueba la
-> disponibilidad del dominio y de la marca, y sustituye los datos de ejemplo
-> por los reales.
+> El dominio real es **tornabox.eu** (registrado en Hostinger). Las
+> cifras y opiniones siguen siendo **contenido de plantilla inventado**:
+> sustitúyelas por las reales antes de lanzar.
 >
 > La web **nombra a Amazon** como origen de los lotes (uso descriptivo) y
 > repite en el pie, en el almacén, en la FAQ y en las condiciones que
@@ -94,7 +93,7 @@ o usa solo los enlaces de pago de Stripe.
 | Envío, mínimo de envío gratis, recargo COD y seguro | `lib/manifest.js` → `envio` **y** `pedido.php` |
 | Titular, NIF y dirección (marcados `[así]` en amarillo) | `aviso-legal.html`, `privacidad.html`, `condiciones.html`, `contacto.html` |
 | Cifras de confianza (cajas entregadas, valoraciones) y opiniones | `index.html` + `lib/manifest.js` → sustitúyelas por las reales |
-| Dominio real (si no es tornabox.es) | `index.html` (canonical), `robots.txt`, `sitemap.xml` |
+| Dominio (ya puesto a tornabox.eu) | `index.html` (canonical), `robots.txt`, `sitemap.xml` |
 
 ### Cómo funciona el pago
 
@@ -154,6 +153,62 @@ El método de pago por defecto es **tarjeta**, marcado en verde y sin
 recargo, para reducir los impagos del contra reembolso.
 
 ---
+
+---
+
+## Publicar tornabox.eu en el VPS (dos pasos)
+
+### 1 · Apuntar el dominio al VPS
+
+En hPanel, con `tornabox.eu` seleccionado → **DNS/Nameservers** → *Registros DNS*.
+Los nameservers de Hostinger (`athena/apollo.dns-parking.com`) ya valen; solo
+hay que añadir o editar dos registros **A** con la IP del VPS (la ves en
+hPanel → *VPS* → *Vista general*):
+
+| Tipo | Nombre | Apunta a | TTL |
+|---|---|---|---|
+| A | `@` | LA-IP-DE-TU-VPS | 3600 |
+| A | `www` | LA-IP-DE-TU-VPS | 3600 |
+
+Si ya existe un registro A de aparcamiento en `@`, se **edita**, no se añade
+otro. Comprobar que se ha propagado (tarda de minutos a un par de horas):
+
+```bash
+dig +short tornabox.eu
+```
+
+Tiene que devolver la IP del VPS. Hasta entonces, el certificado HTTPS fallará.
+
+### 2 · Instalar la tienda en el VPS
+
+Por SSH en el VPS (hPanel → *VPS* → *Acceso SSH* da el usuario y la IP):
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/sevecat2023-pixel/tornarem/claude/tienda-minimalista-psicologia-9q5ku3/deploy-vps.sh -o deploy-vps.sh
+sudo bash deploy-vps.sh tornabox.eu --ssl
+```
+
+Eso instala nginx, PHP, Node y pm2; publica la tienda en `tornabox.eu` y en
+`www.tornabox.eu`; levanta la API de pedidos en `/api`; deja el CRM en
+`/admin.html` con usuario y contraseña de nginx; y saca el certificado HTTPS
+de Let's Encrypt. Al terminar imprime la clave del panel y el token de la API.
+
+Volver a lanzar el mismo comando **actualiza** la tienda a la última versión.
+
+> Si el certificado falla es que el DNS todavía no había llegado: espera a que
+> `dig +short tornabox.eu` dé la IP del VPS y repite el comando.
+
+### Después, en el VPS
+
+```bash
+nano /var/www/tornabox/pedido.php       # tu email de pedidos (líneas 9-10)
+nano /var/www/tornabox/lib/manifest.js  # emails visibles y stock semanal
+```
+
+Para que salgan los correos hace falta un envío configurado
+(`sudo apt install msmtp-mta` con tu SMTP). Mientras tanto cada pedido queda
+en `/var/www/tornabox/datos/pedidos.json` y se ve en el CRM.
+
 
 ## CRM de pedidos (`admin.html`)
 
