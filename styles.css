@@ -999,3 +999,74 @@ html.no-js .check-ring circle, html.no-js .check-ring path { animation: none; st
   .cajas .section-head h2 { font-size: 1.45rem; }
   .cajas .kicker { margin-bottom: .6rem; font-size: .72rem; }
 }
+
+/* =============================================================
+   18. Fotos reales: tira, galería y almacén
+   ============================================================= */
+.tira { border-block: 1px solid var(--line-soft); overflow: hidden; padding-block: .9rem .6rem; background: var(--bg); }
+.tira-track {
+  display: flex; gap: .5rem; width: max-content;
+  animation: tira 60s linear infinite;
+}
+.tira-track img {
+  height: 118px; width: auto; border-radius: 10px; object-fit: cover;
+  background: var(--bg-soft);
+}
+@keyframes tira { to { transform: translateX(-50%); } }
+.tira:hover .tira-track { animation-play-state: paused; }
+.tira-pie { text-align: center; font-size: .74rem; color: var(--ink-mute); margin-top: .6rem; }
+
+.galeria { display: grid; grid-template-columns: 1fr 1fr; gap: .6rem; margin-bottom: 1rem; }
+.galeria figure { position: relative; border-radius: var(--radius-s); overflow: hidden; background: var(--bg-soft); }
+.galeria img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; display: block; }
+.galeria figcaption {
+  position: absolute; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(transparent, rgba(20,19,26,.82));
+  color: #fff; font-size: .78rem; font-weight: 600;
+  padding: 1.6em .7em .5em;
+}
+.galeria-pie { font-size: .8rem; color: var(--ink-mute); margin-bottom: 1.2rem; max-width: 62ch; }
+
+.almacen-grid { display: grid; gap: 1rem; }
+.almacen-grid figure { background: #fff; border: 1px solid var(--line-soft); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow-1); }
+.almacen-grid img { width: 100%; aspect-ratio: 16 / 11; object-fit: cover; display: block; }
+.almacen-grid figcaption { padding: .85rem 1rem 1rem; font-size: .88rem; color: var(--ink-soft); }
+.almacen-grid figcaption b { display: block; font-family: var(--display); font-size: 1rem; color: var(--ink); margin-bottom: .2rem; }
+
+@media (min-width: 720px) {
+  .tira-track img { height: 160px; }
+  .galeria { grid-template-columns: repeat(3, 1fr); gap: .8rem; }
+  .galeria figcaption { font-size: .86rem; }
+  .almacen-grid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tira-track { animation: none; }
+  .tira { overflow-x: auto; }
+}
+.almacen-aviso { margin-top: 1.1rem; font-size: .8rem; color: var(--ink-mute); max-width: 70ch; }
+
+/* --- Móvil: las fotos aportan, pero sin volver a alargar la página --- */
+@media (max-width: 719px) {
+  .tira-track img { height: 96px; }
+  .tira { padding-block: .7rem .4rem; }
+
+  /* Galería: cuadrada, 2×2 (las dos últimas se ven en la de producto) */
+  .galeria { gap: .45rem; margin-bottom: .8rem; }
+  .galeria img { aspect-ratio: 1 / 1; }
+  .galeria figure:nth-child(n+5) { display: none; }
+  .galeria figcaption { font-size: .72rem; padding: 1.4em .55em .4em; }
+  .galeria-pie { font-size: .76rem; margin-bottom: 1rem; }
+
+  /* Almacén: los tres pasos se deslizan en vez de apilarse */
+  .almacen-grid {
+    display: flex; gap: .7rem; overflow-x: auto; scroll-snap-type: x mandatory;
+    margin-inline: -1.25rem; padding: 0 1.25rem .4rem; scroll-padding-inline: 1.25rem;
+    scrollbar-width: none;
+  }
+  .almacen-grid::-webkit-scrollbar { display: none; }
+  .almacen-grid > figure { flex: 0 0 78%; scroll-snap-align: start; }
+  .almacen-grid img { aspect-ratio: 16 / 10; }
+  .almacen-grid figcaption { padding: .7rem .8rem .85rem; font-size: .82rem; }
+  .almacen-grid figcaption b { font-size: .92rem; }
+  .almacen-aviso { font-size: .74rem; margin-top: .8rem; }
+}
