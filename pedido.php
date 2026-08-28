@@ -66,8 +66,11 @@ $nombre    = limpiar($_POST['nombre']    ?? '');
 $telefono  = limpiar($_POST['telefono']  ?? '');
 $email     = limpiar($_POST['email']     ?? '');
 $direccion = limpiar($_POST['direccion'] ?? '');
+$numero    = limpiar($_POST['numero']    ?? '');
+$piso      = limpiar($_POST['piso']      ?? '');
 $cp        = limpiar($_POST['cp']        ?? '');
 $poblacion = limpiar($_POST['poblacion'] ?? '');
+$provincia = limpiar($_POST['provincia'] ?? '');
 $notas     = limpiar($_POST['notas']     ?? '');
 $pago      = ($_POST['pago'] ?? '') === 'reembolso' ? 'reembolso' : 'tarjeta';
 $mejoraId  = $_POST['mejora'] ?? '';
@@ -127,8 +130,8 @@ $cuerpo = "NUEVO PEDIDO {$num}\n"
         . "Cliente:    {$nombre}\n"
         . "Teléfono:   {$telefono}\n"
         . "Email:      {$email}\n"
-        . "Dirección:  {$direccion}\n"
-        . "CP/Ciudad:  {$cp} {$poblacion}\n"
+        . "Dirección:  {$direccion} {$numero}" . ($piso !== '' ? ", {$piso}" : '') . "\n"
+        . "CP/Ciudad:  {$cp} {$poblacion} ({$provincia})\n"
         . ($notas !== '' ? "Notas:      {$notas}\n" : '')
         . "\nFecha:      " . date('d/m/Y H:i') . "\n";
 

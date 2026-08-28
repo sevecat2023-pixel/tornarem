@@ -153,9 +153,137 @@ en los dos sitios.
 El método de pago por defecto es **tarjeta**, marcado en verde y sin
 recargo, para reducir los impagos del contra reembolso.
 
+---
+
+## CRM de pedidos (`admin.html`)
+
+Panel propio para trabajar los pedidos: tabla, ficha de cada uno, clientes,
+estadísticas y una **nota de credibilidad** de 1 a 10 por pedido.
+
+### Las tres piezas
+
+| Pieza | Fichero | Qué hace |
+|---|---|---|
+| Panel | `admin.html` + `admin.js` | Toda la interfaz. HTML/JS plano, sin framework ni compilación. |
+| Cliente de datos | `lib/db.js` | **Lo único que habla con la API.** Guarda copia en `localStorage`: si la API cae, el panel sigue enseñando datos y la tienda sigue aceptando pedidos (quedan en cola y se reenvían solos). |
+| API | `server.js` | Node **sin dependencias** (`http`, `https`, `fs`, `path`, `crypto`). Datos en `datos/pedidos.json` con escritura atómica (`.tmp` + `renameSync`). Va con pm2 detrás de nginx en `/api`. |
+
+Motor de notas aparte, en `lib/credibilidad.js`, para poder probarlo solo.
+
+### Arrancarlo
+
+```bash
+node server.js                  # API en 127.0.0.1:8787
+ESTATICO=1 node server.js       # + sirve la tienda, para probar en local
+```
+
+`deploy-vps.sh` ya lo deja montado: instala Node y pm2, publica la API en
+`/api`, protege `/admin.html` con usuario y contraseña de nginx y te imprime
+el token al terminar.
+
+Crear un pedido (lo hace el checkout) es **público**. Leer o modificar exige
+la cabecera `x-admin-token`, que se genera sola en `datos/token.txt` (chmod 600)
+o se fija con la variable `ADMIN_TOKEN`.
+
+**Los precios los calcula siempre el servidor.** Si el navegador manda un total
+de 0,01 €, se ignora: se recalcula la caja, la escalera de mejora, el envío,
+el seguro y el recargo del reembolso.
+
+### Las cuatro pestañas
+
+1. **Pedidos** — tabla con casilla, fecha, nº, cliente, contacto, total, nota,
+   estado (se guarda al cambiarlo) y nº de seguimiento. Pulsar la fila abre la
+   ficha; las celdas con controles llevan `data-stop` para que cambiar el estado
+   no abra la ficha. Al marcar casillas sale la barra de acciones en masa.
+2. **Clientes** — agrupados por correo (o teléfono, o nombre), ordenados por
+   gasto. Lo cancelado no cuenta como gasto.
+3. **Estadísticas** — pedidos, ingresos, ticket medio, unidades y ranking de
+   productos con barras.
+4. **Ajustes** — pixel de Google, contraseña y token, credenciales de Correos,
+   exportar a CSV (con BOM, para que Excel respete los acentos), pedido de
+   ejemplo, limpiar caché y borrar todo.
+
+### La nota de credibilidad
+
+Se parte de 10 y cada regla suma o resta décimas **dejando escrito el porqué**.
+En la tabla se ve solo el número (verde ≥7, naranja ≥5, rojo <5); en la ficha,
+tres bloques: «por qué baja», «por qué sube» y las comprobaciones superadas.
+
+Reglas locales sobre nombre, correo, teléfono, dirección, historial e importe.
+Dos comprobaciones contra internet, **cacheadas 30 días** en `localStorage`:
+
+- **¿Existe la dirección?** → Nominatim (OpenStreetMap) con consulta
+  *estructurada* (`street`, `city`, `postalcode`), 1 petición por segundo.
+  Si no la encuentra con número, reintenta sin número.
+- **¿El dominio del correo recibe correo?** → DNS-over-HTTPS de Cloudflare,
+  registro MX y, si no hay, A.
+
+### Cancelación automática
+
+**Viene desactivada.** En Ajustes hay un botón de *simular* que dice qué se
+cancelaría sin tocar nada. Actívala solo después de mirar esa lista.
+
+Se cancela un pedido si su nota es menor que 5, o si **duplica** a uno de los
+10 anteriores. Y «duplicar» tiene dos condiciones, las dos necesarias:
+
+- que el pedido anterior **siga sin salir del almacén** (un pedido igual ya
+  entregado no es un duplicado: es un cliente que repite), y
+- que sea **de las últimas 72 horas**.
+
+Campos fuertes (correo, teléfono, nombre+dirección): uno solo basta para
+cancelar. Campos débiles (IP o dirección sueltas): los comparte una familia,
+una oficina o cualquiera detrás del CGNAT del operador, así que bajan la nota
+y salen en «pedidos relacionados», pero **no cancelan solos**.
+Con `estricto: true` se recupera la regla literal de «cualquier campo repetido
+cancela».
+
+Nunca se cancela algo que ya esté `enviado` o `entregado`, ni un pedido cuyo
+análisis quedó incompleto porque falló una comprobación de red.
+
+### Transportista (Correos)
+
+Las credenciales viven **solo en el servidor**, en `datos/correos.json` con
+chmod 600. El endpoint de configuración nunca devuelve la contraseña, solo si
+está puesta. El navegador jamás ve una credencial: el panel solo pide «haz el
+envío del pedido X».
+
+Si el pedido es contra reembolso y **no hay IBAN configurado, la API se niega
+a generar la etiqueta**: sin IBAN el repartidor entrega el paquete y no cobra.
+En la ficha, junto al botón, se ve «Contra reembolso · cobrar XX €».
+
+> El sobre SOAP del preregistro de envíos está escrito contra la especificación
+> publicada de Correos, pero **no se ha podido probar contra el servicio real**
+> sin credenciales. Usa *Probar credenciales* en Ajustes con las tuyas antes de
+> fiarte: devuelve el código HTTP y el principio de la respuesta tal cual.
+
+### Seguridad — léelo, no está maquillado
+
+La contraseña del panel **no es seguridad real**. El panel es una página
+estática: cualquiera que abra el código fuente la ve. Sirve para que no entre
+quien pase por delante del ordenador, nada más. Lo mismo vale para el token si
+lo pegas en un JS público.
+
+Los pedidos contienen **datos personales** (nombre, dirección, teléfono), así
+que lo correcto es poner el panel detrás de **autenticación de servidor**.
+`deploy-vps.sh` ya lo hace con `auth_basic` de nginx, y el `.htaccess` de
+Apache **bloquea `admin.html` por defecto** (en un hosting compartido no hay
+Node, la API no puede correr y el panel solo expondría datos).
+
+### En Hostinger
+
+`server.js` **no funciona** en hosting compartido: no hay Node. Allí la tienda
+va igual (con `pedido.php` mandando los pedidos por email), pero el CRM
+necesita el VPS. Por eso `admin.html` viene denegado en el `.htaccess`.
+
 ## Qué hay dentro
 
 ```
+admin.html          CRM de pedidos (protegido; ver «Seguridad»)
+admin.js            Panel: tabla, ficha, clientes, estadísticas, ajustes
+server.js           ← API de pedidos (Node sin dependencias, va con pm2)
+lib/db.js           Cliente de datos: lo único que habla con la API
+lib/credibilidad.js Motor de la nota de credibilidad
+datos/              Pedidos, token y credenciales (NO va al repositorio)
 index.html          Portada: hero, pasos, 4 cajas, opiniones, FAQ, CTA
 checkout.html       Pedido en una pantalla: datos + método de pago
 gracias.html        Confirmación con nº de pedido y siguientes pasos

@@ -564,7 +564,7 @@
       fd.set("ajax", "1");
 
       var pedido = {
-        num: numPedido, caja: cajaId, cajaNombre: caja.nombre,
+        num: numPedido, caja: baseId, cajaFinal: finalId, cajaNombre: caja.nombre,
         mejorada: finalId !== baseId, precio: t.subtotal, envio: t.envio,
         recargo: t.recargo, seguro: t.seguro,
         total: t.total, pago: t.metodo, fecha: new Date().toISOString()
@@ -578,15 +578,54 @@
       var irAGracias = function (n) {
         var q = "?p=" + encodeURIComponent(n || numPedido) + "&pago=" + t.metodo;
         // Con enlace de pago configurado, la tarjeta salta a la pasarela
-        var link = (BRAND.pagoTarjeta || {})[cajaId];
+        var link = (BRAND.pagoTarjeta || {})[finalId];
         if (t.metodo === "tarjeta" && link) { location.href = link; return; }
         location.href = "gracias.html" + q;
       };
 
-      // pedido.php envía el aviso por email; si no hay PHP (previa local),
-      // el pedido queda igualmente registrado en el navegador y seguimos.
-      fetch("pedido.php", { method: "POST", body: fd })
-        .then(function (r) { return r.ok ? r.json() : Promise.reject(new Error("HTTP " + r.status)); })
+      // Dos destinos, a propósito:
+      //  · el CRM (db.js → API) es la fuente de verdad de los pedidos, y
+      //  · pedido.php sigue mandando el aviso por email, que ya funcionaba.
+      // Si cualquiera de los dos falla, el cliente llega igual a «gracias»:
+      // db.js guarda el pedido en local y lo reenvía solo cuando pueda.
+      var datos = new FormData(form);
+      var aCRM = function (ip) {
+        return window.dbCrearPedido({
+          num: numPedido,
+          caja: baseId,
+          mejora: finalId === baseId ? "" : finalId,
+          seguro: Boolean($("input[name=seguro]", form) && $("input[name=seguro]", form).checked),
+          pago: t.metodo,
+          notas: datos.get("notas") || "",
+          cliente: {
+            nombre: datos.get("nombre") || "",
+            correo: datos.get("email") || "",
+            telefono: datos.get("telefono") || "",
+            direccion: datos.get("direccion") || "",
+            numero: datos.get("numero") || "",
+            piso: datos.get("piso") || "",
+            cp: datos.get("cp") || "",
+            ciudad: datos.get("poblacion") || "",
+            provincia: datos.get("provincia") || "",
+            ip: ip || ""
+          }
+        });
+      };
+
+      // La IP sirve para cruzar pedidos repetidos en el CRM. Si ipify tarda o
+      // falla no se espera: el pedido pesa más que el dato.
+      var ip = Promise.race([
+        (window.dbIP ? window.dbIP() : Promise.resolve("")),
+        new Promise(function (r) { setTimeout(function () { r(""); }, 2500); })
+      ]);
+
+      var avisoEmail = fetch("pedido.php", { method: "POST", body: fd })
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .catch(function () { return null; });
+
+      ip.then(aCRM)
+        .catch(function () { return null; })
+        .then(function () { return avisoEmail; })
         .then(function (json) { irAGracias(json && json.num); })
         .catch(function () { irAGracias(numPedido); });
     });

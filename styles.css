@@ -544,7 +544,8 @@ html.no-js .check-ring circle, html.no-js .check-ring path { animation: none; st
 /* ============ 11. Responsive ============ */
 @media (min-width: 540px) {
   .field-row { grid-template-columns: 1fr 1fr; }
-  .field-row.row-cp { grid-template-columns: 140px 1fr; }
+  .field-row.row-cp { grid-template-columns: 130px 1fr 1fr; }
+  .field-row.row-calle { grid-template-columns: 1fr 90px 110px; }
   .gracias-actions { flex-direction: row; flex-wrap: wrap; }
   .gracias-actions .btn { width: auto; }
 }
@@ -1217,4 +1218,18 @@ html.no-js .topbar-msg:not(.is-on) { display: none; }
 
   /* Pie interior legible en móvil: dos columnas y bloque de marca arriba */
   .footer-dis { font-size: .74rem; line-height: 1.45; }
+}
+
+/* =============================================================
+   22. Checkout: dirección separada en calle / nº / piso y
+       provincia. El motor de credibilidad del CRM necesita el
+       portal y la provincia por separado para comprobar que el
+       portal es plausible y que el CP cuadra con la provincia.
+   ============================================================= */
+@media (max-width: 719px) {
+  /* Calle a todo lo ancho y nº + piso debajo, a la mitad cada uno */
+  .field-row.row-calle { grid-template-columns: 1fr 1fr; gap: .7rem; }
+  .field-row.row-calle > .field:first-child { grid-column: 1 / -1; }
+  .field-row.row-cp { grid-template-columns: 110px 1fr; gap: .7rem; }
+  .field-row.row-cp > .field:last-child { grid-column: 1 / -1; }
 }

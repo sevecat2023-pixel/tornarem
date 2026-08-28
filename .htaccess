@@ -11,6 +11,29 @@ ErrorDocument 404 /404.html
   Require all denied
 </Files>
 
+# --- La base de datos de pedidos (nombres, direcciones, teléfonos) y el
+#     código del servidor NO se sirven jamás por web ---
+RedirectMatch 404 /datos(/|$)
+<FilesMatch "^(server\.js)$">
+  Require all denied
+</FilesMatch>
+
+# --- EL CRM, BLOQUEADO POR DEFECTO ---
+# En un hosting compartido tipo Hostinger no hay Node, así que la API de
+# pedidos no puede correr y el panel no serviría de nada; y dejarlo abierto
+# expondría datos personales. Se deniega.
+# Para usarlo aquí de verdad: crea un .htpasswd fuera de public_html,
+# borra estas cuatro líneas y descomenta el bloque de abajo.
+<FilesMatch "^(admin\.html|admin\.js)$">
+  Require all denied
+</FilesMatch>
+# <FilesMatch "^(admin\.html|admin\.js)$">
+#   AuthType Basic
+#   AuthName "CRM de pedidos"
+#   AuthUserFile /home/TU-USUARIO/.htpasswd
+#   Require valid-user
+# </FilesMatch>
+
 # --- Si la web se publica clonando el repositorio (Git de Hostinger),
 #     estos archivos viajan con él pero no deben servirse ---
 <FilesMatch "^(README\.md|deploy-vps\.sh|\.gitignore|\.nojekyll)$">

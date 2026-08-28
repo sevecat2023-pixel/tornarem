@@ -1,3 +1,7 @@
 # Copias de las solicitudes del formulario: datos personales, nunca al repositorio
 solicitudes.log
 pedidos.log
+
+# Base de datos de pedidos, token de administración y credenciales del
+# transportista: datos personales y secretos, nunca al repositorio
+datos/

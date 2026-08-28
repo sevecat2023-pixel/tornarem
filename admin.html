@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>CRM de pedidos · TornaBox</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<style>
+/* =============================================================================
+   Panel de pedidos. Hoja propia: no comparte nada con la tienda para que un
+   cambio de diseño de la web no descoloque la herramienta de trabajo.
+   ========================================================================== */
+:root{
+  --tinta:#14131a; --suave:#5a5764; --tenue:#8a8794;
+  --fondo:#f6f5f3; --papel:#fff; --linea:#e4e1dc; --linea2:#f0eeea;
+  --acento:#ff4b26; --ok:#15803d; --aviso:#b45309; --mal:#b91c1c;
+  --e-pendiente_pago:#b45309; --e-recibido:#1d4ed8; --e-preparacion:#6d28d9;
+  --e-enviado:#0f766e; --e-entregado:#15803d; --e-cancelado:#b91c1c;
+  --r:10px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font:15px/1.5 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  color:var(--tinta);background:var(--fondo);-webkit-text-size-adjust:100%}
+a{color:var(--acento)}
+button,input,select,textarea{font:inherit;color:inherit}
+.oculto{display:none !important}
+
+/* ---------------------------------------------------------------- cabecera */
+.top{position:sticky;top:0;z-index:40;background:var(--papel);border-bottom:1px solid var(--linea);
+  padding:.6rem clamp(.7rem,2vw,1.4rem);display:flex;gap:.7rem;align-items:center;flex-wrap:wrap}
+.marca{font-weight:800;letter-spacing:-.02em;display:flex;align-items:center;gap:.45rem;font-size:1.05rem}
+.marca i{width:18px;height:18px;background:var(--acento);border-radius:5px;display:inline-block}
+.marca small{font-weight:600;color:var(--tenue);font-size:.78rem;letter-spacing:.04em;text-transform:uppercase}
+.buscador{flex:1 1 200px;min-width:150px;position:relative}
+.buscador input{width:100%;padding:.5rem .8rem;border:1px solid var(--linea);border-radius:99px;background:var(--fondo)}
+.conexion{font-size:.76rem;font-weight:700;padding:.3em .7em;border-radius:99px;white-space:nowrap}
+.conexion.on{background:#dcfce7;color:var(--ok)} .conexion.off{background:#fee2e2;color:var(--mal)}
+.conexion.tok{background:#fef3c7;color:var(--aviso)}
+
+.tabs{display:flex;gap:.2rem;overflow-x:auto;background:var(--papel);
+  border-bottom:1px solid var(--linea);padding:0 clamp(.4rem,2vw,1.2rem)}
+.tabs button{background:none;border:0;padding:.75rem .95rem;font-weight:600;color:var(--suave);
+  border-bottom:2.5px solid transparent;cursor:pointer;white-space:nowrap}
+.tabs button[aria-selected=true]{color:var(--tinta);border-bottom-color:var(--acento)}
+.envoltorio{padding:clamp(.7rem,2vw,1.4rem);max-width:1500px;margin-inline:auto}
+
+/* ------------------------------------------------------------------ avisos */
+/* Nada de alert(): un modal del navegador bloquea el pintado y deja la
+   pestaña colgada. Los avisos van dentro de la página. */
+#avisos{display:grid;gap:.6rem;margin-bottom:.9rem}
+.aviso{background:var(--papel);border:1px solid var(--linea);border-left:4px solid var(--acento);
+  border-radius:var(--r);padding:.8rem 2.4rem .8rem 1rem;position:relative;font-size:.92rem}
+.aviso.bien{border-left-color:var(--ok)} .aviso.mal{border-left-color:var(--mal)}
+.aviso.ojo{border-left-color:var(--aviso)}
+.aviso b{display:block;margin-bottom:.15rem}
+.aviso ul{margin:.4rem 0 0 1.1rem;font-size:.88rem;color:var(--suave)}
+.aviso .cerrar{position:absolute;top:.4rem;right:.5rem;background:none;border:0;font-size:1.2rem;
+  line-height:1;color:var(--tenue);cursor:pointer;padding:.2rem .35rem}
+
+/* ------------------------------------------------------------------- tabla */
+.tabla-caja{background:var(--papel);border:1px solid var(--linea);border-radius:var(--r);overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:.88rem;min-width:940px}
+th{text-align:left;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--tenue);
+  font-weight:600;padding:.6rem .55rem;border-bottom:1px solid var(--linea);white-space:nowrap;
+  position:sticky;top:0;background:var(--papel);z-index:2}
+td{padding:.5rem .55rem;border-bottom:1px solid var(--linea2);vertical-align:middle}
+tbody tr{cursor:pointer;border-left:4px solid transparent}
+tbody tr:hover{background:#faf9f7}
+tbody tr.sel{background:#fff7ed}
+.num{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.82rem;font-weight:600}
+.cli b{display:block} .cli span{color:var(--tenue);font-size:.8rem}
+.cont{font-size:.8rem;color:var(--suave);max-width:190px;overflow:hidden;text-overflow:ellipsis}
+.imp{font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
+.nota{display:inline-block;min-width:2.4em;text-align:center;font-weight:800;
+  padding:.2em .45em;border-radius:7px;font-variant-numeric:tabular-nums}
+.nota.v{background:#dcfce7;color:var(--ok)} .nota.n{background:#fef3c7;color:var(--aviso)}
+.nota.r{background:#fee2e2;color:var(--mal)} .nota.gris{background:var(--linea2);color:var(--tenue)}
+.sel-estado{padding:.3rem .4rem;border:1px solid var(--linea);border-radius:7px;background:var(--papel);
+  font-size:.8rem;font-weight:600;max-width:9.5rem}
+.tr-campo{display:flex;gap:.25rem}
+.tr-campo input{width:8.5rem;padding:.3rem .45rem;border:1px solid var(--linea);border-radius:7px;
+  font-size:.78rem;font-family:ui-monospace,monospace}
+.mini{padding:.3rem .5rem;border:1px solid var(--linea);border-radius:7px;background:var(--papel);
+  cursor:pointer;font-size:.78rem;font-weight:600}
+.mini:hover{border-color:var(--tinta)}
+.sinsync{color:var(--aviso);font-size:.72rem;font-weight:700}
+
+/* -------------------------------------------------------- barra de selección */
+.masa{position:sticky;bottom:0;z-index:30;margin-top:.7rem;background:var(--tinta);color:#fff;
+  border-radius:var(--r);padding:.6rem .9rem;display:flex;gap:.6rem;align-items:center;flex-wrap:wrap}
+.masa b{margin-right:auto}
+.masa select,.masa button{padding:.4rem .7rem;border-radius:8px;border:1px solid rgba(255,255,255,.25);
+  background:rgba(255,255,255,.1);color:#fff;font-weight:600;cursor:pointer}
+.masa button.peligro{background:var(--mal);border-color:var(--mal)}
+.masa option{color:var(--tinta)}
+
+/* ------------------------------------------------------------------- ficha */
+.velo{position:fixed;inset:0;background:rgba(20,19,26,.55);z-index:60;display:flex;
+  align-items:flex-start;justify-content:center;padding:clamp(.5rem,3vw,2rem);overflow-y:auto}
+.ficha{background:var(--papel);border-radius:14px;width:min(880px,100%);padding:clamp(1rem,3vw,1.6rem);
+  position:relative}
+.ficha h2{font-size:1.2rem;display:flex;align-items:center;gap:.6rem;flex-wrap:wrap}
+.ficha .cerrar{position:absolute;top:.6rem;right:.7rem;background:none;border:0;font-size:1.6rem;
+  cursor:pointer;color:var(--tenue);line-height:1}
+.bloques{display:grid;gap:.9rem;margin-top:1rem}
+@media(min-width:760px){.bloques{grid-template-columns:1fr 1fr}}
+.bloque{border:1px solid var(--linea);border-radius:var(--r);padding:.8rem .9rem}
+.bloque h3{font-size:.74rem;letter-spacing:.07em;text-transform:uppercase;color:var(--tenue);margin-bottom:.5rem}
+.bloque dl{display:grid;grid-template-columns:auto 1fr;gap:.25rem .7rem;font-size:.87rem}
+.bloque dt{color:var(--tenue)} .bloque dd{word-break:break-word}
+.ancho{grid-column:1/-1}
+.motivos{list-style:none;font-size:.86rem;display:grid;gap:.3rem}
+.motivos li{display:flex;gap:.5rem;align-items:flex-start}
+.motivos .v{font-weight:800;font-variant-numeric:tabular-nums;white-space:nowrap;min-width:2.6em}
+.motivos.baja .v{color:var(--mal)} .motivos.sube .v{color:var(--ok)}
+details.superadas{margin-top:.6rem;font-size:.85rem}
+details.superadas summary{cursor:pointer;color:var(--suave);font-weight:600}
+details.superadas ul{margin:.4rem 0 0 1.1rem;color:var(--suave)}
+.rel a{display:block;font-size:.85rem;padding:.25rem 0;border-bottom:1px solid var(--linea2)}
+.acciones{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:1rem;align-items:center}
+.btn{padding:.55rem 1rem;border-radius:9px;border:1px solid var(--linea);background:var(--papel);
+  font-weight:700;cursor:pointer}
+.btn.pri{background:var(--acento);border-color:var(--acento);color:#fff}
+.btn.peligro{background:var(--mal);border-color:var(--mal);color:#fff}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.cobrar{background:#fef3c7;color:var(--aviso);font-weight:800;padding:.4em .8em;border-radius:8px;font-size:.85rem}
+
+/* ------------------------------------------------------ tarjetas y ajustes */
+.tarjetas{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:.8rem}
+.tarjeta{background:var(--papel);border:1px solid var(--linea);border-radius:var(--r);padding:1rem}
+.tarjeta span{font-size:.74rem;letter-spacing:.06em;text-transform:uppercase;color:var(--tenue);font-weight:600}
+.tarjeta b{display:block;font-size:1.9rem;font-weight:800;letter-spacing:-.02em;margin-top:.2rem;
+  font-variant-numeric:tabular-nums}
+.ranking{background:var(--papel);border:1px solid var(--linea);border-radius:var(--r);
+  padding:1rem;margin-top:1rem;display:grid;gap:.7rem}
+.rank-fila{display:grid;grid-template-columns:1fr auto;gap:.2rem .8rem;font-size:.9rem}
+.rank-fila b{font-variant-numeric:tabular-nums}
+.barra{grid-column:1/-1;height:8px;background:var(--linea2);border-radius:99px;overflow:hidden}
+.barra i{display:block;height:100%;background:var(--acento);border-radius:99px}
+.panel-aj{background:var(--papel);border:1px solid var(--linea);border-radius:var(--r);
+  padding:1rem;margin-bottom:.9rem}
+.panel-aj h3{font-size:1rem;margin-bottom:.2rem}
+.panel-aj p{font-size:.87rem;color:var(--suave);margin-bottom:.7rem}
+.fila{display:flex;gap:.5rem;flex-wrap:wrap;align-items:center}
+.fila input,.fila select{padding:.5rem .7rem;border:1px solid var(--linea);border-radius:8px;
+  background:var(--fondo);min-width:0;flex:1 1 200px}
+.chivato{font-size:.85rem;margin-top:.5rem;color:var(--suave)}
+.grave{border-left:4px solid var(--mal);background:#fff5f5}
+.grave h3{color:var(--mal)}
+
+/* ------------------------------------------------------------------ acceso */
+.acceso{min-height:100dvh;display:grid;place-items:center;padding:1.2rem}
+.acceso form{background:var(--papel);border:1px solid var(--linea);border-radius:14px;
+  padding:1.6rem;width:min(420px,100%);display:grid;gap:.7rem}
+.acceso h1{font-size:1.25rem}
+.acceso input{padding:.65rem .8rem;border:1px solid var(--linea);border-radius:9px;background:var(--fondo)}
+.acceso .nota-seg{font-size:.8rem;color:var(--suave);background:#fff5f5;border-left:3px solid var(--mal);
+  padding:.6rem .7rem;border-radius:0 8px 8px 0}
+.vacio{padding:2.5rem 1rem;text-align:center;color:var(--tenue)}
+
+@media(max-width:719px){
+  .envoltorio{padding:.6rem}
+  .bloques{grid-template-columns:1fr}
+  .top{gap:.5rem}
+  .marca small{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- ======================= PUERTA (contraseña del panel) ==================== -->
+<div class="acceso" id="acceso">
+  <form data-acceso>
+    <h1>CRM de pedidos · TornaBox</h1>
+    <label>Contraseña del panel
+      <input type="password" name="clave" autocomplete="current-password" required></label>
+    <label>Token de administración de la API
+      <input type="password" name="token" autocomplete="off" placeholder="datos/token.txt del servidor"></label>
+    <button class="btn pri" type="submit">Entrar</button>
+    <p class="nota-seg" id="nota-seguridad"></p>
+  </form>
+</div>
+
+<!-- ============================== EL PANEL ================================= -->
+<div id="panel" class="oculto">
+
+  <header class="top">
+    <p class="marca"><i></i> TornaBox <small>CRM</small></p>
+    <span class="conexion" data-conexion>…</span>
+    <span class="buscador"><input type="search" data-buscar placeholder="Buscar por nº, nombre, correo, teléfono, dirección o IP…"></span>
+    <button class="mini" data-recargar>Actualizar</button>
+    <button class="mini" data-salir>Salir</button>
+  </header>
+
+  <nav class="tabs" role="tablist">
+    <button role="tab" data-tab="pedidos" aria-selected="true">Pedidos</button>
+    <button role="tab" data-tab="clientes" aria-selected="false">Clientes</button>
+    <button role="tab" data-tab="stats" aria-selected="false">Estadísticas</button>
+    <button role="tab" data-tab="ajustes" aria-selected="false">Ajustes</button>
+  </nav>
+
+  <div class="envoltorio">
+    <div id="avisos"></div>
+
+    <!-- ------------------------------- PEDIDOS ------------------------------ -->
+    <section data-panel="pedidos">
+      <div class="tabla-caja">
+        <table>
+          <thead><tr>
+            <th style="width:2.2rem"><input type="checkbox" data-todos aria-label="Seleccionar todos"></th>
+            <th>Fecha</th><th>Nº</th><th>Cliente</th><th>Contacto</th><th>Total</th>
+            <th>Nota</th><th>Estado</th><th>Seguimiento</th>
+          </tr></thead>
+          <tbody data-filas></tbody>
+        </table>
+      </div>
+      <div class="masa oculto" data-masa>
+        <b><span data-masa-n>0</span> seleccionados</b>
+        <select data-masa-estado>
+          <option value="">Aplicar estado…</option>
+          <option value="pendiente_pago">Pendiente de pago</option>
+          <option value="recibido">Recibido</option>
+          <option value="preparacion">En preparación</option>
+          <option value="enviado">Enviado</option>
+          <option value="entregado">Entregado</option>
+          <option value="cancelado">Cancelado</option>
+        </select>
+        <button data-masa-aplicar>Aplicar</button>
+        <button class="peligro" data-masa-borrar>Borrar</button>
+      </div>
+    </section>
+
+    <!-- ------------------------------ CLIENTES ------------------------------ -->
+    <section data-panel="clientes" class="oculto">
+      <div class="tabla-caja">
+        <table>
+          <thead><tr><th>Cliente</th><th>Correo</th><th>Teléfono</th><th>Ciudad</th>
+            <th>Pedidos</th><th>Gastado</th></tr></thead>
+          <tbody data-clientes></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ---------------------------- ESTADÍSTICAS ---------------------------- -->
+    <section data-panel="stats" class="oculto">
+      <div class="tarjetas">
+        <div class="tarjeta"><span>Pedidos</span><b data-st-pedidos>0</b></div>
+        <div class="tarjeta"><span>Ingresos</span><b data-st-ingresos>0 €</b></div>
+        <div class="tarjeta"><span>Ticket medio</span><b data-st-medio>0 €</b></div>
+        <div class="tarjeta"><span>Unidades vendidas</span><b data-st-unidades>0</b></div>
+      </div>
+      <div class="ranking" data-st-ranking></div>
+    </section>
+
+    <!-- ------------------------------- AJUSTES ------------------------------ -->
+    <section data-panel="ajustes" class="oculto">
+
+      <div class="panel-aj grave">
+        <h3>Sobre la seguridad de este panel — léelo</h3>
+        <p id="aviso-seguridad"></p>
+      </div>
+
+      <div class="panel-aj">
+        <h3>Cancelación automática</h3>
+        <p>Cancela sola un pedido si repite nombre, dirección, teléfono, correo o IP respecto a
+          los 10 pedidos anteriores a él, o si su nota es menor que 5.
+          <b>Simula antes de activarla</b>: la simulación no toca nada.</p>
+        <div class="fila">
+          <label><input type="checkbox" data-auto-activo> Activada</label>
+          <label><input type="checkbox" data-auto-red> Incluir comprobaciones de internet (más lento)</label>
+        </div>
+        <div class="fila" style="margin-top:.5rem">
+          <button class="btn" data-auto-simular>Simular sobre mis pedidos</button>
+          <button class="btn peligro" data-auto-aplicar>Aplicar ahora</button>
+        </div>
+        <p class="chivato" data-auto-chivato></p>
+      </div>
+
+      <div class="panel-aj">
+        <h3>Pixel de Google</h3>
+        <p>Identificador de medición (G-XXXXXXX) o de Google Ads (AW-XXXXXXX).</p>
+        <div class="fila">
+          <input type="text" data-pixel placeholder="G-XXXXXXXXXX">
+          <button class="btn" data-pixel-guardar>Guardar</button>
+          <button class="btn" data-pixel-probar>Probar</button>
+          <button class="btn" data-pixel-quitar>Quitar</button>
+        </div>
+        <p class="chivato" data-pixel-chivato></p>
+      </div>
+
+      <div class="panel-aj">
+        <h3>Contraseña del panel y token de la API</h3>
+        <p>La contraseña es una comodidad, no una barrera (lee el aviso de arriba).
+          El token sí lo comprueba el servidor.</p>
+        <div class="fila">
+          <input type="password" data-clave-nueva placeholder="Contraseña nueva">
+          <button class="btn" data-clave-guardar>Cambiar contraseña</button>
+        </div>
+        <div class="fila" style="margin-top:.5rem">
+          <input type="password" data-token-nuevo placeholder="Token de administración">
+          <button class="btn" data-token-guardar>Guardar token</button>
+        </div>
+        <p class="chivato" data-clave-chivato></p>
+      </div>
+
+      <div class="panel-aj">
+        <h3>Transportista (Correos)</h3>
+        <p>Las credenciales se guardan <b>solo en el servidor</b>, en un fichero con permisos 600.
+          Este navegador nunca las ve: solo pide «haz el envío del pedido X».</p>
+        <div class="fila">
+          <input type="text" data-co-usuario placeholder="Usuario">
+          <input type="password" data-co-password placeholder="Contraseña (en blanco = no tocarla)">
+          <input type="text" data-co-codcliente placeholder="Código de cliente">
+        </div>
+        <div class="fila" style="margin-top:.5rem">
+          <input type="text" data-co-iban placeholder="IBAN para el contra reembolso">
+          <button class="btn" data-co-guardar>Guardar</button>
+          <button class="btn" data-co-probar>Probar credenciales</button>
+        </div>
+        <p class="chivato" data-co-chivato></p>
+      </div>
+
+      <div class="panel-aj">
+        <h3>Datos</h3>
+        <div class="fila">
+          <button class="btn" data-csv>Exportar pedidos a CSV</button>
+          <button class="btn" data-ejemplo>Crear pedido de ejemplo</button>
+          <button class="btn" data-limpiar>Limpiar caché</button>
+          <button class="btn peligro" data-borrar-todo>Borrar todos los pedidos</button>
+        </div>
+        <p class="chivato" data-datos-chivato></p>
+      </div>
+
+    </section>
+  </div>
+</div>
+
+<div id="ficha-host"></div>
+
+<script src="lib/db.js?v=20260828c"></script>
+<script src="lib/credibilidad.js?v=20260828c"></script>
+<script src="admin.js?v=20260828c"></script>
+</body>
+</html>
