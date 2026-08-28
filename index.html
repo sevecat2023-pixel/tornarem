@@ -3,21 +3,21 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>TornaBox · Cajas sorpresa de devoluciones desde 34,95 €</title>
-<meta name="description" content="Cajas sorpresa con devoluciones y excedentes de grandes tiendas online, revisadas una a una en Barcelona. Envío 24/48 h con Correos, gratis desde 50 €, y devoluciones aceptadas sin preguntas.">
+<title>TornaBox · Devoluciones de Amazon y grandes tiendas desde 34,95 €</title>
+<meta name="description" content="Lotes de devoluciones y excedente de Amazon y otras grandes tiendas, revisados uno a uno en Barcelona y vendidos hasta un 83 % por debajo del precio de tienda. Envío 24/48 h con Correos, gratis desde 50 €.">
 <meta name="theme-color" content="#14131a">
 <link rel="canonical" href="https://tornabox.es/">
 
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="TornaBox">
 <meta property="og:title" content="TornaBox · Tú pones 59 €. La caja pone hasta 350 €.">
-<meta property="og:description" content="Cajas sorpresa de devoluciones revisadas a mano. Envío 24/48 h gratis desde 50 €. Devoluciones sin preguntas.">
+<meta property="og:description" content="Devoluciones de Amazon y grandes tiendas, revisadas a mano y hasta un 83 % más baratas. Envío 24/48 h gratis desde 50 €.">
 <meta property="og:locale" content="es_ES">
 
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="preload" as="font" type="font/woff2" href="assets/fonts/space-grotesk-700-latin.woff2" crossorigin>
 <link rel="preload" as="font" type="font/woff2" href="assets/fonts/inter-400-latin.woff2" crossorigin>
-<link rel="stylesheet" href="styles.css?v=20260828">
+<link rel="stylesheet" href="styles.css?v=20260828b">
 <script>document.documentElement.classList.remove("no-js");</script>
 
 <script type="application/ld+json">
@@ -25,7 +25,7 @@
   "@context": "https://schema.org",
   "@type": "OnlineStore",
   "name": "TornaBox",
-  "description": "Cajas sorpresa con devoluciones y excedentes de grandes tiendas online, revisadas una a una.",
+  "description": "Lotes de devoluciones y excedente de Amazon y otras grandes tiendas, revisados uno a uno y vendidos muy por debajo del precio de tienda.",
   "url": "https://tornabox.es/",
   "areaServed": "ES",
   "paymentAccepted": "Tarjeta, Contra reembolso"
@@ -38,6 +38,7 @@
 
 <!-- Sprite de iconos (inline para funcionar también en file://) -->
 <svg class="sprite" aria-hidden="true" focusable="false">
+  <symbol id="i-mail" viewBox="0 0 24 24"><rect x="2.6" y="5" width="18.8" height="14" rx="2.6" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M3.6 7.2l8.4 5.9 8.4-5.9" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
   <symbol id="i-check" viewBox="0 0 24 24"><path d="M4.5 12.5l5 5 10-11" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></symbol>
   <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4 12h15m-6-7l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
   <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 2.6l2.9 5.9 6.5.9-4.7 4.6 1.1 6.4L12 17.4l-5.8 3 1.1-6.4L2.6 9.4l6.5-.9z"/></symbol>
@@ -47,7 +48,6 @@
   <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 2.8l7.5 2.9v5.5c0 5-3.2 8.6-7.5 10-4.3-1.4-7.5-5-7.5-10V5.7z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M8.8 12l2.3 2.3 4.2-4.6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
   <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 6.8V12l3.4 2.1" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
   <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4.5" y="10" width="15" height="10.5" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8 10V7.5a4 4 0 018 0V10" fill="none" stroke="currentColor" stroke-width="1.8"/></symbol>
-  <symbol id="i-wa" viewBox="0 0 24 24"><path d="M12 2.8a9.2 9.2 0 00-7.9 13.9L3 21l4.5-1.1A9.2 9.2 0 1012 2.8z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M8.6 8.9c.2-.6.5-.6.8-.6h.7c.2 0 .5 0 .7.5s.7 1.7.7 1.8c.1.2.1.4 0 .6-.4.8-.9.8-.6 1.3.8 1.3 1.8 1.9 3 2.4.4.2.6.1.8-.1l.8-.9c.2-.3.5-.2.8-.1l1.8.9c.3.2.5.3.5.5 0 1.1-1.2 2.1-2.3 2.2-1.9.1-5.1-1.2-6.9-4.1-1.1-1.7-1.3-3.4-.6-4.4z" fill="currentColor"/></symbol>
   <symbol id="i-box" viewBox="0 0 24 24"><path d="M3.5 7.5L12 3.5l8.5 4v9l-8.5 4-8.5-4z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M3.5 7.5L12 11.5l8.5-4M12 11.5v9" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
   <!-- Caja cerrada en isométrico para las tarjetas de producto (el color de la cinta se hereda de --tape) -->
   <symbol id="box-mini" viewBox="0 0 240 210">
@@ -100,7 +100,7 @@
     <a href="envios-devoluciones.html">Envíos y devoluciones</a>
     <a href="#faq">Preguntas frecuentes</a>
     <a href="contacto.html">Contacto</a>
-    <a class="nav-movil-wa" href="https://wa.me/34600000000" rel="noopener">Escríbenos por WhatsApp</a>
+    <a class="nav-movil-wa" href="mailto:hola@tornabox.es">Escríbenos por email</a>
   </nav>
 </header>
 
@@ -112,17 +112,17 @@
     <div class="hero-copy">
       <p class="kicker reveal">Lotes verificados <span class="solo-ancho">· Almacén en Barcelona</span></p>
       <h1 class="hero-title reveal">
-        <span>Tú pones 59&nbsp;€.</span>
-        <span>La caja pone <em>hasta 350&nbsp;€</em>.</span>
+        <span>Devoluciones de Amazon</span>
+        <span><span class="solo-ancho">y grandes tiendas, </span><em>hasta&nbsp;−83&nbsp;%</em>.</span>
       </h1>
-      <p class="hero-sub reveal">Compramos <span class="solo-ancho">por palés </span>devoluciones y excedentes de grandes tiendas online<span class="solo-ancho">, los revisamos a mano</span> y los convertimos en cajas sorpresa. Tú eliges el tamaño<span class="solo-ancho">; lo de dentro es la sorpresa</span>.</p>
+      <p class="hero-sub reveal">Compramos palés de devoluciones y excedente de Amazon y otras grandes tiendas<span class="solo-ancho">, los abrimos y revisamos producto a producto</span> y los vendemos por lotes cerrados<span class="solo-ancho">, a una fracción de lo que costarían en tienda</span>.</p>
       <div class="hero-actions reveal">
         <a class="btn btn-primary btn-xl" href="#cajas">Elegir mi caja <svg class="ic"><use href="#i-arrow"/></svg></a>
         <a class="btn btn-ghost btn-xl hero-2nd" href="#como">Cómo funciona</a>
       </div>
       <p class="hero-micro reveal">
         <span class="micro-item"><svg class="ic ok"><use href="#i-check"/></svg> Sin crear cuenta</span>
-        <span class="micro-item"><svg class="ic ok"><use href="#i-check"/></svg> Pides en 60 segundos</span>
+        <span class="micro-item"><svg class="ic ok"><use href="#i-check"/></svg> Factura si la necesitas</span>
         <span class="micro-item"><svg class="ic ok"><use href="#i-check"/></svg> Devoluciones sin preguntas</span>
       </p>
       <div class="hero-trust reveal">
@@ -162,10 +162,12 @@
         <!-- aristas -->
         <polygon points="80,150 260,230 440,150" fill="none" stroke="rgba(94,68,41,.30)" stroke-width="2.5"/>
         <path d="M260 230v182" stroke="rgba(94,68,41,.30)" stroke-width="2.5"/>
-        <!-- interrogación flotante -->
+        <!-- sello de descuento flotante -->
         <g class="hero-q">
-          <ellipse cx="260" cy="148" rx="56" ry="15" fill="rgba(0,0,0,.28)"/>
-          <text x="260" y="188" text-anchor="middle" font-family="'Space Grotesk','Inter',sans-serif" font-weight="700" font-size="130" fill="#ff4b26">?</text>
+          <ellipse cx="260" cy="186" rx="62" ry="16" fill="rgba(0,0,0,.26)"/>
+          <circle cx="260" cy="127" r="58" fill="#ff4b26"/>
+          <text x="260" y="122" text-anchor="middle" font-family="'Space Grotesk','Inter',sans-serif" font-weight="700" font-size="38" fill="#fff">−83&#160;%</text>
+          <text x="260" y="150" text-anchor="middle" font-family="'Space Grotesk','Inter',sans-serif" font-weight="500" font-size="18" fill="rgba(255,255,255,.88)">sobre PVP</text>
         </g>
       </svg>
       <span class="hero-chip chip-a"><b>Smartwatch</b> pvp ~119&nbsp;€</span>
@@ -210,22 +212,22 @@
   <div class="container">
     <header class="section-head reveal">
       <p class="kicker">Sin cuentas, sin suscripciones</p>
-      <h2>Tres pasos y una sorpresa</h2>
+      <h2>Del palé a tu casa en tres pasos</h2>
     </header>
     <ol class="pasos-grid">
       <li class="paso reveal">
         <span class="paso-num">01</span>
-        <h3>Eliges tu caja</h3>
-        <p>Cuatro tamaños, del capricho al mini-palé para revender.<span class="solo-ancho"> Nombre, dirección y listo: un minuto de reloj.</span></p>
+        <h3>Eliges el lote</h3>
+        <p>Cuatro tamaños, del lote de prueba al mini-palé para revender.<span class="solo-ancho"> Nombre, dirección y listo: un minuto de reloj.</span></p>
       </li>
       <li class="paso reveal">
         <span class="paso-num">02</span>
-        <h3>La preparamos a mano</h3>
-        <p>La llenamos con devoluciones revisadas una a una: productos nuevos, como nuevos o con el embalaje tocado.</p>
+        <h3>Lo preparamos a mano</h3>
+        <p>Sale del palé de la semana: producto nuevo, como nuevo o con el embalaje tocado, revisado uno a uno.</p>
       </li>
       <li class="paso reveal">
         <span class="paso-num">03</span>
-        <h3>La abres y ya está</h3>
+        <h3>Lo recibes y listo</h3>
         <p>Entrega en 24/48&nbsp;h con Correos y seguimiento. Si no te convence, la devuelves sin explicaciones.</p>
       </li>
     </ol>
@@ -323,7 +325,7 @@
 
     </div>
     <div class="snap-dots" data-dots="cajas" hidden></div>
-    <p class="cajas-nota reveal">¿Dudas entre dos? La <a href="checkout.html?caja=grande">Caja Grande</a> es la que más repite la gente: equilibrio entre precio y sorpresa.</p>
+    <p class="cajas-nota reveal">¿Dudas entre dos? La <a href="checkout.html?caja=grande">Caja Grande</a> es la que más repite la gente: el mejor equilibrio entre precio y cantidad de producto.</p>
   </div>
 </section>
 
@@ -332,8 +334,8 @@
   <div class="container">
     <header class="section-head reveal">
       <p class="kicker">Nuestro almacén en Barcelona</p>
-      <h2>Así se monta tu caja</h2>
-      <p class="section-sub">No somos un intermediario con una web: compramos los palés, los abrimos y revisamos cada producto a mano antes de que entre en una caja.</p>
+      <h2>Así compramos y revisamos</h2>
+      <p class="section-sub">No somos un intermediario con una web: compramos los palés de devoluciones, los abrimos y revisamos cada producto a mano antes de que entre en un lote.</p>
     </header>
     <div class="almacen-grid">
       <figure class="reveal">
@@ -346,10 +348,10 @@
       </figure>
       <figure class="reveal">
         <img src="assets/img/almacen/cajas.webp" alt="Cajas preparadas para enviar" loading="lazy" decoding="async">
-        <figcaption><b>3. Montamos y precintamos</b> Lo que no funciona no entra en tu caja.</figcaption>
+        <figcaption><b>3. Montamos y precintamos</b> Lo que no funciona no entra en tu lote.</figcaption>
       </figure>
     </div>
-    <p class="almacen-aviso reveal">Fotos reales de nuestro almacén. En los palés se ven embalajes de las plataformas de origen: son marcas de sus titulares y <strong>TornaBox no está afiliada ni patrocinada por ellas</strong>.</p>
+    <p class="almacen-aviso reveal">Fotos reales de nuestro almacén. Amazon y el resto de plataformas cuyos embalajes se ven en los palés son marcas de sus titulares; compramos su stock de devoluciones a través de mayoristas de liquidación y <strong>TornaBox no está afiliada, asociada ni patrocinada por ninguna de ellas</strong>.</p>
   </div>
 </section>
 
@@ -365,7 +367,7 @@
       <article class="garantia reveal">
         <svg class="ic"><use href="#i-shield"/></svg>
         <h3>Revisión una a una</h3>
-        <p>Cada producto pasa por nuestras manos. Lo que no funciona, no entra en tu caja.</p>
+        <p>Cada producto pasa por nuestras manos. Lo que no funciona, no entra en tu lote.</p>
       </article>
       <article class="garantia reveal">
         <svg class="ic"><use href="#i-box"/></svg>
@@ -373,9 +375,9 @@
         <p>14 días, también abierta. Con el seguro opcional, 30 días y recogida gratis.</p>
       </article>
       <article class="garantia reveal">
-        <svg class="ic"><use href="#i-wa"/></svg>
+        <svg class="ic"><use href="#i-mail"/></svg>
         <h3>Personas, no bots</h3>
-        <p>WhatsApp y email atendidos por el equipo del almacén, de lunes a sábado.</p>
+        <p>Email atendido por el equipo del almacén, de lunes a sábado.</p>
       </article>
     </div>
   </div>
@@ -386,7 +388,7 @@
   <div class="container">
     <header class="section-head reveal">
       <p class="kicker">Compras verificadas</p>
-      <h2>Lo que sale al abrirlas</h2>
+      <h2>Lo que se han llevado</h2>
       <p class="section-sub"><b>4,6 sobre 5</b> · 2.118 valoraciones</p>
     </header>
     <div class="opiniones-grid" data-snap="opiniones">
@@ -417,7 +419,7 @@
       </figure>
       <figure class="opinion reveal">
         <p class="stars-line" aria-label="4 de 5">★★★★<span class="star-off">★</span></p>
-        <blockquote>Atención por WhatsApp rapidísima. Un artículo llegó tocado, mandé foto y me lo compensaron sin dramas.</blockquote>
+        <blockquote>Atención por email rapidísima. Un artículo llegó tocado, mandé foto y me lo compensaron sin dramas.</blockquote>
         <figcaption>Ana T. · A Coruña <span class="verificada"><svg class="ic"><use href="#i-check"/></svg> Compra verificada</span></figcaption>
       </figure>
     </div>
@@ -434,12 +436,12 @@
     </header>
     <div class="faq-list reveal">
       <details open>
-        <summary>¿Qué trae exactamente mi caja?</summary>
-        <p>No lo sabemos ni nosotros hasta que se prepara: es una caja sorpresa. Lo que sí está garantizado es el número de productos, las categorías del lote y que todo llega revisado y funcional. El valor orientativo de cada caja es la suma del PVP de artículos nuevos equivalentes.</p>
+        <summary>¿Qué trae exactamente el lote?</summary>
+        <p>Depende del palé que hayamos comprado esa semana, así que el contenido exacto no se publica de antemano. Lo que sí está garantizado es el <strong>número de productos</strong>, las <strong>categorías</strong> del lote y que todo llega revisado y funcional. El valor orientativo es la suma del PVP de artículos nuevos equivalentes; es la referencia con la que calculamos el descuento.</p>
       </details>
       <details>
         <summary>¿De dónde salen los productos?</summary>
-        <p>De lotes de devoluciones y excedentes de stock que las grandes plataformas de venta online liquidan por palés. Los compramos al peso, los revisamos uno a uno en nuestro almacén y descartamos lo que no está a la altura.</p>
+        <p>De devoluciones de clientes y excedente de stock que Amazon y otras grandes plataformas retiran de su almacén y liquidan por palés a través de mayoristas. Los compramos al peso, los revisamos uno a uno en Barcelona y descartamos lo que no está a la altura. No somos ni representamos a ninguna de esas plataformas.</p>
       </details>
       <details>
         <summary>¿Esto es legal?</summary>
@@ -447,7 +449,7 @@
       </details>
       <details>
         <summary>¿Y si algo llega roto o no funciona?</summary>
-        <p>Nos mandas una foto por WhatsApp o email en las 48&nbsp;h siguientes a la entrega y te compensamos esa pieza: reposición en tu siguiente caja o reembolso parcial. Sin formularios eternos.</p>
+        <p>Nos mandas una foto por email en las 48&nbsp;h siguientes a la entrega y te compensamos esa pieza: reposición en tu siguiente pedido o reembolso parcial. Sin formularios eternos.</p>
       </details>
       <details>
         <summary>¿Cuánto tarda en llegar?</summary>
@@ -458,12 +460,12 @@
         <p>Con tarjeta a través de pasarela segura y <strong>sin recargo</strong>, o contra reembolso (+4,95&nbsp;€ de gestión): pagas al repartidor en el momento de la entrega, con la caja ya en la mano.</p>
       </details>
       <details>
-        <summary>¿Puedo devolver la caja?</summary>
+        <summary>¿Puedo devolver el pedido?</summary>
         <p>Sí, y sin darnos explicaciones: 14 días naturales desde la entrega, también si la has abierto, devolviendo el contenido completo. Si contratas el seguro de devolución (4,95&nbsp;€) son 30 días, pasamos a recogerla gratis por tu casa y eliges entre otra caja o el 100&nbsp;% del dinero. Todo el detalle en <a href="envios-devoluciones.html">envíos y devoluciones</a>.</p>
       </details>
       <details>
         <summary>¿Puedo revender lo que me toque?</summary>
-        <p>Claro. De hecho, la Caja XXL Reventa existe para eso: es la que mejor precio por producto tiene y la que usan quienes venden en mercadillos y plataformas de segunda mano.</p>
+        <p>Claro, y mucha gente compra justo para eso. La Caja XXL Reventa es la que mejor precio por producto tiene: la usan quienes venden en mercadillos, tiendas de segunda mano y plataformas online. Emitimos factura si la necesitas.</p>
       </details>
     </div>
   </div>
@@ -491,7 +493,7 @@
         <svg class="brand-mark" viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 7.5L12 3.5l8.5 4v9l-8.5 4-8.5-4z" fill="#ff4b26"/><path d="M3.5 7.5L12 11.5l8.5-4M12 11.5v9" fill="none" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/></svg>
         <span class="brand-name">Torna<b>Box</b></span>
       </a>
-      <p>Cajas sorpresa con devoluciones y excedentes revisados a mano en Barcelona.</p>
+      <p>Devoluciones y excedente de Amazon y otras grandes tiendas, revisados a mano en Barcelona y vendidos por lotes.</p>
       <p class="footer-pagos">
         <span class="pago-chip"><svg class="ic"><use href="#i-card"/></svg> Tarjeta</span>
         <span class="pago-chip"><svg class="ic"><use href="#i-cash"/></svg> Contra reembolso</span>
@@ -499,7 +501,7 @@
     </div>
     <nav class="footer-col" aria-label="Tienda">
       <h3>Tienda</h3>
-      <a href="#cajas">Las cajas</a>
+      <a href="#cajas">Los lotes</a>
       <a href="#como">Cómo funciona</a>
       <a href="#opiniones">Opiniones</a>
       <a href="#faq">Preguntas frecuentes</a>
@@ -509,7 +511,7 @@
       <a href="envios-devoluciones.html">Envíos y devoluciones</a>
       <a href="devoluciones.html">Política de devoluciones</a>
       <a href="contacto.html">Contacto</a>
-      <a href="contacto.html#whatsapp">WhatsApp</a>
+      <a href="mailto:pedidos@tornabox.es">pedidos@tornabox.es</a>
     </nav>
     <nav class="footer-col" aria-label="Legal">
       <h3>Legal</h3>
@@ -521,7 +523,7 @@
   </div>
   <div class="container footer-bottom">
     <p>© 2026 TornaBox · Hecho con calma en Barcelona</p>
-    <p class="footer-dis">Las plataformas de origen de los lotes son marcas de sus titulares; TornaBox no está afiliada a ellas.</p>
+    <p class="footer-dis">Amazon y el resto de plataformas de origen de los lotes son marcas de sus titulares; TornaBox no está afiliada, asociada ni patrocinada por ninguna de ellas.</p>
   </div>
 </footer>
 
@@ -531,7 +533,7 @@
   <a class="btn btn-primary" href="#cajas">Elegir caja</a>
 </div>
 
-<script defer src="lib/manifest.js?v=20260828"></script>
-<script defer src="main.js?v=20260828"></script>
+<script defer src="lib/manifest.js?v=20260828b"></script>
+<script defer src="main.js?v=20260828b"></script>
 </body>
 </html>

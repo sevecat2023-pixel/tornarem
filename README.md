@@ -1,4 +1,4 @@
-# TornaBox — tienda de cajas sorpresa de devoluciones
+# TornaBox — tienda de lotes de devoluciones de Amazon y grandes tiendas
 
 Tienda estática minimalista, lista para arrastrar a **Hostinger** (o cualquier
 hosting con PHP) y empezar a recibir pedidos. Sin Node, sin npm, sin compilar.
@@ -10,6 +10,13 @@ Pago con **tarjeta** (pasarela externa) o **contra reembolso**.
 > **contenido de plantilla inventado**. Antes de lanzar: comprueba la
 > disponibilidad del dominio y de la marca, y sustituye los datos de ejemplo
 > por los reales.
+>
+> La web **nombra a Amazon** como origen de los lotes (uso descriptivo) y
+> repite en el pie, en el almacén, en la FAQ y en las condiciones que
+> TornaBox **no está afiliada, asociada ni patrocinada** por ninguna de esas
+> plataformas. Es la práctica habitual del sector, pero conviene que lo
+> revise tu asesoría antes de publicar, y que solo lo mantengas mientras los
+> lotes procedan realmente de ahí.
 
 ---
 
@@ -52,7 +59,7 @@ Después, en el servidor, edita tus datos reales:
 
 ```bash
 nano /var/www/tornabox/pedido.php       # tu email de pedidos
-nano /var/www/tornabox/lib/manifest.js  # WhatsApp y stock semanal
+nano /var/www/tornabox/lib/manifest.js  # emails visibles y stock semanal
 ```
 
 Para que los emails salgan del VPS necesitas un envío de correo configurado
@@ -81,7 +88,7 @@ o usa solo los enlaces de pago de Stripe.
 | Qué | Dónde |
 |---|---|
 | Email que recibe los pedidos | `pedido.php` (líneas 10–11) |
-| WhatsApp, emails visibles, hora de corte | `lib/manifest.js` |
+| Emails visibles, hora de corte | `lib/manifest.js` |
 | **Stock semanal de cada caja** | `lib/manifest.js` → `cajas.*.stockRestante` |
 | Enlaces de pago con tarjeta (Stripe Payment Links) | `lib/manifest.js` → `pagoTarjeta` |
 | Envío, mínimo de envío gratis, recargo COD y seguro | `lib/manifest.js` → `envio` **y** `pedido.php` |
@@ -157,10 +164,10 @@ envios-devoluciones.html  Envíos, seguro y seguimiento (sección del menú)
 devoluciones.html   Política de devoluciones (legal)
 condiciones.html    Condiciones de compra   aviso-legal.html   Aviso legal
 privacidad.html     RGPD                    cookies.html       Cookies
-contacto.html       WhatsApp y email        404.html           Error con marca
+contacto.html       Email de contacto       404.html           Error con marca
 styles.css          Toda la hoja de estilos (tipografías incluidas)
 main.js             Contadores, stock, checkout, confirmación (vanilla JS)
-lib/manifest.js     ← DATOS EDITABLES: stock, WhatsApp, enlaces de pago
+lib/manifest.js     ← DATOS EDITABLES: stock, emails, enlaces de pago
 assets/fonts/       Space Grotesk + Inter autoalojadas (sin Google Fonts CDN)
 assets/favicon.svg  Icono de la marca
 .htaccess           Caché, MIME, 404 y protección de pedidos.log
