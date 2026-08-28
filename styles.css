@@ -1070,3 +1070,15 @@ html.no-js .check-ring circle, html.no-js .check-ring path { animation: none; st
   .almacen-grid figcaption b { font-size: .92rem; }
   .almacen-aviso { font-size: .74rem; margin-top: .8rem; }
 }
+
+/* --- Móvil: reseñas con foto en dos columnas --- */
+@media (max-width: 719px) {
+  .resenas-masonry { columns: 2; column-gap: .55rem; }
+  .resena { margin-bottom: .55rem; border-radius: var(--radius-s); }
+  .resena-body { padding: .6rem .65rem .7rem; }
+  .resena .stars-line { font-size: .8rem; letter-spacing: .05em; }
+  .resena-head { font-size: .78rem; margin-top: .3rem; gap: .2em .4em; }
+  .resena-head .verificada { font-size: .66rem; }
+  .resena-texto { font-size: .78rem; margin-top: .35rem; line-height: 1.45; }
+  .pdp-resenas .contenido-nota { font-size: .76rem; margin-top: .9rem; }
+}
