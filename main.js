@@ -238,9 +238,11 @@
     set("[data-p-claim]", caja.claim || "");
     $$("[data-p-envio]").forEach(function (el) {
       el.classList.toggle("is-free", caja.envioGratis);
+      var cfg = BRAND.envio || {};
       el.innerHTML = '<svg class="ic"><use href="#i-truck"/></svg> '
-        + (caja.envioGratis ? "Envío gratis" : "Envío " + eur(BRAND.envio ? BRAND.envio.estandar : 4.95))
-        + " · 24–72&nbsp;h";
+        + (caja.envioGratis
+            ? "Envío gratis · 24/48&nbsp;h con Correos"
+            : "Envío " + eur(cfg.estandar || 4.95) + " · GRATIS desde " + (cfg.gratisDesde || 50) + " €");
     });
     $$("[data-p-ratingtxt]").forEach(function (el) {
       el.innerHTML = "<b>" + mediaTxt + "</b> · " + resenas.length + " valoraciones" + (conFoto ? ", " + conFoto + " con foto" : "");

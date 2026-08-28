@@ -51,6 +51,7 @@ o usa solo los enlaces de pago de Stripe.
 | WhatsApp, emails visibles, hora de corte | `lib/manifest.js` |
 | **Stock semanal de cada caja** | `lib/manifest.js` → `cajas.*.stockRestante` |
 | Enlaces de pago con tarjeta (Stripe Payment Links) | `lib/manifest.js` → `pagoTarjeta` |
+| Envío, mínimo de envío gratis, recargo COD y seguro | `lib/manifest.js` → `envio` **y** `pedido.php` |
 | Titular, NIF y dirección (marcados `[así]` en amarillo) | `aviso-legal.html`, `privacidad.html`, `condiciones.html`, `contacto.html` |
 | Cifras de confianza (cajas entregadas, valoraciones) y opiniones | `index.html` + `lib/manifest.js` → sustitúyelas por las reales |
 | Dominio real (si no es tornabox.es) | `index.html` (canonical), `robots.txt`, `sitemap.xml` |
@@ -58,7 +59,7 @@ o usa solo los enlaces de pago de Stripe.
 ### Cómo funciona el pago
 
 - **Contra reembolso**: el pedido te llega por email (y queda copia en
-  `pedidos.log`); cobra el repartidor. Recargo de 2,95 € ya calculado.
+  `pedidos.log`); cobra el repartidor. Recargo de 4,95 € ya calculado.
 - **Tarjeta**: crea un *Payment Link* en [stripe.com](https://stripe.com) por
   caja y pégalo en `lib/manifest.js` → el cliente salta a la pasarela al
   confirmar. Sin enlace configurado, el pedido se registra igual y tú le
@@ -72,6 +73,32 @@ Cámbialo en los tres sitios: `index.html` (tarjeta del producto),
 
 ---
 
+## Reglas comerciales (y dónde se cambian)
+
+| Regla | Valor | Dónde |
+|---|---|---|
+| Envío estándar | 4,95 € | `manifest.js` → `envio.estandar` + `pedido.php` |
+| Envío gratis a partir de | 50 € de pedido | `envio.gratisDesde` + `pedido.php` |
+| Recargo contra reembolso | 4,95 € | `envio.recargoCOD` + `pedido.php` |
+| Pago con tarjeta | sin recargo | — |
+| Seguro de devolución (opcional) | 4,95 € | `envio.seguro` + `pedido.php` |
+| Hora de corte para «sale hoy» | 18:00 | `manifest.js` → `horaCorte` |
+
+Los precios se calculan **siempre en el servidor** (`pedido.php`): lo que
+llegue del navegador no se usa para cobrar. Si cambias un importe, tócalo
+en los dos sitios.
+
+### Los dos upsells del checkout
+
+1. **2ª caja** — solo aparece en las cajas que pagan envío (la Inicio).
+   Al marcarla, el pedido supera los 50 € y el envío pasa a gratis.
+2. **Seguro de devolución (4,95 €)** — amplía a 30 días, recogida gratis a
+   domicilio y cambio por otra caja o reembolso del 100 %. Sin él, el
+   cliente conserva sus 14 días legales de desistimiento.
+
+El método de pago por defecto es **tarjeta**, marcado en verde y sin
+recargo, para reducir los impagos del contra reembolso.
+
 ## Qué hay dentro
 
 ```
@@ -79,7 +106,8 @@ index.html          Portada: hero, pasos, 4 cajas, opiniones, FAQ, CTA
 checkout.html       Pedido en una pantalla: datos + método de pago
 gracias.html        Confirmación con nº de pedido y siguientes pasos
 pedido.php          ← RECIBE LOS PEDIDOS: configura tu email aquí
-envios.html         Política de envíos      devoluciones.html  Devoluciones
+envios-devoluciones.html  Envíos, seguro y seguimiento (sección del menú)
+devoluciones.html   Política de devoluciones (legal)
 condiciones.html    Condiciones de compra   aviso-legal.html   Aviso legal
 privacidad.html     RGPD                    cookies.html       Cookies
 contacto.html       WhatsApp y email        404.html           Error con marca
@@ -101,9 +129,13 @@ no hay fotos de stock que licenciar ni pesos que optimizar.
 - Escasez real por lote semanal (barras de stock desde `manifest.js`).
 - Urgencia honesta: cuenta atrás hasta la hora de corte de envío del día.
 - Prueba social (valoraciones, contador de cajas, opiniones verificadas).
-- Reversión de riesgo: contra reembolso por defecto, 14 días de devolución.
+- Reversión de riesgo: devoluciones sin preguntas y contra reembolso disponible.
 - Checkout de una sola pantalla, sin registro, con total siempre visible.
 - CTA fija en móvil y avisos de «sale hoy» repetidos en el resumen.
+- Entrega con fecha real estilo Prime («Recíbelo mañana si lo pides en 2 h»).
+- Umbral de envío gratis con aviso de cuánto falta y upsell de 2ª caja.
+- Seguro de devolución como segundo upsell, y devoluciones «sin preguntas»
+  como argumento de reversión de riesgo en toda la web.
 
 ## Pensada para el móvil primero
 
