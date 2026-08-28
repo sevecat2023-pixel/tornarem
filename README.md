@@ -188,7 +188,13 @@ no hay fotos de stock que licenciar ni pesos que optimizar.
 
 ## Pensada para el móvil primero
 
-- Cajas y opiniones en **carrusel deslizable** (scroll-snap) con puntos de
+- **Menú desplegable** en la cabecera (marca + hamburguesa): en móvil el
+  encabezado deja de competir con el CTA, que vive en la barra fija de abajo.
+- Aviso superior **rotatorio** (una línea en vez de tres) y textos cortos
+  específicos de móvil (`.solo-movil` / `.solo-ancho`).
+- Las **cuatro cajas en una pantalla** (2×2) y alineadas entre sí: el rótulo
+  de cada tarjeta ocupa siempre una línea.
+- Opiniones en **carrusel deslizable** (scroll-snap) con puntos de
   posición y asomo de la siguiente tarjeta.
 - Checkout con **resumen compacto arriba** y **barra de pago fija abajo**:
   el total y el botón de confirmar siempre a un pulgar.

@@ -17,7 +17,7 @@
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="preload" as="font" type="font/woff2" href="assets/fonts/space-grotesk-700-latin.woff2" crossorigin>
 <link rel="preload" as="font" type="font/woff2" href="assets/fonts/inter-400-latin.woff2" crossorigin>
-<link rel="stylesheet" href="styles.css?v=20260827b">
+<link rel="stylesheet" href="styles.css?v=20260828">
 <script>document.documentElement.classList.remove("no-js");</script>
 
 <script type="application/ld+json">
@@ -66,13 +66,10 @@
 
 <!-- ============================ AVISO SUPERIOR ============================ -->
 <div class="topbar" role="status">
-  <p class="topbar-line">
-    <svg class="ic"><use href="#i-truck"/></svg>
-    <span class="topbar-strong">ENTREGA EN TODA LA PENÍNSULA EN 24/48&nbsp;H</span>
-    <span class="topbar-sep" aria-hidden="true">·</span>
-    <span>COMPRA AHORA Y PAGA AL RECIBIR</span>
-    <span class="topbar-sep" aria-hidden="true">·</span>
-    <span><b data-count="18412">18.412</b> CLIENTES EN ESPAÑA</span>
+  <p class="topbar-line" data-topbar>
+    <span class="topbar-msg is-on"><svg class="ic"><use href="#i-truck"/></svg> Entrega en toda la península en <b>24/48&nbsp;h</b></span>
+    <span class="topbar-msg"><svg class="ic"><use href="#i-cash"/></svg> Compra ahora y <b>paga al recibir</b></span>
+    <span class="topbar-msg"><svg class="ic"><use href="#i-check"/></svg> Más de <b>18.412 clientes</b> en España</span>
   </p>
 </div>
 
@@ -90,8 +87,21 @@
       <a href="envios-devoluciones.html">Envíos y devoluciones</a>
       <a href="#faq">Preguntas</a>
     </nav>
-    <a class="btn btn-primary btn-nav" href="#cajas">Elegir mi caja</a>
+    <a class="btn btn-primary btn-nav" href="#cajas">Elegir caja</a>
+    <button class="nav-burger" type="button" data-burger aria-label="Abrir menú" aria-expanded="false" aria-controls="menu-movil">
+      <span></span><span></span><span></span>
+    </button>
   </div>
+  <nav class="nav-movil" id="menu-movil" data-menu aria-label="Menú" hidden>
+    <a href="#cajas">Las cajas</a>
+    <a href="#como">Cómo funciona</a>
+    <a href="#almacen">Nuestro almacén</a>
+    <a href="#opiniones">Opiniones</a>
+    <a href="envios-devoluciones.html">Envíos y devoluciones</a>
+    <a href="#faq">Preguntas frecuentes</a>
+    <a href="contacto.html">Contacto</a>
+    <a class="nav-movil-wa" href="https://wa.me/34600000000" rel="noopener">Escríbenos por WhatsApp</a>
+  </nav>
 </header>
 
 <main id="main">
@@ -100,15 +110,15 @@
 <section class="hero">
   <div class="container hero-grid">
     <div class="hero-copy">
-      <p class="kicker reveal">Lotes de devoluciones verificados · Almacén en Barcelona</p>
+      <p class="kicker reveal">Lotes verificados <span class="solo-ancho">· Almacén en Barcelona</span></p>
       <h1 class="hero-title reveal">
         <span>Tú pones 59&nbsp;€.</span>
         <span>La caja pone <em>hasta 350&nbsp;€</em>.</span>
       </h1>
-      <p class="hero-sub reveal">Compramos por palés devoluciones y excedentes de grandes tiendas online, los revisamos a mano y los convertimos en cajas sorpresa. Tú eliges el tamaño; lo de dentro es la sorpresa.</p>
+      <p class="hero-sub reveal">Compramos <span class="solo-ancho">por palés </span>devoluciones y excedentes de grandes tiendas online<span class="solo-ancho">, los revisamos a mano</span> y los convertimos en cajas sorpresa. Tú eliges el tamaño<span class="solo-ancho">; lo de dentro es la sorpresa</span>.</p>
       <div class="hero-actions reveal">
         <a class="btn btn-primary btn-xl" href="#cajas">Elegir mi caja <svg class="ic"><use href="#i-arrow"/></svg></a>
-        <a class="btn btn-ghost btn-xl" href="#como">Cómo funciona</a>
+        <a class="btn btn-ghost btn-xl hero-2nd" href="#como">Cómo funciona</a>
       </div>
       <p class="hero-micro reveal">
         <span class="micro-item"><svg class="ic ok"><use href="#i-check"/></svg> Sin crear cuenta</span>
@@ -170,23 +180,27 @@
   <div class="container confianza-grid">
     <div class="conf-item">
       <svg class="ic"><use href="#i-truck"/></svg>
-      <b>Envío gratis en 24/48&nbsp;h</b>
-      <span>Con Correos y seguimiento, desde 50&nbsp;€</span>
+      <b>Envío gratis<span class="solo-ancho"> en 24/48&nbsp;h</span></b>
+      <span class="solo-ancho">Con Correos y seguimiento, desde 50&nbsp;€</span>
+      <span class="solo-movil">Desde 50&nbsp;€ · 24/48&nbsp;h</span>
     </div>
     <div class="conf-item">
       <svg class="ic"><use href="#i-cash"/></svg>
       <b>Paga al recibir</b>
-      <span>Contra reembolso en toda la península</span>
+      <span class="solo-ancho">Contra reembolso en toda la península</span>
+      <span class="solo-movil">Contra reembolso</span>
     </div>
     <div class="conf-item">
       <svg class="ic"><use href="#i-box"/></svg>
-      <b>Devoluciones sin preguntas</b>
-      <span>14 días, o 30 con recogida gratis</span>
+      <b>Devoluciones<span class="solo-ancho"> sin preguntas</span></b>
+      <span class="solo-ancho">14 días, o 30 con recogida gratis</span>
+      <span class="solo-movil">Sin preguntas, 14 días</span>
     </div>
     <div class="conf-item">
       <svg class="ic"><use href="#i-shield"/></svg>
       <b>Compra segura</b>
-      <span>Revisado a mano y con garantía legal</span>
+      <span class="solo-ancho">Revisado a mano y con garantía legal</span>
+      <span class="solo-movil">Revisado a mano</span>
     </div>
   </div>
 </section>
@@ -202,17 +216,17 @@
       <li class="paso reveal">
         <span class="paso-num">01</span>
         <h3>Eliges tu caja</h3>
-        <p>Cuatro tamaños, del capricho al mini-palé para revender. Nombre, dirección y listo: un minuto de reloj.</p>
+        <p>Cuatro tamaños, del capricho al mini-palé para revender.<span class="solo-ancho"> Nombre, dirección y listo: un minuto de reloj.</span></p>
       </li>
       <li class="paso reveal">
         <span class="paso-num">02</span>
         <h3>La preparamos a mano</h3>
-        <p>La llenamos con devoluciones y excedentes revisados uno a uno: productos nuevos, como nuevos o con el embalaje tocado.</p>
+        <p>La llenamos con devoluciones revisadas una a una: productos nuevos, como nuevos o con el embalaje tocado.</p>
       </li>
       <li class="paso reveal">
         <span class="paso-num">03</span>
         <h3>La abres y ya está</h3>
-        <p>Entrega en 24/48&nbsp;h con Correos y seguimiento por email. Si no te convence, la devuelves sin darnos explicaciones.</p>
+        <p>Entrega en 24/48&nbsp;h con Correos y seguimiento. Si no te convence, la devuelves sin explicaciones.</p>
       </li>
     </ol>
   </div>
@@ -252,6 +266,7 @@
       <!-- CAJA GRANDE -->
       <article class="caja-card is-star reveal" style="--tape:#ff4b26">
         <p class="caja-badge">La más pedida</p>
+        <p class="caja-tag">La más completa</p>
         <svg class="caja-thumb" aria-hidden="true"><use href="#box-mini"/></svg>
         <h3 class="caja-nombre"><a class="caja-link" href="producto.html?id=grande">Caja Grande</a></h3>
         <p class="caja-meta">15–20 productos · Todas las categorías</p>
@@ -289,7 +304,7 @@
 
       <!-- CAJA XXL -->
       <article class="caja-card reveal" style="--tape:#0e8a5f">
-        <p class="caja-tag">Mejor precio por producto</p>
+        <p class="caja-tag">Para revender</p>
         <svg class="caja-thumb" aria-hidden="true"><use href="#box-mini"/></svg>
         <h3 class="caja-nombre"><a class="caja-link" href="producto.html?id=xxl">Caja XXL Reventa</a></h3>
         <p class="caja-meta">30+ productos · Pensada para revender con margen</p>
@@ -512,11 +527,11 @@
 
 <!-- CTA fija en móvil -->
 <div class="sticky-cta" data-sticky-cta>
-  <div class="sticky-cta-txt"><b>Cajas desde 34,95&nbsp;€</b><span>Envío 24/48 h · Devoluciones sin preguntas</span></div>
+  <div class="sticky-cta-txt"><b>Cajas desde 34,95&nbsp;€</b><span>Envío 24/48&nbsp;h · Paga al recibir</span></div>
   <a class="btn btn-primary" href="#cajas">Elegir caja</a>
 </div>
 
-<script defer src="lib/manifest.js?v=20260827b"></script>
-<script defer src="main.js?v=20260827b"></script>
+<script defer src="lib/manifest.js?v=20260828"></script>
+<script defer src="main.js?v=20260828"></script>
 </body>
 </html>

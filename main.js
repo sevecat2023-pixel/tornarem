@@ -31,6 +31,33 @@
     onScroll();
   }
 
+  /* ---------- Barra superior: los mensajes van rotando ---------- */
+  function initTopbar() {
+    var msgs = $$("[data-topbar] .topbar-msg");
+    if (msgs.length < 2) return;
+    var i = 0;
+    setInterval(function () {
+      msgs[i].classList.remove("is-on");
+      i = (i + 1) % msgs.length;
+      msgs[i].classList.add("is-on");
+    }, 3800);
+  }
+
+  /* ---------- Menú de móvil ---------- */
+  function initMenu() {
+    var btn = $("[data-burger]"), menu = $("[data-menu]");
+    if (!btn || !menu) return;
+    var abrir = function (si) {
+      menu.hidden = !si;
+      btn.setAttribute("aria-expanded", si ? "true" : "false");
+      btn.setAttribute("aria-label", si ? "Cerrar menú" : "Abrir menú");
+    };
+    btn.addEventListener("click", function () { abrir(menu.hidden); });
+    menu.addEventListener("click", function (e) { if (e.target.closest("a")) abrir(false); });
+    document.addEventListener("keydown", function (e) { if (e.key === "Escape") abrir(false); });
+    window.addEventListener("resize", function () { if (window.innerWidth >= 720) abrir(false); });
+  }
+
   /* ---------- Revelado de secciones ---------- */
   function initReveals() {
     var targets = $$(".reveal");
@@ -602,6 +629,8 @@
   /* ---------- Arranque ---------- */
   function boot() {
     safe(initNav, "initNav");
+    safe(initTopbar, "initTopbar");
+    safe(initMenu, "initMenu");
     safe(initReveals, "initReveals");
     safe(initCountUp, "initCountUp");
     safe(initCutoff, "initCutoff");
