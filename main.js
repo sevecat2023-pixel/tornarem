@@ -160,9 +160,11 @@
       var fill = $(".stock-fill", el);
       var label = $(".stock-label", el);
       if (fill) requestAnimationFrame(function () { fill.style.width = pct + "%"; });
+      var corto = window.innerWidth < 720;
       if (label) label.textContent = resto > 0
-        ? "Quedan " + resto + " de " + caja.stockTotal + " esta semana"
-        : "Agotada esta semana — vuelve el lunes";
+        ? (corto ? "Quedan " + resto + " de " + caja.stockTotal
+                 : "Quedan " + resto + " de " + caja.stockTotal + " esta semana")
+        : (corto ? "Agotada" : "Agotada esta semana — vuelve el lunes");
       if (pct <= 30) el.classList.add("is-low");
     });
   }

@@ -907,3 +907,95 @@ html.no-js .check-ring circle, html.no-js .check-ring path { animation: none; st
   .conf-item span { font-size: .84rem; }
 }
 .caja-ahorro, .pdp-ahorro { width: fit-content; align-self: flex-start; }
+
+/* =============================================================
+   17. Móvil: menos scroll, todo de un vistazo
+   ============================================================= */
+@media (max-width: 719px) {
+
+  /* --- Secciones más juntas --- */
+  .section { padding-block: clamp(2.2rem, 7vw, 3rem); }
+  .section-head { margin-bottom: 1.2rem; }
+  .section-head h2 { font-size: 1.6rem; }
+  .section-sub { font-size: .9rem; margin-top: .5rem; }
+
+  /* --- Hero compacto: titular, promesa y botón sin hacer scroll --- */
+  .hero { padding-block: 1.1rem 1.3rem; }
+  .hero-grid { gap: 1.2rem; }
+  .hero-title { font-size: clamp(2rem, 8.6vw, 2.7rem); }
+  .hero-sub { font-size: .95rem; margin-top: .8rem; }
+  .hero-actions { margin-top: 1.1rem; gap: .6rem; }
+  .hero-actions .btn { flex: 1 1 auto; }
+  .hero-micro { margin-top: .8rem; font-size: .78rem; gap: .3em .8em; }
+  .hero-trust { margin-top: 1rem; padding-top: .9rem; font-size: .85rem; }
+  .hero-visual { max-width: 210px; }
+  .hero-chip { font-size: .65rem; padding: .3em .7em; }
+  .chip-c { display: none; }
+
+  /* --- LAS CUATRO CAJAS EN UNA PANTALLA (2×2, sin deslizar) --- */
+  .cajas-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: .7rem;
+    overflow: visible; margin-inline: 0; padding: .9rem 0 0;
+    scroll-snap-type: none;
+  }
+  .cajas-grid > .caja-card { flex: none; padding: .85rem .75rem 1rem; }
+  .swipe-hint, .snap-dots[data-dots="cajas"] { display: none; }
+
+  .caja-thumb { width: 88px; height: 77px; margin: .2rem auto .1rem; }
+  .caja-tag { font-size: .64rem; letter-spacing: .06em; }
+  .caja-badge { font-size: .66rem; padding: .25em .7em; }
+  .caja-nombre { font-size: 1rem; }
+  .caja-meta, .caja-ver, .caja-pago, .caja-card .caja-envio { display: none; }
+  .caja-valor { font-size: .74rem; gap: .25em; margin-top: .5rem; }
+  .caja-valor s { font-size: .86rem; text-decoration-thickness: 2px; }
+  .caja-precio { gap: .3em; }
+  .caja-precio b { font-size: 1.45rem; }
+  .caja-precio span { display: none; }
+  .caja-ahorro { font-size: .68rem; padding: .15em .6em; margin-top: .3rem; }
+  .stock { padding-top: .55rem; }
+  .stock-bar { height: 5px; }
+  .stock-label { font-size: .68rem; margin-top: .3rem; }
+  .caja-cta { margin-top: .7rem; min-height: 42px; font-size: .88rem; padding: .55em .7em; }
+  .cajas-nota { margin-top: 1.1rem; font-size: .86rem; }
+
+  /* --- Pasos y garantías, más apretados --- */
+  .paso { padding: .95rem 1rem; }
+  .paso h3 { font-size: 1.02rem; }
+  .paso p { font-size: .86rem; margin-top: .3rem; }
+  .garantia { padding: .9rem .85rem; }
+  .garantia h3 { font-size: .92rem; margin-top: .5rem; }
+  .garantia p { font-size: .8rem; margin-top: .3rem; }
+  .confianza { padding-block: 1.1rem; }
+
+  /* --- FAQ compacto --- */
+  .faq-list summary { padding: .8rem 1rem; font-size: .95rem; }
+  .faq-list details p { padding: 0 1rem .9rem; font-size: .88rem; }
+
+  /* --- Pie a dos columnas en vez de cuatro filas --- */
+  .footer-grid { grid-template-columns: 1fr 1fr; gap: 1.3rem 1rem; padding-block: 2rem 1.4rem; }
+  .footer-brand { grid-column: 1 / -1; }
+  .footer-brand p { margin-top: .7rem; font-size: .86rem; }
+  .footer-col { gap: .4rem; font-size: .88rem; }
+  .footer-bottom { padding-block: 1.1rem 1.6rem; }
+}
+@media (max-width: 719px) {
+  /* La explicación larga ya está repetida bajo las tarjetas: en móvil sobra */
+  .cajas > .container > .section-head .section-sub { display: none; }
+  .opiniones .section-head .section-sub { margin-top: .3rem; }
+  .stock-label { white-space: nowrap; }
+}
+@media (max-width: 719px) {
+  /* «Valor del contenido hasta 150 €» no cabe en una línea: lo abreviamos */
+  .caja-valor-lbl { display: none; }
+  .caja-valor::before { content: "Valor "; font-size: .74rem; color: var(--ink-mute); }
+  .caja-valor { flex-wrap: nowrap; align-items: baseline; margin-top: .45rem; }
+  .cajas-grid > .caja-card { padding: .8rem .7rem .9rem; }
+  .caja-thumb { width: 80px; height: 70px; }
+  .caja-cta { margin-top: .6rem; }
+}
+@media (max-width: 719px) {
+  /* Que la barra fija no tape la última fila de cajas */
+  .cajas { padding-bottom: 5.5rem; }
+  .cajas .section-head h2 { font-size: 1.45rem; }
+  .cajas .kicker { margin-bottom: .6rem; font-size: .72rem; }
+}
