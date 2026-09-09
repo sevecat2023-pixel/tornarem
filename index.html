@@ -1,743 +1,519 @@
 <!DOCTYPE html>
-<html lang="es" class="no-js">
+<html lang="es">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Tornarem Telecom · Fibra y móvil en el Gironès, Osona y el Ripollès</title>
-<meta name="description" content="Operador de fibra simétrica propia y móvil 5G en 41 municipios del Gironès, Osona y el Ripollès. Sin permanencia, sin cuota de alta y con el precio que firmas.">
-<meta name="theme-color" content="#f3f1ec">
+<title>Tornarem · Lotes de devoluciones de Amazon con entrega en 24 h</title>
+<meta name="description" content="Compramos camiones enteros de devoluciones de Amazon, los clasificamos en nuestra nave y los vendemos en lotes cerrados. Contrarreembolso o tarjeta. Entrega en 24 horas en península.">
+<meta name="theme-color" content="#111111">
 <link rel="canonical" href="https://www.tornarem.cat/">
 
 <meta property="og:type" content="website">
-<meta property="og:title" content="Tornarem Telecom · Fibra y móvil de proximidad">
-<meta property="og:description" content="Fibra simétrica propia y móvil 5G en 41 municipios de Girona, Osona y el Ripollès. Sin permanencia y con precio para siempre.">
-<meta property="og:image" content="assets/img/fiber-optic.webp">
+<meta property="og:title" content="Tornarem · Devoluciones de Amazon por lotes">
+<meta property="og:description" content="10 lotes en venta, clasificados por grados. Contrarreembolso o tarjeta. Entrega en 24 h.">
+<meta property="og:image" content="assets/img/hero-almacen.webp">
 <meta property="og:locale" content="es_ES">
 
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-<link rel="preload" as="font" type="font/woff2" href="assets/fonts/manrope-800-latin.woff2" crossorigin>
-<link rel="preload" as="font" type="font/woff2" href="assets/fonts/inter-400-latin.woff2" crossorigin>
-<link rel="stylesheet" href="styles.css?v=20260810">
-<script>document.documentElement.classList.remove("no-js");</script>
+<link rel="preload" as="font" type="font/woff2" href="assets/fonts/archivo-black-400-latin.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="assets/fonts/ibm-plex-mono-400-latin.woff2" crossorigin>
+<link rel="preload" as="image" href="assets/img/hero-almacen.webp" fetchpriority="high">
+<link rel="stylesheet" href="styles.css?v=20260909">
 </head>
 
 <body>
 <a class="skip-link" href="#main">Saltar al contenido</a>
 
+<!-- ============================ CINTA ============================ -->
+<div class="ticker" aria-hidden="true">
+  <div class="ticker-track" data-ticker>
+    <span class="ticker-item">Entrega en 24 h en península</span>
+    <span class="ticker-item">Contrarreembolso o tarjeta</span>
+    <span class="ticker-item">Lotes cerrados desde 319 €</span>
+    <span class="ticker-item">Camión nuevo cada semana</span>
+    <span class="ticker-item">Factura con IVA</span>
+    <span class="ticker-item">Recogida gratis en nave</span>
+    <span class="ticker-item">Stock actualizado hoy</span>
+  </div>
+</div>
+
 <!-- ============================ NAV ============================ -->
-<header class="nav" data-nav>
-  <div class="nav-inner">
-    <a class="brand" href="index.html" aria-label="Tornarem Telecom, inicio">
-      <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true">
-        <circle cx="16" cy="16" r="3.4" fill="#0f7b6c"/>
-        <path d="M23.4 8.6a10.5 10.5 0 1 1-14.8 0" fill="none" stroke="#14181c" stroke-width="2.2" stroke-linecap="round"/>
-        <path d="M23.9 3.6v5.3h-5.3" fill="none" stroke="#0f7b6c" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
+<header class="nav">
+  <div class="wrap nav-inner">
+    <a class="brand" href="index.html" aria-label="Tornarem, inicio">
+      <svg class="brand-mark" viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" fill="#111111"/><path d="M14 26h26v-8l12 12-12 12v-8H14z" fill="#ff4d00"/><rect x="12" y="44" width="40" height="6" fill="#ffffff"/></svg>
       <span>Tornarem</span>
+      <small>Lotes de devoluciones</small>
     </a>
 
     <nav class="nav-links" aria-label="Principal">
-      <a class="nav-link" href="#tarifas">Tarifas</a>
-      <a class="nav-link" href="#cobertura">Cobertura</a>
-      <a class="nav-link" href="#red">La red</a>
-      <a class="nav-link" href="empresas.html">Empresas</a>
-      <a class="nav-link" href="#ayuda">Ayuda</a>
+      <a href="#lotes">Lotes</a>
+      <a href="#como">Cómo funciona</a>
+      <a href="#grados">Grados</a>
+      <a href="#pago">Pago y envío</a>
+      <a href="#faq">Preguntas</a>
     </nav>
 
-    <div class="nav-actions">
-      <a class="nav-phone" href="tel:+34900000000">900 000 000</a>
-      <a class="btn btn--accent btn--sm" href="#hero-cp" data-magnetic data-magnetic-strength="0.22">Comprobar cobertura</a>
-      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="menu-movil" aria-label="Abrir menú">
-        <span></span><span></span><span></span>
+    <div class="nav-right">
+      <button class="btn btn-solid nav-cart" type="button" data-cart-open aria-controls="carrito" aria-expanded="false">
+        Carrito <span class="nav-cart-count" data-cart-count>0</span>
       </button>
+      <button class="nav-burger" type="button" data-menu-toggle aria-label="Abrir menú" aria-expanded="false" aria-controls="menu-movil"><span></span></button>
     </div>
   </div>
 </header>
-
-<div class="nav-drawer" id="menu-movil" data-open="false" aria-label="Menú">
-  <a href="#tarifas">Tarifas</a>
-  <a href="#cobertura">Cobertura</a>
-  <a href="#red">La red</a>
-  <a href="empresas.html">Empresas</a>
-  <a href="#ayuda">Ayuda</a>
-  <a href="#contacto">Contacto</a>
-  <a class="btn btn--accent drawer-cta" href="#hero-cp">Comprobar cobertura</a>
-</div>
+<nav class="nav-menu" id="menu-movil" data-menu aria-label="Menú móvil">
+  <a href="#lotes">Lotes</a>
+  <a href="#como">Cómo funciona</a>
+  <a href="#grados">Grados</a>
+  <a href="#pago">Pago y envío</a>
+  <a href="#faq">Preguntas</a>
+  <a href="checkout.html">Tramitar pedido</a>
+</nav>
 
 <main id="main">
 
 <!-- ============================ HERO ============================ -->
-<section class="hero" id="inicio">
-  <div class="mesh" aria-hidden="true"></div>
+<section class="hero">
   <div class="wrap hero-grid">
-
     <div class="hero-copy">
-      <p class="eyebrow">Operador de proximidad · Gironès, Osona i el Ripollès</p>
-
-      <h1 class="hero-title">Conectamos 41 pueblos. <em>Uno a uno.</em></h1>
-
-      <p class="hero-sub">
-        Fibra simétrica tendida por nosotros y móvil 5G sin permanencia.
-        Instalamos en 72 horas y el precio que firmas hoy es el que pagarás
-        dentro de cuatro años.
-      </p>
-
-      <form class="hero-check" data-cover-check novalidate>
-        <div class="hero-check-row">
-          <label class="field" for="hero-cp">
-            <input id="hero-cp" name="cp" type="text" placeholder=" " autocomplete="postal-code"
-                   inputmode="text" required>
-            <span>Municipio o código postal</span>
-          </label>
-          <button class="btn btn--primary" type="submit">
-            Ver si llegamos
-            <span class="btn-arrow" aria-hidden="true">→</span>
-          </button>
-        </div>
-
-        <p class="hero-note">
-          <span>Sin permanencia</span>
-          <span>Sin cuota de alta</span>
-          <span>Router en propiedad</span>
-        </p>
-
-        <div class="check-result" data-cover-result role="status" aria-live="polite">
-          <h3><i class="check-dot" aria-hidden="true"></i><span data-cover-title></span></h3>
-          <p data-cover-text></p>
-        </div>
-      </form>
-    </div>
-
-    <!-- Panel flotante: estado de la red -->
-    <aside class="glass hero-panel" aria-label="Estado de la red">
-      <div class="panel-head">
-        <h2>Estado de la red</h2>
-        <span class="panel-live">En vivo</span>
+      <p class="kicker">Liquidación de devoluciones · Lotes y palés · Nave en Girona</p>
+      <h1 class="hero-title">
+        <span class="stamp">Devoluciones</span>
+        <span class="stamp">de Amazon.</span>
+        <span class="stamp">Por lotes.</span>
+        <span class="stamp">A precio</span>
+        <span class="stamp"><em>de almacén.</em></span>
+      </h1>
+      <p class="hero-sub">Compramos camiones enteros de devoluciones, los clasificamos en nuestra nave y los vendemos en lotes cerrados. Pagas contrarreembolso o con tarjeta. Lo tienes en casa en 24 horas.</p>
+      <div class="hero-cta">
+        <a class="btn btn-accent" href="#lotes">Ver los 10 lotes</a>
+        <a class="btn btn-line" href="#como">Cómo funciona</a>
       </div>
-
-      <dl class="panel-metrics">
-        <div class="panel-metric">
-          <dt>Latencia media</dt>
-          <dd><span class="num" data-count-to="4">4</span><small>ms</small></dd>
-        </div>
-        <div class="panel-metric">
-          <dt>Disponibilidad</dt>
-          <dd><span class="num" data-count-to="99.98">99,98</span><small>%</small></dd>
-        </div>
-        <div class="panel-metric">
-          <dt>Averías abiertas</dt>
-          <dd><span class="num" data-count-to="0">0</span></dd>
-        </div>
-      </dl>
-
-      <div class="panel-chart">
-        <svg viewBox="0 0 300 60" preserveAspectRatio="none" role="img"
-             aria-label="Tráfico del anillo durante las últimas 24 horas: sube por la tarde y baja de madrugada.">
-          <defs>
-            <linearGradient id="sparkFill" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="#7fd8c6" stop-opacity=".65"/>
-              <stop offset="100%" stop-color="#7fd8c6" stop-opacity="0"/>
-            </linearGradient>
-          </defs>
-          <path class="spark-area" d="M0,46 L20,48 L40,50 L60,47 L80,40 L100,36 L120,38 L140,30 L160,26 L180,29 L200,20 L220,14 L240,17 L260,10 L280,16 L300,22 L300,60 L0,60 Z"/>
-          <path class="spark-line" d="M0,46 L20,48 L40,50 L60,47 L80,40 L100,36 L120,38 L140,30 L160,26 L180,29 L200,20 L220,14 L240,17 L260,10 L280,16 L300,22"/>
-        </svg>
-      </div>
-
-      <div class="panel-foot">
-        <span>Tráfico del anillo · 24 h</span>
-        <span>Pico 412 Gb/s</span>
-      </div>
-    </aside>
-
-  </div>
-</section>
-
-<!-- ============================ CIFRAS ============================ -->
-<section class="stats" aria-label="La empresa en cifras">
-  <div class="wrap">
-    <dl class="stats-grid">
-      <div class="stat" data-reveal>
-        <dd><span class="num" data-count-to="41">41</span></dd>
-        <dt>municipios con fibra propia</dt>
-      </div>
-      <div class="stat" data-reveal data-delay="1">
-        <dd><span class="num" data-count-to="12400">12.400</span></dd>
-        <dt>hogares y negocios conectados</dt>
-      </div>
-      <div class="stat" data-reveal data-delay="2">
-        <dd><span class="num" data-count-to="480">480</span><small>km</small></dd>
-        <dt>de anillo de fibra desplegado</dt>
-      </div>
-      <div class="stat" data-reveal data-delay="3">
-        <dd><span class="num" data-count-to="1.4">1,4</span><small>min</small></dd>
-        <dt>de espera media al teléfono</dt>
-      </div>
-    </dl>
-  </div>
-</section>
-
-<!-- ============================ POR QUÉ ============================ -->
-<section class="section" id="nosotros">
-  <div class="wrap">
-    <div class="section-head" data-reveal>
-      <p class="eyebrow">Por qué existimos</p>
-      <h2>Nos llamamos Tornarem porque volvimos a los pueblos que los grandes dejaron a medias.</h2>
-      <p>
-        Empezamos en 2016 tendiendo fibra en tres calles de Ripoll con una zanjadora alquilada.
-        Hoy somos cuarenta personas y seguimos con la misma norma: si prometemos una fecha, se cumple.
-      </p>
     </div>
-
-    <div class="trio">
-      <article class="glass" data-reveal>
-        <div class="trio-icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24"><path d="M12 3v18M5 8l7-5 7 5M5 16l7 5 7-5"/></svg>
-        </div>
-        <h3 class="card-title">La fibra es nuestra, de punta a punta</h3>
-        <p class="card-text">
-          No revendemos la red de nadie. Tendemos, empalmamos y mantenemos los 480 km del anillo,
-          así que cuando algo falla sabemos exactamente dónde mirar.
-        </p>
-        <p class="trio-note">Subida igual que la bajada, siempre</p>
-      </article>
-
-      <article class="glass" data-reveal data-delay="1">
-        <div class="trio-icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24"><path d="M4 5h16v11H8l-4 3z"/><path d="M8 9h8M8 12h5"/></svg>
-        </div>
-        <h3 class="card-title">Te coge una persona, en catalán o en castellano</h3>
-        <p class="card-text">
-          Atención y técnicos en Girona y Vic. Sin menú de opciones, sin centro de llamadas
-          a seis husos horarios de aquí y sin robots que te pidan repetir el DNI.
-        </p>
-        <p class="trio-note">1,4 minutos de espera media</p>
-      </article>
-
-      <article class="glass" data-reveal data-delay="2">
-        <div class="trio-icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24"><path d="M12 3l7.5 3.5v5c0 4.6-3.1 8.4-7.5 9.5-4.4-1.1-7.5-4.9-7.5-9.5v-5z"/><path d="M9.2 12.2l2 2 3.6-4"/></svg>
-        </div>
-        <h3 class="card-title">El precio que firmas es el precio de siempre</h3>
-        <p class="card-text">
-          Ni subidas por IPC ni descuentos de bienvenida que caducan a los doce meses.
-          Nuestras tarifas han subido una vez en nueve años, y avisamos con tres meses.
-        </p>
-        <p class="trio-note">Sin permanencia en ninguna tarifa</p>
-      </article>
-    </div>
-  </div>
-</section>
-
-<!-- ============================ TARIFAS ============================ -->
-<section class="section section--tint" id="tarifas">
-  <div class="wrap">
-    <div class="section-head" data-reveal>
-      <p class="eyebrow">Tarifas para casa</p>
-      <h2>Tres tarifas. Ninguna letra pequeña.</h2>
-      <p>Todas incluyen instalación, alta y router. Puedes cambiar de una a otra cuando quieras y el cambio se aplica en la factura del mes siguiente.</p>
-    </div>
-
-    <div class="plans-switch" role="tablist" aria-label="Tipo de tarifa" data-plans-switch>
-      <button type="button" role="tab" aria-selected="true" aria-controls="panel-convergente" id="tab-convergente" data-plan-tab="convergente">Fibra + móvil</button>
-      <button type="button" role="tab" aria-selected="false" aria-controls="panel-fibra" id="tab-fibra" data-plan-tab="fibra">Solo fibra</button>
-    </div>
-
-    <!-- Fibra + móvil -->
-    <div class="plans" id="panel-convergente" role="tabpanel" aria-labelledby="tab-convergente" data-plan-panel="convergente">
-      <article class="glass plan" data-reveal>
-        <h3 class="plan-name">Bàsica</h3>
-        <p class="plan-summary">Para una casa de dos, con teletrabajo puntual.</p>
-        <p class="plan-price"><b>28</b><span>€ / mes · IVA incluido</span></p>
-        <p class="plan-was">Precio fijo mientras mantengas la tarifa</p>
-        <ul class="plan-list">
-          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6"/></svg>600 Mb simétricos de fibra</li>
-          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6"/></svg>1 línea móvil con 25 GB en 5G</li>
-          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6"/></svg>Llamadas ilimitadas a fijos y móviles</li>
-          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6"/></svg>Router Wi-Fi 6 en propiedad</li>
-          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6"/></svg>Instalación y alta gratuitas</li>
-        </ul>
-        <div class="plan-cta"><a class="btn btn--ghost btn--block" href="#contacto">Quiero la Bàsica</a></div>
-      </article>
-
-      <article class="glass plan plan--featured" data-reveal data-delay="1">
-        <span class="tag plan-badge">La más contratada</span>
-        <h3 class="plan-name">Comarca</h3>
-        <p class="plan-summary">La que contratan 6 de cada 10 hogares.</p>
-        <p class="plan-price"><b>38</b><span>€ / mes · IVA incluido</span></p>
-        <p class="plan-was">Antes <s>45 €</s> · precio revisado en enero</p>
-        <ul class="plan-list">
-          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6"/></svg>1 Gb simétrico de fibra</li>
-          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6"/></svg>2 líneas móviles con 60 GB en 5G</li>
-          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6"/></svg>Llamadas ilimitadas y roaming en la UE</li>
-          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6"/></svg>Router Wi-Fi 6 + repetidor mallado</li>
-          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6"/></svg>IP fija sin coste si la pides</li>
-        </ul>
-        <div class="plan-cta"><a class="btn btn--accent btn--block" href="#contacto" data-magnetic data-magnetic-strength="0.18">Quiero la Comarca</a></div>
-      </article>
-
-      <article class="glass plan" data-reveal data-delay="2">
-        <h3 class="plan-name">Total</h3>
-        <p class="plan-summary">Casas grandes, familias numerosas, gente que sube vídeo.</p>
-        <p class="plan-price"><b>59</b><span>€ / mes · IVA incluido</span></p>
-        <p class="plan-was">Precio fijo mientras mantengas la tarifa</p>
-        <ul class="plan-list">
-          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6"/></svg>10 Gb simétricos de fibra</li>
-          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6"/></svg>4 líneas móviles ilimitadas en 5G</li>
-          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6"/></svg>Wi-Fi mallado en toda la casa (3 puntos)</li>
-          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6"/></svg>IP fija y puertos abiertos a petición</li>
-          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6"/></svg>Prioridad de avería en menos de 8 h</li>
-        </ul>
-        <div class="plan-cta"><a class="btn btn--ghost btn--block" href="#contacto">Quiero la Total</a></div>
-      </article>
-    </div>
-
-    <!-- Solo fibra -->
-    <div class="plans" id="panel-fibra" role="tabpanel" aria-labelledby="tab-fibra" data-plan-panel="fibra" hidden>
-      <article class="glass plan">
-        <h3 class="plan-name">Fibra 600</h3>
-        <p class="plan-summary">Suficiente para dos personas y una tele.</p>
-        <p class="plan-price"><b>22</b><span>€ / mes · IVA incluido</span></p>
-        <p class="plan-was">Precio fijo mientras mantengas la tarifa</p>
-        <ul class="plan-list">
-          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6"/></svg>600 Mb simétricos, subida real</li>
-          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6"/></svg>Router Wi-Fi 6 en propiedad</li>
-          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6"/></svg>Instalación y alta gratuitas</li>
-          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6"/></svg>Sin permanencia, nunca</li>
-          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6"/></svg>Soporte técnico local</li>
-        </ul>
-        <div class="plan-cta"><a class="btn btn--ghost btn--block" href="#contacto">Quiero la Fibra 600</a></div>
-      </article>
-
-      <article class="glass plan plan--featured">
-        <span class="tag plan-badge">La más contratada</span>
-        <h3 class="plan-name">Fibra 1 Gb</h3>
-        <p class="plan-summary">El punto dulce entre precio y margen.</p>
-        <p class="plan-price"><b>29</b><span>€ / mes · IVA incluido</span></p>
-        <p class="plan-was">Antes <s>34 €</s> · precio revisado en enero</p>
-        <ul class="plan-list">
-          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6"/></svg>1 Gb simétrico, subida real</li>
-          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6"/></svg>Router Wi-Fi 6 + repetidor mallado</li>
-          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6"/></svg>IP fija sin coste si la pides</li>
-          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6"/></svg>Sin permanencia, nunca</li>
-          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6"/></svg>Soporte técnico local</li>
-        </ul>
-        <div class="plan-cta"><a class="btn btn--accent btn--block" href="#contacto">Quiero la Fibra 1 Gb</a></div>
-      </article>
-
-      <article class="glass plan">
-        <h3 class="plan-name">Fibra 10 Gb</h3>
-        <p class="plan-summary">Para quien mueve archivos, no páginas.</p>
-        <p class="plan-price"><b>45</b><span>€ / mes · IVA incluido</span></p>
-        <p class="plan-was">Precio fijo mientras mantengas la tarifa</p>
-        <ul class="plan-list">
-          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6"/></svg>10 Gb simétricos, subida real</li>
-          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6"/></svg>Wi-Fi mallado en toda la casa (3 puntos)</li>
-          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6"/></svg>IP fija y puertos abiertos a petición</li>
-          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6"/></svg>Prioridad de avería en menos de 8 h</li>
-          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6"/></svg>Soporte técnico local</li>
-        </ul>
-        <div class="plan-cta"><a class="btn btn--ghost btn--block" href="#contacto">Quiero la Fibra 10 Gb</a></div>
-      </article>
-    </div>
-
-    <p class="plans-legal">
-      Precios con IVA incluido para instalaciones dentro de nuestra cobertura directa.
-      La velocidad indicada es la del acceso; en Wi-Fi depende del dispositivo y de la casa.
-      Ninguna tarifa lleva permanencia: puedes irte con treinta días de aviso y los equipos se quedan contigo.
-    </p>
-
-    <!-- Móvil suelto -->
-    <h3 class="h3" style="margin-top:clamp(2.6rem,5vw,4rem)" data-reveal>Solo móvil, sin fibra</h3>
-    <div class="sims">
-      <article class="glass sim" data-reveal>
-        <div>
-          <p class="sim-name">Justa</p>
-          <p class="sim-data">25 GB · 5G · llamadas ilimitadas</p>
-        </div>
-        <p class="sim-price">8 <small>€/mes</small></p>
-      </article>
-      <article class="glass sim" data-reveal data-delay="1">
-        <div>
-          <p class="sim-name">Holgada</p>
-          <p class="sim-data">60 GB · 5G · llamadas ilimitadas</p>
-        </div>
-        <p class="sim-price">12 <small>€/mes</small></p>
-      </article>
-      <article class="glass sim" data-reveal data-delay="2">
-        <div>
-          <p class="sim-name">Sin contar</p>
-          <p class="sim-data">Datos ilimitados · 5G · llamadas ilimitadas</p>
-        </div>
-        <p class="sim-price">18 <small>€/mes</small></p>
-      </article>
-    </div>
-  </div>
-</section>
-
-<!-- ============================ LA RED ============================ -->
-<section class="section" id="red">
-  <div class="wrap split">
-    <figure class="split-figure" data-reveal>
-      <img src="assets/img/fiber-optic.webp" alt="Haz de fibras ópticas iluminadas en azul y verde" loading="lazy" decoding="async" width="1600" height="1067">
-      <figcaption>Anillo troncal · empalme en el nodo de Ripoll</figcaption>
+    <figure class="hero-fig">
+      <img src="assets/img/hero-almacen.webp" width="1536" height="1024" alt="Pasillo de nuestra nave con estanterías llenas de palés de devoluciones y una carretilla al fondo" fetchpriority="high" loading="eager" decoding="sync">
+      <div class="fig-stickers" aria-hidden="true"><span class="sticker">−79 % sobre PVP</span><span class="sticker sticker--ink">Entrega 24 h</span></div>
+      <figcaption><span>Nave 14 · Pol. Mas Xirgu · Girona</span><span>1.200 m²</span></figcaption>
     </figure>
-
-    <div data-reveal data-delay="1">
-      <p class="eyebrow">Cómo está hecha</p>
-      <h2 class="h2">Una red que se puede visitar.</h2>
-      <p class="lead" style="margin-top:1rem">
-        Si eres cliente y quieres ver dónde acaba tu fibra, te enseñamos el nodo.
-        No es una metáfora: hacemos visitas guiadas dos veces al año.
-      </p>
-
-      <div class="pillars">
-        <div class="pillar">
-          <h3>480 km de anillo propio</h3>
-          <p>Doble camino entre Girona, Vic y Ripoll. Si una zanja se corta, el tráfico da la vuelta por el otro lado en menos de cincuenta milisegundos.</p>
-        </div>
-        <div class="pillar">
-          <h3>Dos centros de datos, no uno</h3>
-          <p>Girona y Vic, con energía redundante y refrigeración libre nueve meses al año. Cada servicio corre en los dos a la vez.</p>
-        </div>
-        <div class="pillar">
-          <h3>Salida a internet por dos ciudades</h3>
-          <p>Peering en Barcelona y Marsella con tránsito de dos operadores distintos. Ningún proveedor puede dejarnos a oscuras él solo.</p>
-        </div>
-      </div>
-    </div>
   </div>
-
-  <div class="wrap split split--flip" style="margin-top:clamp(3rem,6vw,5rem)">
-    <figure class="split-figure" data-reveal>
-      <img src="assets/img/technician.webp" alt="Técnico trabajando en un repartidor de fibra con centenares de latiguillos" loading="lazy" decoding="async" width="683" height="1024">
-      <figcaption>Repartidor óptico · central de Vic</figcaption>
-    </figure>
-
-    <div data-reveal data-delay="1">
-      <p class="eyebrow">Instalación</p>
-      <h2 class="h2">De la llamada al primer test de velocidad, tres pasos.</h2>
-
-      <div class="steps" style="margin-top:1.8rem;grid-template-columns:1fr">
-        <article class="glass step">
-          <h3>Compruebas y eliges</h3>
-          <p>Metes tu municipio arriba, ves qué velocidad llega a tu calle y escoges tarifa. Si prefieres hablarlo, llamas y lo hacemos por teléfono en diez minutos.</p>
-        </article>
-        <article class="glass step">
-          <h3>Te damos día y franja de dos horas</h3>
-          <p>No «entre las nueve y las seis». Una franja de dos horas, y si el técnico va a llegar tarde te llama él mismo antes de la hora.</p>
-        </article>
-        <article class="glass step">
-          <h3>Instalamos y no nos vamos hasta medirlo</h3>
-          <p>Tiramos la fibra, montamos el router, medimos la velocidad en cada habitación y te dejamos el papel con los números. La portabilidad la coordinamos nosotros.</p>
-        </article>
-      </div>
+  <div class="wrap">
+    <div class="grid12 stats">
+      <div><div class="stat-num"><span data-count="10">10</span></div><div class="stat-label">Lotes distintos en venta</div></div>
+      <div><div class="stat-num"><span data-count="3322">3.322</span></div><div class="stat-label">Unidades en la nave</div></div>
+      <div><div class="stat-num">−<span data-count="79">79</span><span class="u"> %</span></div><div class="stat-label">Descuento medio sobre PVP</div></div>
+      <div><div class="stat-num"><span data-count="24">24</span><span class="u"> h</span></div><div class="stat-label">Entrega en península</div></div>
     </div>
   </div>
 </section>
 
-<!-- ============================ COBERTURA ============================ -->
-<section class="section section--tint" id="cobertura">
+<!-- ============================ 01 · CÓMO FUNCIONA ============================ -->
+<section class="sec" id="como">
   <div class="wrap">
-    <div class="section-head" data-reveal>
-      <p class="eyebrow">Dónde llegamos</p>
-      <h2>41 municipios, y cada año tres o cuatro más.</h2>
-      <p>Priorizamos por solicitudes acumuladas, no por número de habitantes. Por eso Setcases entró antes que barrios enteros de la capital.</p>
+    <header class="sec-head rv">
+      <p class="sec-num">01 · El circuito</p>
+      <h2 class="sec-title">Del camión a tu puerta en tres pasos</h2>
+      <p class="sec-lead">Amazon no revende lo que sus clientes devuelven: lo vende por camiones a liquidadores. Nosotros somos uno de ellos. Lo que cambia es que abrimos cada caja antes de ponerle precio.</p>
+    </header>
+
+    <div class="grid12 steps rv">
+      <div class="step">
+        <span class="step-num">01</span>
+        <h3>Compramos el camión</h3>
+        <p>Cada semana entra un tráiler con 24 palés de devoluciones sin clasificar. Se compra a ciegas, por peso y categoría, y ahí está el margen: nosotros asumimos el riesgo, tú te llevas el descuento.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">02</span>
+        <h3>Abrimos y clasificamos</h3>
+        <p>Cada unidad pasa por la mesa de revisión: se enciende, se comprueba que está completa y se etiqueta con un grado (A, B o C). Lo que no funciona no entra en ningún lote clasificado.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">03</span>
+        <h3>Cerramos lotes y enviamos</h3>
+        <p>Agrupamos por categoría, publicamos el listado de contenido y lo precintamos. Si confirmas antes de las 14:00, sale hoy y lo recibes mañana en cualquier punto de la península.</p>
+      </div>
     </div>
 
-    <div class="cover-layout">
-      <div class="glass cover-panel" data-reveal>
-        <label class="cover-filter">
-          <span class="sr-only">Buscar municipio o código postal</span>
-          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
-          <input type="text" data-cover-filter placeholder="Buscar municipio o código postal" autocomplete="off">
-        </label>
+    <div class="grid12 pics rv">
+      <figure class="pic">
+        <img src="assets/img/camion-descarga.webp" width="1536" height="1024" alt="Descarga de palés retractilados desde un tráiler en el muelle de la nave" loading="lazy" decoding="async">
+        <figcaption><span>Muelle 2 · descarga del jueves</span><span>24 palés</span></figcaption>
+      </figure>
+      <figure class="pic">
+        <img src="assets/img/clasificacion.webp" width="1536" height="1024" alt="Mesa de revisión con unos auriculares, un lector de códigos de barras y pegatinas de colores para marcar el grado" loading="lazy" decoding="async">
+        <figcaption><span>Mesa de revisión · grado por unidad</span><span>A · B · C</span></figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
 
-        <ul class="cover-list" data-cover-list>
-          <li class="cover-item" data-estado="10g"><span>Girona</span><span class="cp">17001</span><span class="estado">10 Gb</span></li>
-          <li class="cover-item" data-estado="10g"><span>Salt</span><span class="cp">17190</span><span class="estado">10 Gb</span></li>
-          <li class="cover-item" data-estado="10g"><span>Sarrià de Ter</span><span class="cp">17840</span><span class="estado">10 Gb</span></li>
-          <li class="cover-item" data-estado="1g"><span>Sant Gregori</span><span class="cp">17150</span><span class="estado">1 Gb</span></li>
-          <li class="cover-item" data-estado="1g"><span>Bescanó</span><span class="cp">17162</span><span class="estado">1 Gb</span></li>
-          <li class="cover-item" data-estado="10g"><span>Celrà</span><span class="cp">17460</span><span class="estado">10 Gb</span></li>
-          <li class="cover-item" data-estado="1g"><span>Bordils</span><span class="cp">17462</span><span class="estado">1 Gb</span></li>
-          <li class="cover-item" data-estado="1g"><span>Flaçà</span><span class="cp">17463</span><span class="estado">1 Gb</span></li>
-          <li class="cover-item" data-estado="10g"><span>Cassà de la Selva</span><span class="cp">17244</span><span class="estado">10 Gb</span></li>
-          <li class="cover-item" data-estado="1g"><span>Llagostera</span><span class="cp">17240</span><span class="estado">1 Gb</span></li>
-          <li class="cover-item" data-estado="1g"><span>Quart</span><span class="cp">17242</span><span class="estado">1 Gb</span></li>
-          <li class="cover-item" data-estado="10g"><span>Fornells de la Selva</span><span class="cp">17458</span><span class="estado">10 Gb</span></li>
-          <li class="cover-item" data-estado="10g"><span>Vilablareix</span><span class="cp">17180</span><span class="estado">10 Gb</span></li>
-          <li class="cover-item" data-estado="1g"><span>Aiguaviva</span><span class="cp">17181</span><span class="estado">1 Gb</span></li>
-          <li class="cover-item" data-estado="10g"><span>Riudellots de la Selva</span><span class="cp">17457</span><span class="estado">10 Gb</span></li>
-          <li class="cover-item" data-estado="10g"><span>Vic</span><span class="cp">08500</span><span class="estado">10 Gb</span></li>
-          <li class="cover-item" data-estado="10g"><span>Manlleu</span><span class="cp">08560</span><span class="estado">10 Gb</span></li>
-          <li class="cover-item" data-estado="1g"><span>Torelló</span><span class="cp">08570</span><span class="estado">1 Gb</span></li>
-          <li class="cover-item" data-estado="1g"><span>Roda de Ter</span><span class="cp">08510</span><span class="estado">1 Gb</span></li>
-          <li class="cover-item" data-estado="1g"><span>Centelles</span><span class="cp">08540</span><span class="estado">1 Gb</span></li>
-          <li class="cover-item" data-estado="1g"><span>Tona</span><span class="cp">08551</span><span class="estado">1 Gb</span></li>
-          <li class="cover-item" data-estado="1g"><span>Taradell</span><span class="cp">08552</span><span class="estado">1 Gb</span></li>
-          <li class="cover-item" data-estado="obras"><span>Sant Hipòlit de Voltregà</span><span class="cp">08512</span><span class="estado">En obras</span></li>
-          <li class="cover-item" data-estado="1g"><span>Folgueroles</span><span class="cp">08519</span><span class="estado">1 Gb</span></li>
-          <li class="cover-item" data-estado="1g"><span>Calldetenes</span><span class="cp">08506</span><span class="estado">1 Gb</span></li>
-          <li class="cover-item" data-estado="10g"><span>Gurb</span><span class="cp">08503</span><span class="estado">10 Gb</span></li>
-          <li class="cover-item" data-estado="obras"><span>Seva</span><span class="cp">08553</span><span class="estado">En obras</span></li>
-          <li class="cover-item" data-estado="1g"><span>Sant Julià de Vilatorta</span><span class="cp">08504</span><span class="estado">1 Gb</span></li>
-          <li class="cover-item" data-estado="10g"><span>Ripoll</span><span class="cp">17500</span><span class="estado">10 Gb</span></li>
-          <li class="cover-item" data-estado="1g"><span>Campdevànol</span><span class="cp">17530</span><span class="estado">1 Gb</span></li>
-          <li class="cover-item" data-estado="1g"><span>Sant Joan de les Abadesses</span><span class="cp">17860</span><span class="estado">1 Gb</span></li>
-          <li class="cover-item" data-estado="1g"><span>Ribes de Freser</span><span class="cp">17534</span><span class="estado">1 Gb</span></li>
-          <li class="cover-item" data-estado="obras"><span>Queralbs</span><span class="cp">17539</span><span class="estado">En obras</span></li>
-          <li class="cover-item" data-estado="1g"><span>Camprodon</span><span class="cp">17867</span><span class="estado">1 Gb</span></li>
-          <li class="cover-item" data-estado="obras"><span>Setcases</span><span class="cp">17869</span><span class="estado">En obras</span></li>
-          <li class="cover-item" data-estado="1g"><span>Llanars</span><span class="cp">17869</span><span class="estado">1 Gb</span></li>
-          <li class="cover-item" data-estado="obras"><span>Vilallonga de Ter</span><span class="cp">17869</span><span class="estado">En obras</span></li>
-          <li class="cover-item" data-estado="obras"><span>Gombrèn</span><span class="cp">17531</span><span class="estado">En obras</span></li>
-          <li class="cover-item" data-estado="1g"><span>Planoles</span><span class="cp">17535</span><span class="estado">1 Gb</span></li>
-          <li class="cover-item" data-estado="obras"><span>Pardines</span><span class="cp">17537</span><span class="estado">En obras</span></li>
-          <li class="cover-item" data-estado="1g"><span>Vallfogona de Ripollès</span><span class="cp">17862</span><span class="estado">1 Gb</span></li>
+<!-- ============================ 02 · LOTES ============================ -->
+<section class="sec sec--kraft" id="lotes">
+  <div class="wrap">
+    <header class="sec-head rv">
+      <p class="sec-num">02 · En venta ahora</p>
+      <h2 class="sec-title">Diez lotes, precio cerrado, listado a la vista</h2>
+      <p class="sec-lead">Cada lote se vende completo y precintado. El precio incluye IVA y el envío en 24 horas a península. Abre cualquier ficha para ver unidad por unidad lo que hay dentro.</p>
+    </header>
+
+    <div class="lotes-bar">
+      <span><span class="dot" aria-hidden="true"></span>Stock actualizado <time datetime="2026-09-09">09/09/2026</time> · <span data-stock-lotes>39</span> lotes en nave</span>
+      <label>Ordenar
+        <select data-sort>
+          <option value="default">Recomendado</option>
+          <option value="precio-asc">Precio: menor a mayor</option>
+          <option value="precio-desc">Precio: mayor a menor</option>
+          <option value="descuento">Mayor descuento</option>
+          <option value="uds">Más unidades</option>
+        </select>
+      </label>
+    </div>
+
+    <noscript><p class="lotes-note">Para añadir lotes al carrito hace falta JavaScript. Si no puedes activarlo, llámanos al 900 000 000 o escribe a pedidos@tornarem.cat con la referencia del lote.</p></noscript>
+
+    <div class="grid12 lotes" data-lotes>
+
+      <article class="lote rv" data-lote="lote-electronica" data-precio="549" data-pvp="2640" data-uds="42" data-index="1">
+        <a class="lote-fig" href="#lote-electronica" data-open-lote="lote-electronica" aria-label="Ver contenido del lote Electrónica de consumo">
+          <img src="assets/img/lote-electronica.webp" width="1536" height="1024" alt="Palé con auriculares, altavoces, smartwatches y tablets en sus cajas" loading="lazy" decoding="async">
+          <span class="sticker">Grado A/B</span>
+        </a>
+        <div class="lote-body">
+          <p class="lote-meta">Ref TR-2609-01 · 42 uds · Caja 60×40×40 · 19 kg</p>
+          <h3 class="lote-title">Electrónica de consumo</h3>
+          <p class="lote-desc">Auriculares, altavoces Bluetooth, smartwatches, tablets y accesorios de carga.</p>
+          <div class="lote-price"><span class="pvp">PVP estimado <s>2.640 €</s></span><span class="precio">549 €</span><span class="off">−79 %</span><span class="iva">IVA y envío incl.</span></div>
+          <p class="lote-stock"><span class="stock-bar" aria-hidden="true"><i></i><i></i><i></i><i></i><i class="off"></i><i class="off"></i></span>Quedan 4 lotes</p>
+        </div>
+        <div class="lote-actions">
+          <button class="btn btn-accent" type="button" data-add="lote-electronica">Añadir al carrito</button>
+          <button class="btn btn-line" type="button" data-open-lote="lote-electronica">Ver contenido</button>
+        </div>
+        <div class="barcode" aria-hidden="true"></div>
+      </article>
+
+      <article class="lote rv" data-lote="lote-hogar-cocina" data-precio="429" data-pvp="1890" data-uds="14" data-index="2">
+        <a class="lote-fig" href="#lote-hogar-cocina" data-open-lote="lote-hogar-cocina" aria-label="Ver contenido del lote Pequeño electrodoméstico">
+          <img src="assets/img/lote-hogar-cocina.webp" width="1536" height="1024" alt="Palé con freidoras de aire, batidoras, cafeteras, un robot aspirador y tostadoras" loading="lazy" decoding="async">
+          <span class="sticker sticker--yellow">Grado B</span>
+        </a>
+        <div class="lote-body">
+          <p class="lote-meta">Ref TR-2609-02 · 14 uds · Caja 80×60×60 · 38 kg</p>
+          <h3 class="lote-title">Pequeño electrodoméstico</h3>
+          <p class="lote-desc">Freidoras de aire, batidoras, cafeteras de cápsulas, un robot aspirador y tostadoras.</p>
+          <div class="lote-price"><span class="pvp">PVP estimado <s>1.890 €</s></span><span class="precio">429 €</span><span class="off">−77 %</span><span class="iva">IVA y envío incl.</span></div>
+          <p class="lote-stock"><span class="stock-bar" aria-hidden="true"><i></i><i></i><i></i><i class="off"></i><i class="off"></i><i class="off"></i></span>Quedan 3 lotes</p>
+        </div>
+        <div class="lote-actions">
+          <button class="btn btn-accent" type="button" data-add="lote-hogar-cocina">Añadir al carrito</button>
+          <button class="btn btn-line" type="button" data-open-lote="lote-hogar-cocina">Ver contenido</button>
+        </div>
+        <div class="barcode" aria-hidden="true"></div>
+      </article>
+
+      <article class="lote rv" data-lote="lote-juguetes" data-precio="319" data-pvp="1720" data-uds="64" data-index="3">
+        <a class="lote-fig" href="#lote-juguetes" data-open-lote="lote-juguetes" aria-label="Ver contenido del lote Juguetes y juegos">
+          <img src="assets/img/lote-juguetes.webp" width="1536" height="1024" alt="Caja gaylord llena de juguetes: sets de construcción, peluches, juegos de mesa y coches teledirigidos" loading="lazy" decoding="async">
+          <span class="sticker">Grado A/B</span>
+        </a>
+        <div class="lote-body">
+          <p class="lote-meta">Ref TR-2609-03 · 64 uds · Caja 80×60×60 · 27 kg</p>
+          <h3 class="lote-title">Juguetes y juegos</h3>
+          <p class="lote-desc">Sets de construcción, peluches, juegos de mesa, coches teledirigidos, muñecas y puzles.</p>
+          <div class="lote-price"><span class="pvp">PVP estimado <s>1.720 €</s></span><span class="precio">319 €</span><span class="off">−81 %</span><span class="iva">IVA y envío incl.</span></div>
+          <p class="lote-stock"><span class="stock-bar" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i class="off"></i></span>Quedan 5 lotes</p>
+        </div>
+        <div class="lote-actions">
+          <button class="btn btn-accent" type="button" data-add="lote-juguetes">Añadir al carrito</button>
+          <button class="btn btn-line" type="button" data-open-lote="lote-juguetes">Ver contenido</button>
+        </div>
+        <div class="barcode" aria-hidden="true"></div>
+      </article>
+
+      <article class="lote rv" data-lote="lote-herramientas" data-precio="489" data-pvp="2150" data-uds="18" data-index="4">
+        <a class="lote-fig" href="#lote-herramientas" data-open-lote="lote-herramientas" aria-label="Ver contenido del lote Herramientas y bricolaje">
+          <img src="assets/img/lote-herramientas.webp" width="1536" height="1024" alt="Palé y carro con taladros, atornilladores, amoladoras, maletines y un juego de vasos" loading="lazy" decoding="async">
+          <span class="sticker">Grado A/B</span>
+        </a>
+        <div class="lote-body">
+          <p class="lote-meta">Ref TR-2609-04 · 18 uds · Caja 60×40×40 · 41 kg</p>
+          <h3 class="lote-title">Herramientas y bricolaje</h3>
+          <p class="lote-desc">Taladros y atornilladores a batería, sierra de calar, amoladora, maletines y nivel láser.</p>
+          <div class="lote-price"><span class="pvp">PVP estimado <s>2.150 €</s></span><span class="precio">489 €</span><span class="off">−77 %</span><span class="iva">IVA y envío incl.</span></div>
+          <p class="lote-stock is-low"><span class="stock-bar" aria-hidden="true"><i></i><i></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i></span>Quedan 2 lotes</p>
+        </div>
+        <div class="lote-actions">
+          <button class="btn btn-accent" type="button" data-add="lote-herramientas">Añadir al carrito</button>
+          <button class="btn btn-line" type="button" data-open-lote="lote-herramientas">Ver contenido</button>
+        </div>
+        <div class="barcode" aria-hidden="true"></div>
+      </article>
+
+      <article class="lote rv" data-lote="lote-moda" data-precio="590" data-pvp="3600" data-uds="120" data-index="5">
+        <a class="lote-fig" href="#lote-moda" data-open-lote="lote-moda" aria-label="Ver contenido del lote Moda y calzado">
+          <img src="assets/img/lote-moda.webp" width="1536" height="1024" alt="Caja gaylord con prendas embolsadas y etiquetadas junto a cajas de zapatillas" loading="lazy" decoding="async">
+          <span class="sticker">Grado A</span>
+        </a>
+        <div class="lote-body">
+          <p class="lote-meta">Ref TR-2609-05 · 120 uds · Gaylord 120×80×80 · 46 kg</p>
+          <h3 class="lote-title">Moda y calzado</h3>
+          <p class="lote-desc">Zapatillas, sudaderas, vaqueros, chaquetas y mochilas. Prenda en bolsa con etiqueta.</p>
+          <div class="lote-price"><span class="pvp">PVP estimado <s>3.600 €</s></span><span class="precio">590 €</span><span class="off">−84 %</span><span class="iva">IVA y envío incl.</span></div>
+          <p class="lote-stock"><span class="stock-bar" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></span>Quedan 6 lotes</p>
+        </div>
+        <div class="lote-actions">
+          <button class="btn btn-accent" type="button" data-add="lote-moda">Añadir al carrito</button>
+          <button class="btn btn-line" type="button" data-open-lote="lote-moda">Ver contenido</button>
+        </div>
+        <div class="barcode" aria-hidden="true"></div>
+      </article>
+
+      <article class="lote rv" data-lote="lote-informatica" data-precio="699" data-pvp="3280" data-uds="26" data-index="6">
+        <a class="lote-fig" href="#lote-informatica" data-open-lote="lote-informatica" aria-label="Ver contenido del lote Informática y periféricos">
+          <img src="assets/img/lote-informatica.webp" width="1536" height="1024" alt="Palé con dos monitores, teclados mecánicos, webcams, discos SSD, un router y una impresora" loading="lazy" decoding="async">
+          <span class="sticker">Grado A/B</span>
+        </a>
+        <div class="lote-body">
+          <p class="lote-meta">Ref TR-2609-06 · 26 uds · Caja 80×60×60 · 34 kg</p>
+          <h3 class="lote-title">Informática y periféricos</h3>
+          <p class="lote-desc">Teclados mecánicos, ratones, dos monitores, webcams, discos SSD, router e impresora.</p>
+          <div class="lote-price"><span class="pvp">PVP estimado <s>3.280 €</s></span><span class="precio">699 €</span><span class="off">−79 %</span><span class="iva">IVA y envío incl.</span></div>
+          <p class="lote-stock is-low"><span class="stock-bar" aria-hidden="true"><i></i><i></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i></span>Quedan 2 lotes</p>
+        </div>
+        <div class="lote-actions">
+          <button class="btn btn-accent" type="button" data-add="lote-informatica">Añadir al carrito</button>
+          <button class="btn btn-line" type="button" data-open-lote="lote-informatica">Ver contenido</button>
+        </div>
+        <div class="barcode" aria-hidden="true"></div>
+      </article>
+
+      <article class="lote rv" data-lote="lote-deporte" data-precio="519" data-pvp="2340" data-uds="22" data-index="7">
+        <a class="lote-fig" href="#lote-deporte" data-open-lote="lote-deporte" aria-label="Ver contenido del lote Deporte y fitness">
+          <img src="assets/img/lote-deporte.webp" width="1536" height="1024" alt="Palé con mancuernas, kettlebells, esterillas, una bicicleta estática plegable, una tienda y un patinete" loading="lazy" decoding="async">
+          <span class="sticker sticker--yellow">Grado B</span>
+        </a>
+        <div class="lote-body">
+          <p class="lote-meta">Ref TR-2609-07 · 22 uds · Palé EUR 120×80×110 · 96 kg</p>
+          <h3 class="lote-title">Deporte y fitness</h3>
+          <p class="lote-desc">Mancuernas, kettlebells, esterillas, bicicleta estática plegable, bandas, tienda y patinete.</p>
+          <div class="lote-price"><span class="pvp">PVP estimado <s>2.340 €</s></span><span class="precio">519 €</span><span class="off">−78 %</span><span class="iva">IVA y envío incl.</span></div>
+          <p class="lote-stock"><span class="stock-bar" aria-hidden="true"><i></i><i></i><i></i><i class="off"></i><i class="off"></i><i class="off"></i></span>Quedan 3 lotes</p>
+        </div>
+        <div class="lote-actions">
+          <button class="btn btn-accent" type="button" data-add="lote-deporte">Añadir al carrito</button>
+          <button class="btn btn-line" type="button" data-open-lote="lote-deporte">Ver contenido</button>
+        </div>
+        <div class="barcode" aria-hidden="true"></div>
+      </article>
+
+      <article class="lote rv" data-lote="lote-bebe" data-precio="559" data-pvp="2610" data-uds="15" data-index="8">
+        <a class="lote-fig" href="#lote-bebe" data-open-lote="lote-bebe" aria-label="Ver contenido del lote Bebé y puericultura">
+          <img src="assets/img/lote-bebe.webp" width="1536" height="1024" alt="Palé con silla de coche, carrito, trona, vigilabebés, esterilizador y mochila portabebé" loading="lazy" decoding="async">
+          <span class="sticker">Grado A/B</span>
+        </a>
+        <div class="lote-body">
+          <p class="lote-meta">Ref TR-2609-08 · 15 uds · Palé EUR 120×80×120 · 58 kg</p>
+          <h3 class="lote-title">Bebé y puericultura</h3>
+          <p class="lote-desc">Silla de coche, carrito plegable, trona, vigilabebés, esterilizador y mochila portabebé.</p>
+          <div class="lote-price"><span class="pvp">PVP estimado <s>2.610 €</s></span><span class="precio">559 €</span><span class="off">−79 %</span><span class="iva">IVA y envío incl.</span></div>
+          <p class="lote-stock is-low"><span class="stock-bar" aria-hidden="true"><i></i><i></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i></span>Quedan 2 lotes</p>
+        </div>
+        <div class="lote-actions">
+          <button class="btn btn-accent" type="button" data-add="lote-bebe">Añadir al carrito</button>
+          <button class="btn btn-line" type="button" data-open-lote="lote-bebe">Ver contenido</button>
+        </div>
+        <div class="barcode" aria-hidden="true"></div>
+      </article>
+
+      <article class="lote rv" data-lote="lote-belleza" data-precio="389" data-pvp="1980" data-uds="52" data-index="9">
+        <a class="lote-fig" href="#lote-belleza" data-open-lote="lote-belleza" aria-label="Ver contenido del lote Belleza y cuidado personal">
+          <img src="assets/img/lote-belleza.webp" width="1536" height="1024" alt="Mesa con secadores, planchas de pelo, afeitadoras, cepillos eléctricos, depiladoras y básculas" loading="lazy" decoding="async">
+          <span class="sticker">Grado A/B</span>
+        </a>
+        <div class="lote-body">
+          <p class="lote-meta">Ref TR-2609-09 · 52 uds · Caja 60×40×40 · 22 kg</p>
+          <h3 class="lote-title">Belleza y cuidado personal</h3>
+          <p class="lote-desc">Secadores, planchas de pelo, afeitadoras, cepillos eléctricos, depiladoras IPL y básculas.</p>
+          <div class="lote-price"><span class="pvp">PVP estimado <s>1.980 €</s></span><span class="precio">389 €</span><span class="off">−80 %</span><span class="iva">IVA y envío incl.</span></div>
+          <p class="lote-stock"><span class="stock-bar" aria-hidden="true"><i></i><i></i><i></i><i></i><i class="off"></i><i class="off"></i></span>Quedan 4 lotes</p>
+        </div>
+        <div class="lote-actions">
+          <button class="btn btn-accent" type="button" data-add="lote-belleza">Añadir al carrito</button>
+          <button class="btn btn-line" type="button" data-open-lote="lote-belleza">Ver contenido</button>
+        </div>
+        <div class="barcode" aria-hidden="true"></div>
+      </article>
+
+      <article class="lote lote--wide rv" data-lote="lote-pale-mixto" data-precio="1290" data-pvp="6500" data-uds="210" data-index="10">
+        <a class="lote-fig" href="#lote-pale-mixto" data-open-lote="lote-pale-mixto" aria-label="Ver contenido del palé mixto sin clasificar">
+          <img src="assets/img/lote-pale-mixto.webp" width="1536" height="1024" alt="Palé completo de cajas de devoluciones retractilado con film transparente" loading="lazy" decoding="async">
+          <span class="sticker sticker--yellow">Para revendedores</span>
+          <span class="sticker sticker--ink">Sin clasificar</span>
+        </a>
+        <div class="lote-body">
+          <p class="lote-meta">Ref TR-2609-10 · ~210 uds · Palé EUR 120×80×180 · 210 kg</p>
+          <h3 class="lote-title">Palé mixto sin clasificar</h3>
+          <p class="lote-desc">Un palé completo tal cual baja del camión: hogar, electrónica, juguetes, deporte y sorpresas. No lo abrimos, no lo revisamos, y por eso vale menos del 20 % de su PVP. Es el lote de quien revende y sabe lo que compra.</p>
+          <div class="lote-price"><span class="pvp">PVP estimado <s>6.500 €</s></span><span class="precio">1.290 €</span><span class="off">−80 %</span><span class="iva">IVA y transporte de palé incl.</span></div>
+          <p class="lote-stock"><span class="stock-bar" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></span>Quedan 8 palés</p>
+        </div>
+        <div class="lote-actions">
+          <button class="btn btn-accent" type="button" data-add="lote-pale-mixto">Añadir al carrito</button>
+          <button class="btn btn-line" type="button" data-open-lote="lote-pale-mixto">Ver contenido</button>
+        </div>
+        <div class="barcode" aria-hidden="true"></div>
+      </article>
+
+    </div>
+    <p class="lotes-note">Las fotografías son ilustrativas del tipo de lote; el contenido exacto de cada uno está en su ficha y en el listado que viaja dentro de la caja. Los precios incluyen IVA. Los lotes clasificados admiten reclamación en 14 días; el palé sin clasificar se vende cerrado.</p>
+  </div>
+</section>
+
+<!-- ============================ 03 · GRADOS ============================ -->
+<section class="sec" id="grados">
+  <div class="wrap">
+    <header class="sec-head rv">
+      <p class="sec-num">03 · Cómo clasificamos</p>
+      <h2 class="sec-title">Cuatro grados, ninguna sorpresa</h2>
+      <p class="sec-lead">Cada unidad de un lote clasificado lleva su pegatina de grado. Es lo que cambia el precio y lo que te dice qué esperar cuando abras la caja.</p>
+    </header>
+    <div class="tbl-wrap rv">
+      <table class="tbl">
+        <thead>
+          <tr><th>Grado</th><th>Qué es</th><th>Embalaje</th><th>Funcionamiento</th><th>Precio típico</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="g-a">A</td><td>Devolución por talla, cambio de opinión o caja abierta. Producto sin usar.</td><td>Original, a veces con el precinto roto</td><td>Probado, completo, con accesorios</td><td>25–30 % del PVP</td></tr>
+          <tr><td class="g-b">B</td><td>Producto usado unos días. Marcas leves de uso, alguna caja golpeada.</td><td>Original dañado o caja neutra</td><td>Probado y completo</td><td>18–25 % del PVP</td></tr>
+          <tr><td class="g-c">C</td><td>Defecto estético visible o falta un accesorio menor. Se indica en la etiqueta.</td><td>Caja neutra o sin caja</td><td>Funciona; puede faltar cable, manual o adaptador</td><td>10–18 % del PVP</td></tr>
+          <tr><td class="g-x">S/C</td><td>Sin clasificar. Palé cerrado tal cual llega en el camión.</td><td>Retractilado, cajas mezcladas</td><td>Sin revisar: puede haber unidades defectuosas</td><td>Menos del 20 % del PVP</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 04 · PAGO Y ENVÍO ============================ -->
+<section class="sec sec--concrete" id="pago">
+  <div class="wrap">
+    <header class="sec-head rv">
+      <p class="sec-num">04 · Pago y envío</p>
+      <h2 class="sec-title">Paga como quieras. Recíbelo mañana.</h2>
+      <p class="sec-lead">Dos formas de pagar y una sola promesa de entrega. Sin cuenta de cliente, sin registro: nombre, dirección y listo.</p>
+    </header>
+    <div class="grid12 pay rv">
+      <div>
+        <span class="sticker">Sin pagar por adelantado</span>
+        <h3>Contrarreembolso</h3>
+        <p class="big">+3 %</p>
+        <ul>
+          <li>Pagas al transportista cuando tienes el lote delante.</li>
+          <li>En efectivo o con tarjeta en el datáfono del repartidor.</li>
+          <li>Recargo del 3 % (mínimo 5 €): es la comisión de la agencia, no la nuestra.</li>
+          <li>En palés te llamamos antes para concertar la entrega.</li>
         </ul>
-
-        <p class="cover-legend">
-          <span><i></i>Fibra de 10 Gb disponible</span>
-          <span><i class="l1g"></i>Fibra de 1 Gb disponible</span>
-          <span><i class="lob"></i>Obra abierta este año</span>
-        </p>
       </div>
-
-      <div data-reveal data-delay="1">
-        <figure class="cover-figure">
-          <img src="assets/img/hero-rooftops.webp" alt="Tejados apiñados de una ciudad mediterránea vistos desde arriba" loading="lazy" decoding="async" width="1600" height="1067">
-        </figure>
-        <p class="lead" style="margin-top:1.4rem">
-          ¿Tu calle no sale? Escríbenos igualmente. Cada solicitud entra en el mapa
-          de prioridades del año siguiente y te avisamos el día que abrimos el nodo,
-          aunque tarde dos años.
-        </p>
-        <p style="margin-top:1.4rem">
-          <a class="btn btn--primary" href="#contacto" data-magnetic data-magnetic-strength="0.2">
-            Pedir cobertura para mi calle
-            <span class="btn-arrow" aria-hidden="true">→</span>
-          </a>
-        </p>
+      <div>
+        <span class="sticker sticker--ink">Pago seguro</span>
+        <h3>Tarjeta</h3>
+        <p class="big">0 %</p>
+        <ul>
+          <li>Visa, Mastercard, Apple Pay y Google Pay.</li>
+          <li>Pasarela cifrada: nunca vemos ni guardamos los datos de tu tarjeta.</li>
+          <li>Sin recargo y con confirmación inmediata por correo.</li>
+          <li>Factura con IVA en el mismo correo; para empresas, indica el CIF.</li>
+        </ul>
       </div>
-    </div>
-  </div>
-</section>
-
-<!-- ============================ EMPRESAS ============================ -->
-<section class="section" id="empresas">
-  <div class="wrap">
-    <div class="biz" data-reveal>
-      <div class="biz-inner">
-        <div>
-          <p class="eyebrow">Para empresas</p>
-          <h2>Cuando el corte de una hora cuesta un día de trabajo.</h2>
-          <p>
-            Fibra dedicada con ancho garantizado, centralita en la nube, backup 5G automático
-            y una persona con nombre que conoce tu instalación. Sin ticket número 48.291.
-          </p>
-          <ul class="biz-list">
-            <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6"/></svg>SLA del 99,95 % con compensación automática en factura</li>
-            <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6"/></svg>Salto a 5G en menos de tres segundos si cae la fibra</li>
-            <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6"/></svg>Racks en Girona y Vic: tus datos no salen de la comarca</li>
-          </ul>
-          <p style="margin-top:1.8rem">
-            <a class="btn btn--ghost" href="empresas.html">
-              Ver soluciones para empresas
-              <span class="btn-arrow" aria-hidden="true">→</span>
-            </a>
-          </p>
+      <div class="pay--wide">
+        <span class="sticker sticker--yellow">Entrega en 24 horas</span>
+        <h3>De la nave a tu puerta al siguiente día laborable</h3>
+        <div class="timeline">
+          <div><span class="t">14:00</span><span>Hora de corte. Todo pedido confirmado antes sale el mismo día.</span></div>
+          <div><span class="t">16:30</span><span>La agencia recoge en nuestra nave de Girona y lo lleva a la plataforma.</span></div>
+          <div><span class="t">+24 h</span><span>Entrega en cualquier dirección de la península al siguiente día laborable.</span></div>
+          <div><span class="t">Palés</span><span>Viajan con transporte de palés, 24–48 h, con llamada previa para concertar hora.</span></div>
         </div>
-
-        <figure class="biz-figure">
-          <img src="assets/img/tower.webp" alt="Torre de telecomunicaciones recortada contra un cielo azul limpio" loading="lazy" decoding="async" width="768" height="1024">
-        </figure>
+        <p class="lotes-note">Baleares y Canarias: pide presupuesto antes de comprar. Recogida en la nave, gratis, de lunes a viernes de 8:00 a 18:00.</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ============================ TESTIMONIOS ============================ -->
-<section class="section section--tight">
+<!-- ============================ 05 · PREGUNTAS ============================ -->
+<section class="sec" id="faq">
   <div class="wrap">
-    <div class="section-head" data-reveal>
-      <p class="eyebrow">Clientes</p>
-      <h2>Lo que dicen cuando no preguntamos nosotros.</h2>
-    </div>
-
-    <div class="quotes">
-      <blockquote class="glass quote" data-reveal>
-        <p class="quote-mark" aria-hidden="true">“</p>
-        <p>Vivimos a cuatro kilómetros del pueblo y llevábamos ocho años con un radioenlace que se caía cada tormenta. Tornarem tendió la fibra hasta la masía en once días.</p>
-        <footer>
-          <p class="quote-name">Roser Puigdemunt</p>
-          <p class="quote-role">Ganadería Can Serrat · Vallfogona de Ripollès</p>
-        </footer>
-      </blockquote>
-
-      <blockquote class="glass quote" data-reveal data-delay="1">
-        <p class="quote-mark" aria-hidden="true">“</p>
-        <p>Llamé un domingo a las nueve de la noche por una avería. Me cogió una persona, no un menú de opciones. El lunes a primera hora tenía técnico en casa.</p>
-        <footer>
-          <p class="quote-name">Marc Aleñà</p>
-          <p class="quote-role">Cliente desde 2019 · Manlleu</p>
-        </footer>
-      </blockquote>
-
-      <blockquote class="glass quote" data-reveal data-delay="2">
-        <p class="quote-mark" aria-hidden="true">“</p>
-        <p>Somos doce en la oficina y subimos vídeo todo el día. Pasamos de esperar la subida a no pensar en ella. Y la factura no ha cambiado en tres años.</p>
-        <footer>
-          <p class="quote-name">Núria Bosch</p>
-          <p class="quote-role">Estudio Ramal · Girona</p>
-        </footer>
-      </blockquote>
+    <header class="sec-head rv">
+      <p class="sec-num">05 · Preguntas frecuentes</p>
+      <h2 class="sec-title">Lo que nos preguntan antes de comprar</h2>
+    </header>
+    <div class="faq-cols rv">
+      <div class="faq">
+        <details class="faq-item">
+          <summary>¿Sois Amazon?</summary>
+          <p>No. Tornarem es un liquidador independiente. Compramos a los mayoristas que gestionan las devoluciones de la plataforma y las revendemos por nuestra cuenta. Amazon no participa en esta web ni respalda lo que vendemos.</p>
+        </details>
+        <details class="faq-item">
+          <summary>¿Qué es exactamente una devolución?</summary>
+          <p>Un producto que alguien compró en la tienda online y devolvió: porque no era su talla, porque cambió de opinión, porque abrió la caja y no le gustó. La mayoría está sin usar. Un porcentaje pequeño viene con marcas de uso, y para eso están los grados.</p>
+        </details>
+        <details class="faq-item">
+          <summary>¿Puedo elegir lo que hay dentro?</summary>
+          <p>No: los lotes se venden completos y precintados, y eso es lo que permite el precio. Lo que sí puedes es leer el listado exacto de contenido de cada lote antes de comprar, en la ficha de cada uno.</p>
+        </details>
+        <details class="faq-item">
+          <summary>¿Tiene garantía?</summary>
+          <p>En los lotes clasificados (A, B y C), sí: tienes 14 días desde la entrega para reclamar cualquier unidad que no funcione como se describe, y la sustituimos o te abonamos su parte. El palé sin clasificar se vende cerrado y no admite devolución: su precio lo compensa.</p>
+        </details>
+      </div>
+      <div class="faq">
+        <details class="faq-item">
+          <summary>¿Cómo funciona el contrarreembolso?</summary>
+          <p>Haces el pedido sin pagar nada. Cuando el transportista llega, pagas en efectivo o con tarjeta en su datáfono y te quedas el lote. La agencia cobra un 3 % (mínimo 5 €) por gestionar el cobro, que se suma al total.</p>
+        </details>
+        <details class="faq-item">
+          <summary>¿Hacéis factura?</summary>
+          <p>Siempre, con IVA desglosado. Si compras como empresa o autónomo, escribe el CIF o NIF en el pedido y la factura saldrá a ese nombre.</p>
+        </details>
+        <details class="faq-item">
+          <summary>¿De verdad llega en 24 horas?</summary>
+          <p>Si confirmas antes de las 14:00 de un día laborable, la agencia lo recoge esa misma tarde y lo entrega al día siguiente en península. Los palés van con transporte especializado y tardan entre 24 y 48 horas. Islas, bajo presupuesto.</p>
+        </details>
+        <details class="faq-item">
+          <summary>¿Puedo ir a verlo o recogerlo en la nave?</summary>
+          <p>Sí. Estamos en Girona, de lunes a viernes de 8:00 a 18:00. Puedes ver los lotes abiertos, recoger tu pedido sin coste y, si compras varios palés, negociarlos en persona.</p>
+        </details>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- ============================ FAQ ============================ -->
-<section class="section" id="ayuda">
+<!-- ============================ 06 · PRÓXIMO CAMIÓN ============================ -->
+<section class="sec sec--kraft" id="proximo">
   <div class="wrap">
-    <div class="section-head" data-reveal>
-      <p class="eyebrow">Dudas razonables</p>
-      <h2>Preguntas que nos hacen antes de firmar.</h2>
-    </div>
-
-    <div class="faq" data-reveal>
-      <details open>
-        <summary>¿La fibra es vuestra o la alquiláis?</summary>
-        <div class="faq-body">Es nuestra. Desplegamos y mantenemos 480 km de anillo propio y damos servicio directamente sobre él. En los cuatro municipios donde todavía no hemos llegado usamos red mayorista, y lo decimos antes de firmar.</div>
-      </details>
-      <details>
-        <summary>¿Qué pasa si me mudo dentro de la zona?</summary>
-        <div class="faq-body">El traslado es gratuito y no reinicia nada: mismo precio, mismo contrato. Si te mudas fuera de nuestra cobertura, cancelas sin penalización ni devolución de equipos.</div>
-      </details>
-      <details>
-        <summary>¿Me vais a subir el precio dentro de un año?</summary>
-        <div class="faq-body">No. El precio que firmas es el que pagas mientras mantengas la tarifa. No aplicamos subidas por IPC ni descuentos de bienvenida que caducan a los doce meses.</div>
-      </details>
-      <details>
-        <summary>¿Cuánto tarda la instalación?</summary>
-        <div class="faq-body">72 horas laborables desde que confirmas, si tu calle ya tiene nodo abierto. Si hace falta obra en la fachada o acometida nueva, entre una y tres semanas, y te damos fecha cerrada antes de empezar.</div>
-      </details>
-      <details>
-        <summary>¿Puedo mantener mi número?</summary>
-        <div class="faq-body">Sí, de fijo y de móvil. Nos ocupamos nosotros de la portabilidad y coordinamos el corte para que no pierdas servicio más de unos minutos.</div>
-      </details>
-      <details>
-        <summary>¿Tenéis atención en catalán?</summary>
-        <div class="faq-body">Sí, y en castellano. Todo el equipo de atención y los técnicos están en Girona y Vic: no hay centro de llamadas externo ni horario de otro huso.</div>
-      </details>
-    </div>
-  </div>
-</section>
-
-<!-- ============================ CTA / CONTACTO ============================ -->
-<section class="section cta" id="contacto">
-  <div class="mesh" aria-hidden="true" style="opacity:.5"></div>
-  <div class="wrap">
-    <div class="glass cta-card" data-reveal>
-      <div class="cta-grid">
-
-        <div>
-          <p class="eyebrow">Hablemos</p>
-          <h2 class="h2" style="margin-bottom:1.4rem">Déjanos tu calle y te decimos qué llega.</h2>
-
-          <form class="cta-form" data-contact-form action="enviar.php" method="post">
-            <input type="hidden" name="origen" value="portada">
-
-            <div class="cta-form-row">
-              <label class="field" for="c-nombre">
-                <input id="c-nombre" name="nombre" type="text" placeholder=" " autocomplete="name" required>
-                <span>Nombre y apellidos</span>
-              </label>
-              <label class="field" for="c-tel">
-                <input id="c-tel" name="telefono" type="tel" placeholder=" " autocomplete="tel" required>
-                <span>Teléfono</span>
-              </label>
-            </div>
-
-            <div class="cta-form-row">
-              <label class="field" for="c-email">
-                <input id="c-email" name="email" type="email" placeholder=" " autocomplete="email">
-                <span>Correo (opcional)</span>
-              </label>
-              <label class="field" for="c-municipio">
-                <input id="c-municipio" name="municipio" type="text" placeholder=" " autocomplete="address-level2" required>
-                <span>Municipio</span>
-              </label>
-            </div>
-
-            <label class="field" for="c-interes">
-              <select id="c-interes" name="interes" required>
-                <option value="" selected disabled></option>
-                <option>Fibra + móvil</option>
-                <option>Solo fibra</option>
-                <option>Solo móvil</option>
-                <option>Empresa</option>
-                <option>Todavía no llegáis a mi calle</option>
-              </select>
-              <span>Qué te interesa</span>
-            </label>
-
-            <label class="field" for="c-mensaje">
-              <textarea id="c-mensaje" name="mensaje" placeholder=" "></textarea>
-              <span>Cuéntanos lo que necesites (opcional)</span>
-            </label>
-
-            <!-- Cazabobos: invisible para personas, irresistible para robots -->
-            <div class="hp" aria-hidden="true">
-              <label for="c-hp">No rellenes este campo</label>
-              <input id="c-hp" name="empresa_web" type="text" tabindex="-1" autocomplete="off">
-            </div>
-
-            <button class="btn btn--accent cta-submit" type="submit">
-              <span class="cta-label">Enviar y que me llamen</span>
-              <span class="cta-spinner" aria-hidden="true"></span>
-            </button>
-
-            <p class="cta-error" data-contact-error role="alert" hidden></p>
-
-            <p class="cta-consent">
-              Usamos estos datos solo para responderte. Puedes pedirnos que los borremos cuando quieras.
-              <a href="#privacidad">Aviso de privacidad</a>.
-            </p>
-          </form>
-
-          <div class="cta-success" data-contact-success role="status" aria-live="polite">
-            <svg class="cta-check" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6" pathLength="1"/></svg>
-            <h3 data-contact-success-title>Recibido.</h3>
-            <p data-contact-success-msg></p>
-          </div>
+    <header class="sec-head rv">
+      <p class="sec-num">06 · Próximo camión</p>
+      <h2 class="sec-title">El jueves descargamos otro tráiler</h2>
+      <p class="sec-lead">Cada semana entra una categoría nueva. La siguiente ya está comprada y en carretera.</p>
+    </header>
+    <div class="grid12 next rv">
+      <figure class="next-fig">
+        <img src="assets/img/lote-jardin.webp" width="1536" height="1024" alt="Palé con cortacésped, cortasetos, hidrolimpiadora, mangueras, lámparas solares y barbacoa" loading="lazy" decoding="async">
+        <span class="sticker">En carretera</span>
+      </figure>
+      <div class="next-copy">
+        <p class="kicker">Lote en preparación · Ref TR-2609-11</p>
+        <h3>Jardín y exterior</h3>
+        <p>Cortacésped a batería, cortasetos, hidrolimpiadoras, mangueras, lámparas solares, sillas plegables y barbacoas. Unas 16 unidades por lote, grado B, alrededor de 499 €.</p>
+        <div class="countdown" data-countdown aria-label="Cuenta atrás hasta la descarga del jueves">
+          <div class="cd-cell"><b data-cd="d">–</b><span>días</span></div>
+          <div class="cd-cell"><b data-cd="h">–</b><span>horas</span></div>
+          <div class="cd-cell"><b data-cd="m">–</b><span>min</span></div>
+          <div class="cd-cell"><b data-cd="s">–</b><span>seg</span></div>
         </div>
-
-        <aside class="cta-aside">
-          <p class="eyebrow">O directamente</p>
-          <dl>
-            <div>
-              <dt>Teléfono</dt>
-              <dd><a href="tel:+34900000000">900 000 000</a></dd>
-            </div>
-            <div>
-              <dt>Correo</dt>
-              <dd><a href="mailto:hola@tornarem.cat">hola@tornarem.cat</a></dd>
-            </div>
-            <div>
-              <dt>Averías</dt>
-              <dd>24 h, todos los días del año</dd>
-            </div>
-            <div>
-              <dt>Oficina</dt>
-              <dd>Carrer del Portal Nou, 12<br>17001 Girona</dd>
-            </div>
-            <div>
-              <dt>Horario de atención</dt>
-              <dd>Lunes a viernes, 8:00–21:00<br>Sábados, 9:00–14:00</dd>
-            </div>
-          </dl>
-        </aside>
-
+        <div class="hero-cta">
+          <a class="btn btn-solid" href="mailto:pedidos@tornarem.cat?subject=Avisadme%20del%20lote%20Jard%C3%ADn%20y%20exterior">Avísame cuando esté en venta</a>
+          <a class="btn btn-line" href="https://wa.me/34600000000?text=Hola%2C%20avisadme%20cuando%20el%20lote%20de%20jard%C3%ADn%20est%C3%A9%20en%20venta" target="_blank" rel="noopener">WhatsApp</a>
+        </div>
       </div>
     </div>
   </div>
@@ -746,67 +522,96 @@
 </main>
 
 <!-- ============================ PIE ============================ -->
-<footer class="footer" id="privacidad">
+<footer class="footer" id="contacto">
   <div class="wrap">
     <div class="footer-grid">
-      <div class="footer-brand">
-        <a class="brand" href="index.html">
-          <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true">
-            <circle cx="16" cy="16" r="3.4" fill="#0f7b6c"/>
-            <path d="M23.4 8.6a10.5 10.5 0 1 1-14.8 0" fill="none" stroke="#14181c" stroke-width="2.2" stroke-linecap="round"/>
-            <path d="M23.9 3.6v5.3h-5.3" fill="none" stroke="#0f7b6c" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
+      <div>
+        <a class="brand" href="index.html" aria-label="Tornarem, inicio">
+          <svg class="brand-mark" viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" fill="#ffffff"/><path d="M14 26h26v-8l12 12-12 12v-8H14z" fill="#ff4d00"/><rect x="12" y="44" width="40" height="6" fill="#111111"/></svg>
           <span>Tornarem</span>
         </a>
-        <p>Operador de fibra y móvil con red propia en el Gironès, Osona y el Ripollès. Desde 2016.</p>
+        <p class="footer-disclaimer">Tornarem es un liquidador independiente de excedentes y devoluciones. Amazon es una marca registrada de Amazon.com, Inc. o sus filiales. No existe ninguna afiliación, patrocinio ni respaldo por su parte.</p>
       </div>
-
       <div>
-        <h3>Particulares</h3>
-        <ul>
-          <li><a href="#tarifas">Tarifas de fibra y móvil</a></li>
-          <li><a href="#cobertura">Consultar cobertura</a></li>
-          <li><a href="#red">Cómo es la red</a></li>
-          <li><a href="#ayuda">Preguntas frecuentes</a></li>
-        </ul>
-      </div>
-
-      <div>
-        <h3>Empresas</h3>
-        <ul>
-          <li><a href="empresas.html">Fibra dedicada</a></li>
-          <li><a href="empresas.html#centralita">Centralita virtual</a></li>
-          <li><a href="empresas.html#multisede">Red multisede</a></li>
-          <li><a href="empresas.html#contacto-empresas">Pedir presupuesto</a></li>
-        </ul>
-      </div>
-
-      <div>
-        <h3>Contacto</h3>
+        <h4>Pedidos</h4>
         <ul>
           <li><a href="tel:+34900000000">900 000 000</a></li>
-          <li><a href="mailto:hola@tornarem.cat">hola@tornarem.cat</a></li>
-          <li><a href="mailto:averias@tornarem.cat">averias@tornarem.cat</a></li>
-          <li>Carrer del Portal Nou, 12 · Girona</li>
+          <li><a href="https://wa.me/34600000000" target="_blank" rel="noopener">WhatsApp</a></li>
+          <li><a href="mailto:pedidos@tornarem.cat">pedidos@tornarem.cat</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>La nave</h4>
+        <p>Nave 14 · Polígono Mas Xirgu<br>17005 Girona</p>
+        <p>Lunes a viernes<br>8:00–18:00</p>
+      </div>
+      <div>
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="legal.html#aviso">Aviso legal</a></li>
+          <li><a href="legal.html#privacidad">Privacidad</a></li>
+          <li><a href="legal.html#condiciones">Condiciones de venta</a></li>
+          <li><a href="legal.html#garantia">Garantía y reclamaciones</a></li>
         </ul>
       </div>
     </div>
-
     <div class="footer-bottom">
-      <p>© 2026 Tornarem Telecom · Aviso legal · Privacidad · Cookies · Condiciones del servicio</p>
-      <p>Hecho en Girona</p>
+      <span>© 2026 Tornarem · Girona · Precios con IVA · Fotografías ilustrativas</span>
+      <span>Ref catálogo 2609 · Actualizado 09/09/2026</span>
     </div>
-
-    <p class="credits-note" data-credits>
-      Fotografías bajo licencia Creative Commons vía Openverse.
-    </p>
   </div>
 </footer>
 
-<!-- Librerías primero; defer conserva el orden -->
+<!-- ============================ CARRITO ============================ -->
+<div class="drawer-backdrop" data-cart-backdrop></div>
+<aside class="drawer" id="carrito" data-cart aria-label="Carrito" aria-hidden="true">
+  <div class="drawer-head">
+    <h2>Tu carrito <span class="mono" data-cart-count-2>(0)</span></h2>
+    <button class="drawer-close" type="button" data-cart-close aria-label="Cerrar carrito">×</button>
+  </div>
+  <div class="drawer-items" data-cart-items>
+    <div class="drawer-empty">
+      <span>Todavía no hay ningún lote.</span>
+      <button class="btn btn-solid" type="button" data-cart-close>Ver los lotes</button>
+    </div>
+  </div>
+  <div class="drawer-foot">
+    <div class="drawer-row"><span>Subtotal</span><b data-cart-subtotal>0 €</b></div>
+    <p class="drawer-note">IVA y envío 24 h incluidos · Contrarreembolso +3 % al tramitar</p>
+    <a class="btn btn-accent btn-block" href="checkout.html" data-cart-checkout>Tramitar pedido</a>
+  </div>
+</aside>
+
+<!-- ============================ FICHA DE LOTE ============================ -->
+<dialog class="lote-dialog" data-lote-dialog aria-labelledby="dlg-title">
+  <button class="dlg-close" type="button" data-dialog-close aria-label="Cerrar ficha">×</button>
+  <div class="dlg-grid">
+    <figure class="dlg-fig"><img data-dlg-img src="" alt=""></figure>
+    <div class="dlg-body">
+      <p class="lote-meta" data-dlg-meta></p>
+      <h2 id="dlg-title" data-dlg-title></h2>
+      <p data-dlg-resumen></p>
+      <ul data-dlg-contenido></ul>
+      <p class="dlg-nota" data-dlg-nota></p>
+      <div class="dlg-price">
+        <span class="precio" data-dlg-precio></span>
+        <span class="off" data-dlg-off></span>
+        <span class="pvp" data-dlg-pvp></span>
+      </div>
+      <p class="lote-stock" data-dlg-stock></p>
+      <div class="dlg-actions">
+        <button class="btn btn-accent" type="button" data-dlg-add>Añadir al carrito</button>
+        <button class="btn btn-line" type="button" data-dialog-close>Seguir mirando</button>
+      </div>
+    </div>
+  </div>
+</dialog>
+
+<div class="toast" data-toast role="status" aria-live="polite"></div>
+
 <script defer src="lib/gsap.min.js"></script>
 <script defer src="lib/ScrollTrigger.min.js"></script>
-<script defer src="lib/manifest.js?v=20260810"></script>
-<script defer src="main.js?v=20260810"></script>
+<script defer src="lib/catalogo.js?v=20260909"></script>
+<script defer src="main.js?v=20260909"></script>
 </body>
 </html>

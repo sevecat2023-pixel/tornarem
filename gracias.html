@@ -1,89 +1,133 @@
 <!DOCTYPE html>
-<html lang="es" class="no-js">
+<html lang="es">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Recibido · Tornarem Telecom</title>
-<meta name="description" content="Hemos recibido tu solicitud. Te llamamos en menos de un día laborable.">
+<title>Pedido recibido · Tornarem</title>
 <meta name="robots" content="noindex">
-<meta name="theme-color" content="#f3f1ec">
-
+<meta name="theme-color" content="#111111">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-<link rel="preload" as="font" type="font/woff2" href="assets/fonts/manrope-800-latin.woff2" crossorigin>
-<link rel="preload" as="font" type="font/woff2" href="assets/fonts/inter-400-latin.woff2" crossorigin>
-<link rel="stylesheet" href="styles.css?v=20260810">
-<script>document.documentElement.classList.remove("no-js");</script>
+<link rel="preload" as="font" type="font/woff2" href="assets/fonts/archivo-black-400-latin.woff2" crossorigin>
+<link rel="stylesheet" href="styles.css?v=20260909">
 </head>
 
 <body>
 <a class="skip-link" href="#main">Saltar al contenido</a>
 
-<header class="nav is-scrolled" data-nav>
-  <div class="nav-inner">
-    <a class="brand" href="index.html" aria-label="Tornarem Telecom, inicio">
-      <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true">
-        <circle cx="16" cy="16" r="3.4" fill="#0f7b6c"/>
-        <path d="M23.4 8.6a10.5 10.5 0 1 1-14.8 0" fill="none" stroke="#14181c" stroke-width="2.2" stroke-linecap="round"/>
-        <path d="M23.9 3.6v5.3h-5.3" fill="none" stroke="#0f7b6c" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
+<div class="ticker" aria-hidden="true">
+  <div class="ticker-track" data-ticker>
+    <span class="ticker-item">Pedido recibido</span>
+    <span class="ticker-item">Entrega en 24 h en península</span>
+    <span class="ticker-item">Factura con IVA por correo</span>
+    <span class="ticker-item">Dudas: 900 000 000</span>
+  </div>
+</div>
+
+<header class="nav">
+  <div class="wrap nav-inner">
+    <a class="brand" href="index.html" aria-label="Tornarem, inicio">
+      <svg class="brand-mark" viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" fill="#111111"/><path d="M14 26h26v-8l12 12-12 12v-8H14z" fill="#ff4d00"/><rect x="12" y="44" width="40" height="6" fill="#ffffff"/></svg>
       <span>Tornarem</span>
+      <small>Lotes de devoluciones</small>
     </a>
-
     <nav class="nav-links" aria-label="Principal">
-      <a class="nav-link" href="index.html#tarifas">Tarifas</a>
-      <a class="nav-link" href="index.html#cobertura">Cobertura</a>
-      <a class="nav-link" href="index.html#red">La red</a>
-      <a class="nav-link" href="empresas.html">Empresas</a>
-      <a class="nav-link" href="index.html#ayuda">Ayuda</a>
+      <a href="index.html#lotes">Lotes</a>
+      <a href="index.html#como">Cómo funciona</a>
+      <a href="index.html#pago">Pago y envío</a>
+      <a href="index.html#faq">Preguntas</a>
     </nav>
-
-    <div class="nav-actions">
-      <a class="nav-phone" href="tel:+34900000000">900 000 000</a>
+    <div class="nav-right">
+      <a class="btn btn-solid nav-cart" href="checkout.html">Carrito <span class="nav-cart-count" data-cart-count>0</span></a>
+      <button class="nav-burger" type="button" data-menu-toggle aria-label="Abrir menú" aria-expanded="false" aria-controls="menu-movil"><span></span></button>
     </div>
   </div>
 </header>
+<nav class="nav-menu" id="menu-movil" data-menu aria-label="Menú móvil">
+  <a href="index.html#lotes">Lotes</a>
+  <a href="index.html#como">Cómo funciona</a>
+  <a href="index.html#pago">Pago y envío</a>
+  <a href="index.html#faq">Preguntas</a>
+</nav>
 
-<main id="main" class="hero" style="min-height:82vh;display:grid;align-items:center">
-  <div class="mesh" aria-hidden="true"></div>
-  <div class="wrap" style="max-width:44rem;text-align:center">
+<main id="main">
+  <section class="thanks" data-gracias>
+    <div class="wrap thanks-grid">
+      <div style="display:grid;gap:1.4rem;align-content:start">
+        <span class="stamp-big">Recibido</span>
+        <h1>Tu pedido ya está en la nave</h1>
+        <p class="num">Nº <span data-g-num>—</span></p>
+        <p>Te hemos enviado la confirmación a <b data-g-email>tu correo</b> con el listado de contenido de cada lote. Si no la ves en unos minutos, mira en la carpeta de correo no deseado.</p>
 
-    <svg class="cta-check" viewBox="0 0 24 24" aria-hidden="true"
-         style="width:46px;height:46px;margin:0 auto 1.4rem">
-      <path d="M4 12.5l5 5L20 6" pathLength="1" style="stroke-dashoffset:0"/>
-    </svg>
+        <div data-g-pago="contrarreembolso" style="display:none">
+          <h2 class="dlg-body" style="padding:0;font-family:var(--display);text-transform:uppercase;font-size:1.2rem">Qué pasa ahora</h2>
+          <ol>
+            <li>Preparamos y precintamos tu lote. Si has confirmado antes de las 14:00, sale hoy.</li>
+            <li>La agencia te llama o te avisa por SMS el día de la entrega.</li>
+            <li>Pagas al transportista al recibirlo: <b>en efectivo o con tarjeta en su datáfono</b>. El total incluye el recargo del 3 % de la agencia.</li>
+            <li>La factura llega por correo el mismo día de la entrega.</li>
+          </ol>
+        </div>
 
-    <p class="eyebrow" style="justify-content:center">Solicitud recibida</p>
-    <h1 class="hero-title" style="max-width:18ch;margin-inline:auto;font-size:clamp(2.1rem,5.4vw,3.6rem)">
-      Lo tenemos. <em>Te llamamos.</em>
-    </h1>
+        <div data-g-pago="tarjeta" style="display:none">
+          <h2 style="font-family:var(--display);text-transform:uppercase;font-size:1.2rem">Pago recibido</h2>
+          <ol>
+            <li>El cobro con tarjeta se ha completado. Tienes el justificante en el correo de la pasarela.</li>
+            <li>Preparamos y precintamos tu lote. Si has confirmado antes de las 14:00, sale hoy.</li>
+            <li>La agencia te llama o te avisa por SMS el día de la entrega.</li>
+            <li>La factura con IVA llega por correo junto con el número de seguimiento.</li>
+          </ol>
+        </div>
 
-    <p class="lead" style="margin-top:1.4rem;margin-inline:auto;max-width:34rem">
-      Alguien del equipo de altas te llama en menos de un día laborable.
-      Si tienes prisa, marca el
-      <a href="tel:+34900000000" style="color:var(--accent-deep);text-decoration:underline;text-underline-offset:3px">900 000 000</a>
-      y te atendemos en el momento.
-    </p>
+        <div data-g-pago="tarjeta-pendiente" style="display:none">
+          <h2 style="font-family:var(--display);text-transform:uppercase;font-size:1.2rem">Pendiente de pago</h2>
+          <ol>
+            <li>Has elegido pagar con tarjeta. En unos minutos recibirás por correo un <b>enlace de pago seguro</b>; también te lo mandamos por WhatsApp si nos has dejado móvil.</li>
+            <li>El lote queda reservado 24 horas a tu nombre.</li>
+            <li>En cuanto se confirma el pago, lo precintamos y sale en la siguiente recogida.</li>
+            <li>Si prefieres cambiar a contrarreembolso, contesta al correo y lo cambiamos.</li>
+          </ol>
+        </div>
 
-    <p style="margin-top:2.2rem;display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap">
-      <a class="btn btn--primary" href="index.html">Volver a la portada</a>
-      <a class="btn btn--ghost" href="index.html#cobertura">Ver la cobertura</a>
-    </p>
+        <div data-g-pago="generico" style="display:none">
+          <ol>
+            <li>Preparamos y precintamos tu lote.</li>
+            <li>La agencia te avisa el día de la entrega.</li>
+            <li>La factura llega por correo.</li>
+          </ol>
+        </div>
 
-  </div>
+        <div class="hero-cta">
+          <a class="btn btn-solid" href="index.html#lotes">Volver a los lotes</a>
+          <a class="btn btn-line" href="index.html#proximo">Ver el próximo camión</a>
+        </div>
+      </div>
+
+      <aside class="thanks-box">
+        <h2>Resumen</h2>
+        <dl>
+          <dt>Pedido</dt><dd><span data-g-num>—</span></dd>
+          <dt>Total</dt><dd><b data-g-total>—</b></dd>
+          <dt>Entrega prevista</dt><dd><span data-g-eta>—</span> (palés: 24–48 h con llamada previa)</dd>
+          <dt>Dudas</dt><dd><a href="tel:+34900000000" style="text-decoration:underline">900 000 000</a> · <a href="mailto:pedidos@tornarem.cat" style="text-decoration:underline">pedidos@tornarem.cat</a></dd>
+        </dl>
+        <p class="lotes-note">Guarda el número de pedido: es lo que te pedirá el transportista y lo que necesitas para cualquier reclamación en los 14 días siguientes a la entrega.</p>
+      </aside>
+    </div>
+  </section>
 </main>
 
 <footer class="footer">
   <div class="wrap">
     <div class="footer-bottom" style="margin-top:0;border-top:0;padding-top:0">
-      <p>© 2026 Tornarem Telecom · Aviso legal · Privacidad · Cookies</p>
-      <p>Hecho en Girona</p>
+      <span>© 2026 Tornarem · Girona · Liquidador independiente, sin relación con Amazon.com, Inc.</span>
+      <span><a href="legal.html#condiciones">Condiciones de venta</a> · <a href="legal.html#privacidad">Privacidad</a></span>
     </div>
   </div>
 </footer>
 
-<script defer src="lib/gsap.min.js"></script>
-<script defer src="lib/ScrollTrigger.min.js"></script>
-<script defer src="lib/manifest.js?v=20260810"></script>
-<script defer src="main.js?v=20260810"></script>
+<div class="toast" data-toast role="status" aria-live="polite"></div>
+
+<script defer src="lib/catalogo.js?v=20260909"></script>
+<script defer src="main.js?v=20260909"></script>
 </body>
 </html>

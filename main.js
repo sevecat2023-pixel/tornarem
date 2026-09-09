@@ -1,499 +1,558 @@
-/* =============================================================
-   TORNAREM TELECOM — main.js
-   Script clásico, patrón IIFE. Sin imports: funciona en file://,
-   en FTP y detrás de cualquier CDN.
-   El HTML ya contiene todo el contenido; esto sólo lo enriquece.
-   ============================================================= */
 (function () {
   "use strict";
+  /* ===========================================================
+     TORNAREM · Lotes de devoluciones — comportamiento
+     Un solo fichero, sin módulos: funciona abriendo index.html con
+     doble clic, en Hostinger y en cualquier hosting estático.
+     Todo el contenido está en el HTML; aquí sólo se añade el
+     carrito, las fichas, el checkout y los pequeños efectos.
+     =========================================================== */
 
-  var data = window.__BRAND__ || {};
+  var T = window.__TIENDA__ || { lotes: [], contacto: {}, envio: {}, contrarreembolso: {} };
+  var LOTES = {};
+  (T.lotes || []).forEach(function (l) { LOTES[l.id] = l; });
 
-  /* ---------- helpers ---------- */
-  function $(sel, scope) { return (scope || document).querySelector(sel); }
-  function $$(sel, scope) { return Array.prototype.slice.call((scope || document).querySelectorAll(sel)); }
+  var reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var $ = function (sel, scope) { return (scope || document).querySelector(sel); };
+  var $$ = function (sel, scope) { return Array.prototype.slice.call((scope || document).querySelectorAll(sel)); };
+  var escHTML = function (s) {
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  };
   function safe(fn, name) { try { fn(); } catch (e) { console.warn("[" + name + "]", e); } }
 
-  var fineHover = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
-  var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  /* Dinero a la española, con punto de millar siempre: 1.290 € / 84,18 €
+     (Intl en es-ES no agrupa los números de cuatro cifras y en una tienda
+     queda raro ver «1290 €» junto a «2.640 €»). */
+  function eur(n) {
+    n = Math.round((Number(n) || 0) * 100) / 100;
+    var neg = n < 0; n = Math.abs(n);
+    var entero = Math.floor(n), cents = Math.round((n - entero) * 100);
+    var s = String(entero).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    if (cents) s += "," + (cents < 10 ? "0" : "") + cents;
+    return (neg ? "−" : "") + s + " €";
+  }
+  function pct(l) { return Math.round((1 - l.precio / l.pvp) * 100); }
 
-  /* Quita acentos y mayúsculas para comparar textos escritos a mano */
-  function norm(s) {
-    return String(s == null ? "" : s)
-      .toLowerCase()
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .replace(/[^a-z0-9\s]/g, " ")
-      .replace(/\s+/g, " ")
-      .trim();
+  /* Recargo del contrarreembolso: porcentaje con mínimo */
+  function recargoCOD(subtotal) {
+    var c = T.contrarreembolso || {};
+    var p = Number(c.porcentaje) || 0, min = Number(c.minimo) || 0;
+    if (subtotal <= 0) return 0;
+    return Math.max(min, Math.round(subtotal * p) / 100);
   }
 
-  function fmt(value, decimals) {
-    try {
-      return value.toLocaleString("es-ES", {
-        minimumFractionDigits: decimals,
-        maximumFractionDigits: decimals
+  /* Fecha de entrega prevista: corte a las 14:00, sólo laborables */
+  function fechaEntrega(esPale) {
+    var corte = Number((T.envio || {}).horaCorte) || 14;
+    var d = new Date();
+    var laborable = function (x) { var w = x.getDay(); return w >= 1 && w <= 5; };
+    var siguiente = function (x) { var y = new Date(x); do { y.setDate(y.getDate() + 1); } while (!laborable(y)); return y; };
+    var salida = (laborable(d) && d.getHours() < corte) ? d : siguiente(d);
+    var entrega = siguiente(salida);
+    if (esPale) entrega = siguiente(entrega);
+    return entrega;
+  }
+  function fechaLarga(d) {
+    try { return d.toLocaleDateString("es-ES", { weekday: "long", day: "numeric", month: "long" }); }
+    catch (_) { return d.toLocaleDateString(); }
+  }
+
+  /* -------------------------------------------------------------
+     Carrito (localStorage)
+     ------------------------------------------------------------- */
+  var CART_KEY = "tornarem_cart_v1";
+  var cart = {
+    items: {},
+    load: function () {
+      try {
+        var raw = localStorage.getItem(CART_KEY);
+        var data = raw ? JSON.parse(raw) : {};
+        this.items = {};
+        var self = this;
+        Object.keys(data.items || {}).forEach(function (id) {
+          var l = LOTES[id]; var q = parseInt(data.items[id], 10);
+          if (l && q > 0) self.items[id] = Math.min(q, l.stock || 99);
+        });
+      } catch (_) { this.items = {}; }
+    },
+    save: function () {
+      try { localStorage.setItem(CART_KEY, JSON.stringify({ items: this.items, t: Date.now() })); } catch (_) {}
+      document.dispatchEvent(new CustomEvent("cart:change"));
+    },
+    add: function (id, qty) {
+      var l = LOTES[id]; if (!l) return false;
+      var cur = this.items[id] || 0;
+      var next = Math.min(cur + (qty || 1), l.stock || 99);
+      if (next === cur) return false;
+      this.items[id] = next; this.save(); return true;
+    },
+    set: function (id, qty) {
+      var l = LOTES[id]; if (!l) return;
+      qty = Math.max(0, Math.min(parseInt(qty, 10) || 0, l.stock || 99));
+      if (qty === 0) delete this.items[id]; else this.items[id] = qty;
+      this.save();
+    },
+    remove: function (id) { delete this.items[id]; this.save(); },
+    clear: function () { this.items = {}; this.save(); },
+    lines: function () {
+      var self = this;
+      return Object.keys(this.items).map(function (id) {
+        var l = LOTES[id]; var q = self.items[id];
+        return { lote: l, qty: q, total: l.precio * q };
       });
-    } catch (e) {
-      return decimals ? value.toFixed(decimals) : String(Math.round(value));
-    }
+    },
+    count: function () { var n = 0; for (var k in this.items) n += this.items[k]; return n; },
+    subtotal: function () { return this.lines().reduce(function (s, x) { return s + x.total; }, 0); },
+    hasPale: function () { return this.lines().some(function (x) { return /pal[eé]/i.test(x.lote.formato || ""); }); }
+  };
+  cart.load();
+
+  /* -------------------------------------------------------------
+     Avisos (toast)
+     ------------------------------------------------------------- */
+  var toastTimer;
+  function toast(html, ms) {
+    var el = $("[data-toast]"); if (!el) return;
+    el.innerHTML = html;
+    el.classList.add("is-on");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { el.classList.remove("is-on"); }, ms || 3200);
   }
 
-  /* =============================================================
-     Navegación
-     ============================================================= */
+  /* -------------------------------------------------------------
+     Cabecera: menú móvil y contador del carrito
+     ------------------------------------------------------------- */
   function initNav() {
-    var nav = $("[data-nav]");
-    if (!nav) return;
+    var btn = $("[data-menu-toggle]"), menu = $("[data-menu]");
+    if (btn && menu) {
+      btn.addEventListener("click", function () {
+        var open = menu.classList.toggle("is-open");
+        btn.setAttribute("aria-expanded", open ? "true" : "false");
+        btn.setAttribute("aria-label", open ? "Cerrar menú" : "Abrir menú");
+      });
+      $$("a", menu).forEach(function (a) { a.addEventListener("click", function () { menu.classList.remove("is-open"); btn.setAttribute("aria-expanded", "false"); }); });
+    }
+    /* Marquesina sin costura: duplica el contenido una vez */
+    var track = $("[data-ticker]");
+    if (track && !track.dataset.dup) { track.dataset.dup = "1"; track.innerHTML += track.innerHTML; }
 
-    var onScroll = function () {
-      if (window.scrollY > 60) nav.classList.add("is-scrolled");
-      else nav.classList.remove("is-scrolled");
-    };
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-
-    var toggle = $(".nav-toggle", nav);
-    var drawer = $("#menu-movil");
-    if (!toggle || !drawer) return;
-
-    var setOpen = function (open) {
-      toggle.setAttribute("aria-expanded", open ? "true" : "false");
-      toggle.setAttribute("aria-label", open ? "Cerrar menú" : "Abrir menú");
-      drawer.setAttribute("data-open", open ? "true" : "false");
-      document.body.style.overflow = open ? "hidden" : "";
-    };
-
-    toggle.addEventListener("click", function () {
-      setOpen(toggle.getAttribute("aria-expanded") !== "true");
-    });
-
-    drawer.addEventListener("click", function (e) {
-      if (e.target.closest("a")) setOpen(false);
-    });
-
-    document.addEventListener("keydown", function (e) {
-      if (e.key === "Escape") setOpen(false);
-    });
-
-    window.addEventListener("resize", function () {
-      if (window.innerWidth >= 960) setOpen(false);
-    });
-  }
-
-  /* =============================================================
-     Anclas con desplazamiento nativo
-     ============================================================= */
-  function initAnchors() {
+    /* Anclas con desplazamiento suave y margen para la cabecera fija */
     document.addEventListener("click", function (e) {
       var a = e.target.closest('a[href^="#"]');
       if (!a) return;
       var id = a.getAttribute("href");
-      if (!id || id === "#") return;
+      if (!id || id === "#" || a.hasAttribute("data-open-lote")) return;
       var el = document.querySelector(id);
       if (!el) return;
       e.preventDefault();
-      var top = el.getBoundingClientRect().top + window.scrollY - 88;
-      window.scrollTo({ top: top, behavior: reduced ? "auto" : "smooth" });
-      if (el.id === "hero-cp" || el.tagName === "INPUT") {
-        setTimeout(function () { try { el.focus({ preventScroll: true }); } catch (_) { el.focus(); } }, 500);
-      }
+      var offset = 110;
+      window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - offset, behavior: reduced ? "auto" : "smooth" });
+      history.replaceState(null, "", id);
     });
   }
 
-  /* =============================================================
-     Revelado al hacer scroll
-     ============================================================= */
-  function initReveals() {
-    var els = $$("[data-reveal]");
-    if (!els.length) return;
+  function renderBadge() {
+    var n = cart.count();
+    $$("[data-cart-count]").forEach(function (el) { el.textContent = n; });
+    $$("[data-cart-count-2]").forEach(function (el) { el.textContent = "(" + n + ")"; });
+  }
 
-    if (!("IntersectionObserver" in window)) {
-      els.forEach(function (el) { el.classList.add("is-revealed"); });
+  /* -------------------------------------------------------------
+     Cajón del carrito
+     ------------------------------------------------------------- */
+  function initCartDrawer() {
+    var drawer = $("[data-cart]"), backdrop = $("[data-cart-backdrop]");
+    var openBtns = $$("[data-cart-open]");
+    if (!drawer) {
+      /* En páginas sin cajón, el botón del carrito lleva al checkout */
+      openBtns.forEach(function (b) { b.addEventListener("click", function () { location.href = "checkout.html"; }); });
       return;
     }
+    var lastFocus = null;
+    function open() {
+      lastFocus = document.activeElement;
+      drawer.classList.add("is-open"); backdrop.classList.add("is-open");
+      drawer.setAttribute("aria-hidden", "false");
+      openBtns.forEach(function (b) { b.setAttribute("aria-expanded", "true"); });
+      document.body.style.overflow = "hidden";
+      var c = $("[data-cart-close]", drawer); if (c) c.focus();
+    }
+    function close() {
+      drawer.classList.remove("is-open"); backdrop.classList.remove("is-open");
+      drawer.setAttribute("aria-hidden", "true");
+      openBtns.forEach(function (b) { b.setAttribute("aria-expanded", "false"); });
+      document.body.style.overflow = "";
+      if (lastFocus && lastFocus.focus) lastFocus.focus();
+    }
+    openBtns.forEach(function (b) { b.addEventListener("click", open); });
+    $$("[data-cart-close]", drawer).forEach(function (b) { b.addEventListener("click", close); });
+    backdrop.addEventListener("click", close);
+    document.addEventListener("keydown", function (e) { if (e.key === "Escape" && drawer.classList.contains("is-open")) close(); });
 
+    var itemsEl = $("[data-cart-items]", drawer);
+    var subEl = $("[data-cart-subtotal]", drawer);
+    var checkoutBtn = $("[data-cart-checkout]", drawer);
+
+    function render() {
+      var lines = cart.lines();
+      if (!lines.length) {
+        itemsEl.innerHTML = '<div class="drawer-empty"><span>Todavía no hay ningún lote.</span><button class="btn btn-solid" type="button" data-cart-close>Ver los lotes</button></div>';
+        $$("[data-cart-close]", itemsEl).forEach(function (b) { b.addEventListener("click", close); });
+        if (checkoutBtn) { checkoutBtn.setAttribute("aria-disabled", "true"); checkoutBtn.classList.add("is-busy"); }
+      } else {
+        itemsEl.innerHTML = lines.map(function (x) {
+          var l = x.lote;
+          return '<div class="citem" data-citem="' + escHTML(l.id) + '">' +
+            '<img src="' + escHTML(l.img) + '" alt="" loading="lazy">' +
+            '<div>' +
+              '<div class="citem-name">' + escHTML(l.nombre) + '</div>' +
+              '<div class="citem-meta">' + escHTML(l.ref) + ' · ' + escHTML(l.uds) + ' uds · ' + escHTML(eur(l.precio)) + '/lote</div>' +
+              '<div class="citem-row">' +
+                '<span class="qty" aria-label="Cantidad">' +
+                  '<button type="button" data-qty="-1" aria-label="Quitar uno"' + (x.qty <= 1 ? "" : "") + '>−</button>' +
+                  '<output>' + x.qty + '</output>' +
+                  '<button type="button" data-qty="1" aria-label="Añadir uno"' + (x.qty >= l.stock ? " disabled" : "") + '>+</button>' +
+                '</span>' +
+                '<b class="citem-total">' + escHTML(eur(x.total)) + '</b>' +
+              '</div>' +
+              '<button class="citem-remove" type="button" data-remove>Quitar</button>' +
+            '</div>' +
+          '</div>';
+        }).join("");
+        if (checkoutBtn) { checkoutBtn.removeAttribute("aria-disabled"); checkoutBtn.classList.remove("is-busy"); }
+      }
+      if (subEl) subEl.textContent = eur(cart.subtotal());
+      renderBadge();
+    }
+    itemsEl.addEventListener("click", function (e) {
+      var row = e.target.closest("[data-citem]"); if (!row) return;
+      var id = row.getAttribute("data-citem");
+      var q = e.target.closest("[data-qty]");
+      if (q) { cart.set(id, (cart.items[id] || 0) + parseInt(q.getAttribute("data-qty"), 10)); return; }
+      if (e.target.closest("[data-remove]")) { cart.remove(id); }
+    });
+    document.addEventListener("cart:change", render);
+    render();
+
+    /* Botones "Añadir al carrito" de la página */
+    document.addEventListener("click", function (e) {
+      var b = e.target.closest("[data-add]"); if (!b) return;
+      var id = b.getAttribute("data-add"); var l = LOTES[id]; if (!l) return;
+      var ok = cart.add(id, 1);
+      var navBtn = $("[data-cart-open]");
+      if (navBtn) { navBtn.classList.remove("is-bump"); void navBtn.offsetWidth; navBtn.classList.add("is-bump"); }
+      if (ok) toast('Añadido: <b>' + escHTML(l.nombre) + '</b> <a href="#carrito" data-toast-open>Ver carrito</a>');
+      else toast('Ya tienes las ' + l.stock + ' unidades disponibles de <b>' + escHTML(l.nombre) + '</b> en el carrito.');
+      var dlg = $("[data-lote-dialog]"); if (dlg && dlg.open) dlg.close();
+    });
+    document.addEventListener("click", function (e) {
+      var a = e.target.closest("[data-toast-open]"); if (!a) return;
+      e.preventDefault(); open();
+    });
+  }
+
+  /* -------------------------------------------------------------
+     Ficha de lote (diálogo)
+     ------------------------------------------------------------- */
+  function initLoteDialog() {
+    var dlg = $("[data-lote-dialog]"); if (!dlg) return;
+    var img = $("[data-dlg-img]", dlg), meta = $("[data-dlg-meta]", dlg), title = $("[data-dlg-title]", dlg),
+        resumen = $("[data-dlg-resumen]", dlg), cont = $("[data-dlg-contenido]", dlg), nota = $("[data-dlg-nota]", dlg),
+        precio = $("[data-dlg-precio]", dlg), off = $("[data-dlg-off]", dlg), pvp = $("[data-dlg-pvp]", dlg),
+        stock = $("[data-dlg-stock]", dlg), add = $("[data-dlg-add]", dlg);
+
+    function openLote(id) {
+      var l = LOTES[id]; if (!l) return;
+      img.src = l.img; img.alt = l.nombre;
+      meta.textContent = "Ref " + l.ref + " · " + l.uds + " uds · " + l.formato + " · " + l.peso + " · Grado " + l.grado;
+      title.textContent = l.nombre;
+      resumen.textContent = l.resumen;
+      cont.innerHTML = (l.contenido || []).map(function (c) { return "<li>" + escHTML(c) + "</li>"; }).join("");
+      nota.textContent = l.nota || ""; nota.style.display = l.nota ? "" : "none";
+      precio.textContent = eur(l.precio); off.textContent = "−" + pct(l) + " %"; pvp.textContent = "PVP estimado " + eur(l.pvp) + " · IVA y envío incluidos";
+      var esPale = /pal[eé]/i.test(l.formato || "");
+      stock.textContent = "Quedan " + l.stock + (esPale ? " palés" : " lotes") + " · Entrega prevista: " + fechaLarga(fechaEntrega(esPale));
+      stock.classList.toggle("is-low", l.stock <= 2);
+      add.setAttribute("data-add", id);
+      add.textContent = "Añadir al carrito · " + eur(l.precio);
+      if (typeof dlg.showModal === "function") dlg.showModal(); else dlg.setAttribute("open", "");
+      dlg.scrollTop = 0;
+    }
+    document.addEventListener("click", function (e) {
+      var b = e.target.closest("[data-open-lote]"); if (!b) return;
+      e.preventDefault(); openLote(b.getAttribute("data-open-lote"));
+    });
+    $$("[data-dialog-close]", dlg).forEach(function (b) { b.addEventListener("click", function () { dlg.close(); }); });
+    dlg.addEventListener("click", function (e) { if (e.target === dlg) dlg.close(); });
+
+    /* Enlace directo: index.html#lote-moda abre la ficha */
+    var h = location.hash.replace("#", "");
+    if (h && LOTES[h]) setTimeout(function () { openLote(h); }, 400);
+  }
+
+  /* -------------------------------------------------------------
+     Ordenar el catálogo
+     ------------------------------------------------------------- */
+  function initSort() {
+    var sel = $("[data-sort]"), grid = $("[data-lotes]"); if (!sel || !grid) return;
+    sel.addEventListener("change", function () {
+      var cards = $$(".lote", grid);
+      var wide = cards.filter(function (c) { return c.classList.contains("lote--wide"); });
+      var rest = cards.filter(function (c) { return !c.classList.contains("lote--wide"); });
+      var n = function (c, k) { return parseFloat(c.getAttribute("data-" + k)) || 0; };
+      var by = {
+        "default": function (a, b) { return n(a, "index") - n(b, "index"); },
+        "precio-asc": function (a, b) { return n(a, "precio") - n(b, "precio"); },
+        "precio-desc": function (a, b) { return n(b, "precio") - n(a, "precio"); },
+        "descuento": function (a, b) { return (n(b, "pvp") / n(b, "precio")) - (n(a, "pvp") / n(a, "precio")); },
+        "uds": function (a, b) { return n(b, "uds") - n(a, "uds"); }
+      }[sel.value] || function () { return 0; };
+      rest.sort(by).concat(wide).forEach(function (c) { grid.appendChild(c); c.classList.add("is-in"); });
+    });
+  }
+
+  /* -------------------------------------------------------------
+     Efectos: revelado, contadores, cuenta atrás, hero
+     ------------------------------------------------------------- */
+  function initReveals() {
+    var els = $$(".rv"); if (!els.length) return;
+    if (!("IntersectionObserver" in window)) { els.forEach(function (e) { e.classList.add("is-in"); }); return; }
     var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("is-revealed");
-          io.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.01, rootMargin: "0px 0px -2% 0px" });
-
-    els.forEach(function (el) { io.observe(el); });
-
-    /* Red de seguridad: a los 6 s, nada que esté en pantalla sigue oculto */
-    setTimeout(function () {
-      $$("[data-reveal]:not(.is-revealed)").forEach(function (el) {
-        if (el.getBoundingClientRect().top < window.innerHeight * 1.2) {
-          el.classList.add("is-revealed");
-        }
-      });
-    }, 6000);
+      entries.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add("is-in"); io.unobserve(en.target); } });
+    }, { threshold: 0.01, rootMargin: "0px 0px -4% 0px" });
+    els.forEach(function (e) { io.observe(e); });
+    setTimeout(function () { $$(".rv:not(.is-in)").forEach(function (e) { e.classList.add("is-in"); }); }, 6000);
   }
 
-  /* =============================================================
-     Cifras que cuentan hacia arriba
-     ============================================================= */
-  function initCountUp() {
-    var els = $$("[data-count-to]");
-    if (!els.length) return;
+  function initCounters() {
+    var els = $$("[data-count]"); if (!els.length) return;
+    var fmt = function (n) { return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, "."); };
+    function run(el) {
+      var to = parseFloat(el.getAttribute("data-count")) || 0, dur = reduced ? 400 : 1400, t0 = null;
+      function step(ts) {
+        if (!t0) t0 = ts;
+        var p = Math.min(1, (ts - t0) / dur); p = 1 - Math.pow(1 - p, 3);
+        el.textContent = fmt(to * p);
+        if (p < 1) requestAnimationFrame(step); else el.textContent = fmt(to);
+      }
+      requestAnimationFrame(step);
+    }
+    if (!("IntersectionObserver" in window)) return;
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) { if (en.isIntersecting) { run(en.target); io.unobserve(en.target); } });
+    }, { threshold: 0.01 });
+    els.forEach(function (e) { io.observe(e); });
+  }
 
-    els.forEach(function (el) {
-      var raw = el.getAttribute("data-count-to");
-      var target = parseFloat(raw);
-      if (isNaN(target)) return;
-      var decimals = (raw.split(".")[1] || "").length;
-      var final = fmt(target, decimals);
+  function initCountdown() {
+    var box = $("[data-countdown]"); if (!box) return;
+    var pc = T.proximoCamion || {}; var dia = Number(pc.diaSemana) || 4, hora = Number(pc.hora) || 8;
+    function target() {
+      var d = new Date(); d.setHours(hora, 0, 0, 0);
+      var diff = (dia - d.getDay() + 7) % 7;
+      if (diff === 0 && d <= new Date()) diff = 7;
+      d.setDate(d.getDate() + diff); return d;
+    }
+    var t = target();
+    var cells = { d: $('[data-cd="d"]', box), h: $('[data-cd="h"]', box), m: $('[data-cd="m"]', box), s: $('[data-cd="s"]', box) };
+    var pad = function (n) { return (n < 10 ? "0" : "") + n; };
+    function tick() {
+      var ms = t - new Date(); if (ms < 0) { t = target(); ms = t - new Date(); }
+      var s = Math.floor(ms / 1000);
+      cells.d.textContent = Math.floor(s / 86400);
+      cells.h.textContent = pad(Math.floor(s % 86400 / 3600));
+      cells.m.textContent = pad(Math.floor(s % 3600 / 60));
+      cells.s.textContent = pad(s % 60);
+    }
+    tick(); setInterval(tick, 1000);
+  }
 
-      var run = function () {
-        if (reduced || !window.gsap || target === 0) { el.textContent = final; return; }
-        var obj = { v: 0 };
-        window.gsap.to(obj, {
-          v: target,
-          duration: 1.5,
-          ease: "power2.out",
-          onUpdate: function () { el.textContent = fmt(obj.v, decimals); },
-          onComplete: function () { el.textContent = final; }
-        });
+  function initHero() {
+    var title = $(".hero-title"); if (!title || !window.gsap) return;
+    var stamps = $$(".stamp", title);
+    var img = $(".hero-fig img");
+    /* Primero se activa el estado "oculto" por CSS y, al terminar la
+       animación, se quita la clase y los estilos en línea a la vez para
+       que la regla CSS no vuelva a esconder nada. */
+    var done = false;
+    function finish() {
+      if (done) return; done = true;
+      document.documentElement.classList.remove("has-gsap");
+      gsap.set(stamps, { clearProps: "all" });
+      if (img) gsap.set(img, { clearProps: "all" });
+    }
+    document.documentElement.classList.add("has-gsap");
+    var tl = gsap.timeline({ onComplete: finish });
+    tl.to(stamps, { opacity: 1, scale: 1, duration: reduced ? 0.3 : 0.55, ease: "expo.out", stagger: reduced ? 0.03 : 0.09 }, 0.1);
+    if (img) tl.to(img, { clipPath: "inset(0 0% 0 0)", duration: reduced ? 0.4 : 1.1, ease: "expo.inOut" }, 0.35);
+    /* Red de seguridad: pase lo que pase, todo visible a los 4 s */
+    setTimeout(finish, 4000);
+  }
+
+  /* -------------------------------------------------------------
+     Checkout
+     ------------------------------------------------------------- */
+  function initCheckout() {
+    var form = $("[data-checkout-form]"); if (!form) return;
+    var itemsEl = $("[data-co-items]"), emptyEl = $("[data-co-empty]"), gridEl = $("[data-co-grid]");
+    var subEl = $("[data-co-subtotal]"), codRow = $("[data-co-cod-row]"), codEl = $("[data-co-cod]"), totEl = $("[data-co-total]"), etaEl = $("[data-co-eta]");
+    var msg = $("[data-co-msg]"), submit = $("[data-co-submit]");
+    var pagoInputs = $$('input[name="pago"]', form);
+
+    function pago() { var c = pagoInputs.filter(function (i) { return i.checked; })[0]; return c ? c.value : "contrarreembolso"; }
+    function totals() {
+      var sub = cart.subtotal(); var cod = pago() === "contrarreembolso" ? recargoCOD(sub) : 0;
+      return { sub: sub, cod: cod, total: sub + cod };
+    }
+    function render() {
+      var lines = cart.lines();
+      if (!lines.length) { if (gridEl) gridEl.style.display = "none"; if (emptyEl) emptyEl.style.display = ""; renderBadge(); return; }
+      if (gridEl) gridEl.style.display = ""; if (emptyEl) emptyEl.style.display = "none";
+      itemsEl.innerHTML = lines.map(function (x) {
+        var l = x.lote;
+        return '<div class="citem" data-citem="' + escHTML(l.id) + '">' +
+          '<img src="' + escHTML(l.img) + '" alt="" loading="lazy"><div>' +
+          '<div class="citem-name">' + escHTML(l.nombre) + '</div>' +
+          '<div class="citem-meta">' + escHTML(l.ref) + ' · ' + escHTML(l.uds) + ' uds · Grado ' + escHTML(l.grado) + '</div>' +
+          '<div class="citem-row"><span class="qty" aria-label="Cantidad"><button type="button" data-qty="-1" aria-label="Quitar uno">−</button><output>' + x.qty + '</output><button type="button" data-qty="1" aria-label="Añadir uno"' + (x.qty >= l.stock ? " disabled" : "") + '>+</button></span>' +
+          '<b class="citem-total">' + escHTML(eur(x.total)) + '</b></div>' +
+          '<button class="citem-remove" type="button" data-remove>Quitar</button></div></div>';
+      }).join("");
+      var t = totals();
+      subEl.textContent = eur(t.sub);
+      if (codRow) codRow.style.display = t.cod ? "" : "none";
+      if (codEl) codEl.textContent = eur(t.cod);
+      totEl.textContent = eur(t.total);
+      if (etaEl) etaEl.textContent = "Entrega prevista: " + fechaLarga(fechaEntrega(cart.hasPale())) + (cart.hasPale() ? " · palé con llamada previa" : " · antes de las 14:00 sale hoy");
+      if (submit) submit.textContent = (pago() === "tarjeta" ? "Pagar con tarjeta · " : "Confirmar pedido · ") + eur(t.total);
+      renderBadge();
+    }
+    itemsEl.addEventListener("click", function (e) {
+      var row = e.target.closest("[data-citem]"); if (!row) return;
+      var id = row.getAttribute("data-citem");
+      var q = e.target.closest("[data-qty]");
+      if (q) { cart.set(id, (cart.items[id] || 0) + parseInt(q.getAttribute("data-qty"), 10)); return; }
+      if (e.target.closest("[data-remove]")) cart.remove(id);
+    });
+    pagoInputs.forEach(function (i) { i.addEventListener("change", render); });
+    document.addEventListener("cart:change", render);
+    render();
+
+    /* Si vuelve de la pasarela sin pagar */
+    if (/cancelado=1/.test(location.search)) showMsg("No se ha completado el pago. Tu carrito sigue aquí: puedes volver a intentarlo o elegir contrarreembolso.", true);
+
+    function showMsg(html, isError) {
+      if (!msg) return;
+      msg.innerHTML = html; msg.classList.add("is-on"); msg.classList.toggle("co-msg--error", !!isError);
+      msg.scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "center" });
+    }
+    function field(name) { return form.elements[name]; }
+    function val(name) { var f = field(name); return f ? String(f.value || "").trim() : ""; }
+    function markError(name, on) {
+      var f = field(name); if (!f) return;
+      var wrap = f.closest(".field"); if (wrap) wrap.classList.toggle("is-error", !!on);
+      f.setAttribute("aria-invalid", on ? "true" : "false");
+    }
+    function validate() {
+      var bad = [];
+      var req = ["nombre", "email", "telefono", "direccion", "cp", "poblacion", "provincia"];
+      req.forEach(function (n) { var ok = val(n) !== ""; markError(n, !ok); if (!ok) bad.push(n); });
+      if (val("email") && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(val("email"))) { markError("email", true); bad.push("email"); }
+      if (val("telefono") && (val("telefono").replace(/\D/g, "").length < 9)) { markError("telefono", true); bad.push("telefono"); }
+      if (val("cp") && !/^\d{5}$/.test(val("cp"))) { markError("cp", true); bad.push("cp"); }
+      var acepta = field("acepta"); if (acepta && !acepta.checked) { bad.push("acepta"); acepta.closest(".check").style.outline = "3px solid var(--accent)"; } else if (acepta) { acepta.closest(".check").style.outline = ""; }
+      return bad;
+    }
+    function textoPedido(num) {
+      var t = totals();
+      var lines = cart.lines().map(function (x) { return "- " + x.qty + " × " + x.lote.nombre + " (" + x.lote.ref + ") = " + eur(x.total); });
+      return ["PEDIDO " + (num || "(nuevo)") + " — Tornarem", "", "Lotes:"].concat(lines).concat(["",
+        "Subtotal: " + eur(t.sub), (t.cod ? "Recargo contrarreembolso: " + eur(t.cod) : "Pago con tarjeta"), "TOTAL: " + eur(t.total), "",
+        "Nombre: " + val("nombre"), "Email: " + val("email"), "Teléfono: " + val("telefono"),
+        "Dirección: " + val("direccion") + ", " + val("cp") + " " + val("poblacion") + " (" + val("provincia") + ")",
+        (val("nif") ? "NIF/CIF: " + val("nif") : ""), (val("empresa") ? "Empresa: " + val("empresa") : ""), (val("notas") ? "Notas: " + val("notas") : "")]).filter(function (s) { return s !== ""; }).join("\n");
+    }
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      if (!cart.count()) { showMsg("El carrito está vacío.", true); return; }
+      var bad = validate();
+      if (bad.length) { showMsg("Revisa los campos marcados: faltan datos o no son correctos.", true); var f = field(bad[0]); if (f && f.focus) f.focus(); return; }
+      var payload = {
+        cliente: { nombre: val("nombre"), email: val("email"), telefono: val("telefono"), direccion: val("direccion"), cp: val("cp"),
+                   poblacion: val("poblacion"), provincia: val("provincia"), nif: val("nif"), empresa: val("empresa"), notas: val("notas") },
+        pago: pago(),
+        items: cart.lines().map(function (x) { return { id: x.lote.id, qty: x.qty }; }),
+        total_cliente: totals().total,
+        web: val("web"),
+        origen: location.href
       };
+      submit.classList.add("is-busy"); submit.textContent = "Enviando…";
+      if (msg) msg.classList.remove("is-on");
 
-      if (!("IntersectionObserver" in window)) { run(); return; }
-      var io = new IntersectionObserver(function (entries) {
-        entries.forEach(function (entry) {
-          if (entry.isIntersecting) { run(); io.unobserve(entry.target); }
-        });
-      }, { threshold: 0.3 });
-      io.observe(el);
-    });
-  }
-
-  /* =============================================================
-     Botones magnéticos (sólo con ratón fino)
-     ============================================================= */
-  function initMagnetic() {
-    if (!fineHover) return;
-
-    $$("[data-magnetic]").forEach(function (el) {
-      if (el.dataset.magneticBound) return;
-      el.dataset.magneticBound = "1";
-
-      var strength = parseFloat(el.getAttribute("data-magnetic-strength") || "0.22");
-      var inner = document.createElement("span");
-      inner.className = "magnetic-inner";
-      while (el.firstChild) inner.appendChild(el.firstChild);
-      el.appendChild(inner);
-      el.classList.add("has-magnetic");
-
-      var tx = 0, ty = 0, cx = 0, cy = 0, raf = null;
-
-      function loop() {
-        cx += (tx - cx) * 0.2;
-        cy += (ty - cy) * 0.2;
-        inner.style.transform = "translate3d(" + cx.toFixed(2) + "px," + cy.toFixed(2) + "px,0)";
-        raf = (Math.abs(tx - cx) > 0.1 || Math.abs(ty - cy) > 0.1) ? requestAnimationFrame(loop) : null;
-      }
-
-      el.addEventListener("mousemove", function (e) {
-        var r = el.getBoundingClientRect();
-        tx = ((e.clientX - r.left) - r.width / 2) * strength;
-        ty = ((e.clientY - r.top) - r.height / 2) * strength;
-        if (!raf) raf = requestAnimationFrame(loop);
-      });
-
-      el.addEventListener("mouseleave", function () {
-        tx = 0; ty = 0;
-        if (!raf) raf = requestAnimationFrame(loop);
-      });
-    });
-  }
-
-  /* =============================================================
-     Conmutador de tarifas
-     ============================================================= */
-  function initPlansSwitch() {
-    var group = $("[data-plans-switch]");
-    if (!group) return;
-    var tabs = $$("[data-plan-tab]", group);
-    if (!tabs.length) return;
-
-    function select(key) {
-      tabs.forEach(function (t) {
-        t.setAttribute("aria-selected", t.getAttribute("data-plan-tab") === key ? "true" : "false");
-      });
-      $$("[data-plan-panel]").forEach(function (panel) {
-        panel.hidden = panel.getAttribute("data-plan-panel") !== key;
-      });
-      if (window.ScrollTrigger) { try { window.ScrollTrigger.refresh(); } catch (_) {} }
-    }
-
-    tabs.forEach(function (tab) {
-      tab.addEventListener("click", function () { select(tab.getAttribute("data-plan-tab")); });
-      tab.addEventListener("keydown", function (e) {
-        if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
-        e.preventDefault();
-        var i = tabs.indexOf(tab);
-        var next = tabs[(i + (e.key === "ArrowRight" ? 1 : tabs.length - 1)) % tabs.length];
-        next.focus();
-        select(next.getAttribute("data-plan-tab"));
-      });
-    });
-  }
-
-  /* =============================================================
-     Comprobador de cobertura
-     ============================================================= */
-  function findCobertura(query) {
-    var list = data.cobertura || [];
-    var q = norm(query);
-    if (!q) return null;
-
-    /* Código postal exacto o por prefijo */
-    var digits = q.replace(/\D/g, "");
-    if (digits.length >= 3) {
-      var byCp = list.filter(function (row) { return row.cp.indexOf(digits) === 0; });
-      if (byCp.length) return byCp[0];
-    }
-
-    /* Nombre del municipio */
-    var exact = null, partial = null;
-    list.forEach(function (row) {
-      var n = norm(row.m);
-      if (n === q) exact = exact || row;
-      else if (n.indexOf(q) === 0 || n.indexOf(" " + q) > -1) partial = partial || row;
-    });
-    return exact || partial;
-  }
-
-  function initCoverCheck() {
-    var form = $("[data-cover-check]");
-    if (!form) return;
-    var box = $("[data-cover-result]", form);
-    var titleEl = $("[data-cover-title]", form);
-    var textEl = $("[data-cover-text]", form);
-    var input = $("input", form);
-    if (!box || !titleEl || !textEl || !input) return;
-
-    var msgs = data.coberturaMsg || {};
-
-    form.addEventListener("submit", function (e) {
-      e.preventDefault();
-      var value = input.value.trim();
-      if (!value) { input.focus(); return; }
-
-      var hit = findCobertura(value);
-      var state = hit ? hit.estado : "no";
-      var msg = msgs[state] || msgs.no || { titulo: "", texto: "" };
-
-      box.setAttribute("data-state", state);
-      titleEl.textContent = hit ? hit.m + " — " + msg.titulo : msg.titulo;
-      textEl.textContent = msg.texto;
-      box.classList.add("is-open");
-    });
-
-    /* Al reescribir, el resultado anterior deja de tener sentido */
-    input.addEventListener("input", function () {
-      box.classList.remove("is-open");
-    });
-  }
-
-  /* =============================================================
-     Filtro del listado de cobertura
-     ============================================================= */
-  function initCoverFilter() {
-    var input = $("[data-cover-filter]");
-    var list = $("[data-cover-list]");
-    if (!input || !list) return;
-
-    var items = $$(".cover-item", list);
-    var empty = document.createElement("li");
-    empty.className = "cover-empty";
-    empty.hidden = true;
-    empty.textContent = "Ahí todavía no llegamos. Escríbenos y entras en el plan del año que viene.";
-    list.appendChild(empty);
-
-    input.addEventListener("input", function () {
-      var q = norm(input.value);
-      var visible = 0;
-      items.forEach(function (item) {
-        var match = !q || norm(item.textContent).indexOf(q) > -1;
-        item.hidden = !match;
-        if (match) visible++;
-      });
-      empty.hidden = visible > 0;
-    });
-  }
-
-  /* =============================================================
-     Formulario de contacto (envío simulado)
-     ============================================================= */
-  function initContactForm() {
-    var form = $("[data-contact-form]");
-    var success = $("[data-contact-success]");
-    if (!form || !success) return;
-
-    var btn = $("[type=submit]", form);
-    var msg = $("[data-contact-success-msg]", success);
-    var title = $("[data-contact-success-title]", success);
-    var errBox = $("[data-contact-error]", form);
-    var TEL = (data.contacto && data.contacto.telefono) || "900 000 000";
-
-    function mostrarError(texto) {
-      form.classList.remove("is-sending");
-      if (btn) btn.disabled = false;
-      if (!errBox) { window.alert(texto); return; }
-      errBox.textContent = texto;
-      errBox.hidden = false;
-    }
-
-    function mostrarAcuse() {
-      var nombre = (form.elements.nombre && form.elements.nombre.value || "").trim();
-      var municipio = (form.elements.municipio && form.elements.municipio.value || "").trim();
-      var pila = nombre.split(/\s+/)[0] || "Hola";
-      var hit = municipio ? findCobertura(municipio) : null;
-      var esEmpresa = !!(form.elements.origen && form.elements.origen.value === "empresas");
-
-      if (title) title.textContent = pila + ", recibido.";
-      if (msg) {
-        if (esEmpresa) {
-          msg.textContent = hit
-            ? "En " + hit.m + " ya tenemos red propia, así que la propuesta te llega en 48 horas laborables con los precios cerrados."
-            : "Te preparamos la propuesta en 48 horas laborables. Si necesitas hablarlo antes, marca el " + TEL + ", extensión 2.";
-        } else {
-          msg.textContent = hit && hit.estado !== "obras"
-            ? "En " + hit.m + " ya tenemos nodo abierto, así que te llamamos hoy mismo en horario de oficina para cerrar día de instalación."
-            : "Te llamamos en menos de un día laborable. Si prefieres adelantarlo, marca el " + TEL + " y pregunta por el equipo de altas.";
-        }
-      }
-
-      form.classList.add("is-sent");
-
-      /* Al acabar el desvanecido retiramos el formulario del flujo:
-         si sólo bajase la opacidad, el acuse quedaría fuera de pantalla. */
-      setTimeout(function () {
-        form.hidden = true;
-        success.classList.add("is-visible");
-        try {
-          success.scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "center" });
-        } catch (_) {
-          success.scrollIntoView();
-        }
-      }, 480);
-    }
-
-    form.addEventListener("submit", function (e) {
-      if (form.classList.contains("is-sending")) { e.preventDefault(); return; }
-
-      /* Sin fetch (navegador antiguo) dejamos que el formulario se envíe
-         a enviar.php como toda la vida: recarga y página de gracias. */
-      if (!window.fetch || !window.FormData || !form.getAttribute("action")) return;
-
-      e.preventDefault();
-      if (!form.reportValidity()) return;
-      if (errBox) errBox.hidden = true;
-
-      form.classList.add("is-sending");
-      if (btn) btn.disabled = true;
-
-      var vencido = false;
-      var reloj = setTimeout(function () {
-        vencido = true;
-        mostrarError("El envío está tardando demasiado. Vuelve a intentarlo o llámanos al " + TEL + ".");
-      }, 12000);
-
-      fetch(form.getAttribute("action"), {
-        method: "POST",
-        body: new FormData(form),
-        headers: { "Accept": "application/json", "X-Requested-With": "fetch" }
-      })
-        .then(function (r) {
-          return r.json().catch(function () { return { ok: r.ok, mensaje: "" }; });
+      var ctrl = ("AbortController" in window) ? new AbortController() : null;
+      var timer = ctrl ? setTimeout(function () { ctrl.abort(); }, 25000) : null;
+      fetch("pedido.php", { method: "POST", headers: { "Content-Type": "application/json", "Accept": "application/json" },
+        body: JSON.stringify(payload), signal: ctrl ? ctrl.signal : undefined })
+        .then(function (r) { return r.text().then(function (t) { var d; try { d = JSON.parse(t); } catch (_) { throw new Error("respuesta no válida (" + r.status + ")"); } if (!r.ok && !d.mensaje) throw new Error("HTTP " + r.status); return d; }); })
+        .then(function (d) {
+          if (timer) clearTimeout(timer);
+          if (!d.ok) { throw new Error(d.mensaje || "No se ha podido registrar el pedido."); }
+          cart.clear();
+          if (d.url) { location.href = d.url; return; }
+          location.href = "gracias.html?p=" + encodeURIComponent(d.pedido) + "&pago=" + encodeURIComponent(d.pago) + "&total=" + encodeURIComponent(d.total) + "&email=" + encodeURIComponent(payload.cliente.email);
         })
-        .then(function (res) {
-          if (vencido) return;
-          clearTimeout(reloj);
-          if (res && res.ok) mostrarAcuse();
-          else mostrarError((res && res.mensaje) || ("No hemos podido enviarlo. Llámanos al " + TEL + " y lo resolvemos al momento."));
-        })
-        .catch(function () {
-          if (vencido) return;
-          clearTimeout(reloj);
-          mostrarError("No hemos podido enviarlo: parece que no hay conexión. Prueba otra vez o llámanos al " + TEL + ".");
+        .catch(function (err) {
+          if (timer) clearTimeout(timer);
+          submit.classList.remove("is-busy"); render();
+          var c = T.contacto || {};
+          var texto = textoPedido();
+          var mailto = "mailto:" + (c.email || "") + "?subject=" + encodeURIComponent("Pedido web — " + val("nombre")) + "&body=" + encodeURIComponent(texto);
+          var wa = c.whatsapp ? "https://wa.me/" + c.whatsapp + "?text=" + encodeURIComponent(texto) : "";
+          showMsg("<b>No hemos podido registrar el pedido automáticamente</b> (" + escHTML(err.message || "error de red") + "). " +
+            "No has perdido nada: envíanoslo por correo o WhatsApp con un clic y lo confirmamos nosotros." +
+            '<div class="fallbacks"><a class="btn btn-solid" href="' + mailto + '">Enviar por correo</a>' + (wa ? '<a class="btn btn-line" href="' + wa + '" target="_blank" rel="noopener">Enviar por WhatsApp</a>' : "") +
+            (c.telefonoHref ? '<a class="btn btn-line" href="' + escHTML(c.telefonoHref) + '">Llamar al ' + escHTML(c.telefono) + '</a>' : "") + "</div>", true);
         });
     });
   }
 
-  /* =============================================================
-     Créditos de las fotografías (enriquecimiento, no contenido)
-     ============================================================= */
-  function initCredits() {
-    var node = $("[data-credits]");
-    if (!node || !window.fetch) return;
-
-    fetch("assets/credits.json")
-      .then(function (r) { return r.ok ? r.json() : null; })
-      .then(function (credits) {
-        if (!credits) return;
-        var parts = Object.keys(credits).map(function (key) {
-          var c = credits[key];
-          var licencia = String(c.license || "").toUpperCase();
-          return '<a href="' + c.foreign_landing_url + '" rel="noopener nofollow">' + c.title + "</a>"
-            + " de " + c.creator + " (CC " + licencia + " " + (c.license_version || "") + ")";
-        });
-        if (parts.length) {
-          node.innerHTML = "Fotografías bajo licencia Creative Commons vía Openverse: " + parts.join(" · ") + ".";
-        }
-      })
-      .catch(function () { /* en file:// el fetch falla; el texto de respaldo ya está en el HTML */ });
+  /* -------------------------------------------------------------
+     Página de gracias
+     ------------------------------------------------------------- */
+  function initGracias() {
+    var box = $("[data-gracias]"); if (!box) return;
+    var q = {}; location.search.replace(/^\?/, "").split("&").forEach(function (kv) { if (!kv) return; var p = kv.split("="); q[decodeURIComponent(p[0])] = decodeURIComponent((p[1] || "").replace(/\+/g, " ")); });
+    var num = q.p || "", pago = q.pago || "", total = parseFloat(q.total);
+    $$("[data-g-num]", box).forEach(function (el) { el.textContent = num || "pendiente de confirmar"; });
+    $$("[data-g-total]", box).forEach(function (el) { el.textContent = isNaN(total) ? "—" : eur(total); });
+    $$("[data-g-email]", box).forEach(function (el) { el.textContent = q.email || "tu correo"; });
+    $$("[data-g-pago]", box).forEach(function (el) { el.style.display = (el.getAttribute("data-g-pago") === pago) ? "" : "none"; });
+    if (!pago) { var g = $('[data-g-pago="generico"]', box); if (g) g.style.display = ""; }
+    if (q.stripe === "ok") cart.clear();
+    var eta = $("[data-g-eta]", box); if (eta) eta.textContent = fechaLarga(fechaEntrega(false));
   }
 
-  /* =============================================================
-     Profundidad de la malla de color al hacer scroll
-     ============================================================= */
-  function initMeshParallax() {
-    if (!window.gsap || !window.ScrollTrigger) return;
-    $$(".hero .mesh").forEach(function (mesh) {
-      window.gsap.to(mesh, {
-        yPercent: 14,
-        ease: "none",
-        scrollTrigger: {
-          trigger: mesh.parentElement,
-          start: "top top",
-          end: "bottom top",
-          scrub: true
-        }
-      });
-    });
-  }
-
-  /* =============================================================
+  /* -------------------------------------------------------------
      Arranque
-     ============================================================= */
+     ------------------------------------------------------------- */
   function boot() {
+    document.documentElement.classList.add("js-ready");
     safe(initNav, "initNav");
-    safe(initAnchors, "initAnchors");
+    safe(renderBadge, "renderBadge");
+    safe(initCartDrawer, "initCartDrawer");
+    safe(initLoteDialog, "initLoteDialog");
+    safe(initSort, "initSort");
     safe(initReveals, "initReveals");
-    safe(initCountUp, "initCountUp");
-    safe(initMagnetic, "initMagnetic");
-    safe(initPlansSwitch, "initPlansSwitch");
-    safe(initCoverCheck, "initCoverCheck");
-    safe(initCoverFilter, "initCoverFilter");
-    safe(initContactForm, "initContactForm");
-    safe(initCredits, "initCredits");
-
-    if (window.gsap && window.ScrollTrigger) {
-      try { window.gsap.registerPlugin(window.ScrollTrigger); } catch (_) {}
-      safe(initMeshParallax, "initMeshParallax");
-    }
-
-    document.documentElement.classList.add("is-ready");
+    safe(initCounters, "initCounters");
+    safe(initCountdown, "initCountdown");
+    safe(initHero, "initHero");
+    safe(initCheckout, "initCheckout");
+    safe(initGracias, "initGracias");
+    /* Sincroniza el carrito entre pestañas */
+    window.addEventListener("storage", function (e) { if (e.key === CART_KEY) { cart.load(); document.dispatchEvent(new CustomEvent("cart:change")); } });
   }
-
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", boot);
-  } else {
-    boot();
-  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot); else boot();
 })();

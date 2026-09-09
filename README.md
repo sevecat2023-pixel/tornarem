@@ -1,141 +1,209 @@
-# Tornarem Telecom — web
+# Tornarem — tienda de lotes de devoluciones
 
-Sitio estático de tres páginas más un pequeño PHP que recibe los
-formularios. No necesita Node, ni npm, ni compilación: se sube la carpeta
-tal cual por FTP y funciona.
+Tienda estática (HTML + CSS + JavaScript) con un pequeño PHP que recibe los
+pedidos. No necesita Node, ni npm, ni compilación: se sube la carpeta tal
+cual por FTP y funciona.
+
+**Qué vende:** 10 lotes cerrados de devoluciones de Amazon (electrónica,
+hogar, juguetes, herramientas, moda, informática, deporte, bebé, belleza y un
+palé mixto sin clasificar), con carrito, pago contrarreembolso o con tarjeta
+y entrega en 24 horas.
+
+> Tornarem es un liquidador independiente. La web lo dice en el pie, en las
+> preguntas frecuentes y en el aviso legal: no es un «portal oficial» de
+> Amazon ni puede presentarse como tal. Amazon es una marca registrada y usar
+> su nombre para sugerir afiliación es motivo de reclamación.
 
 ---
 
-## Cómo publicarlo en Hostinger
+## Cómo publicarla en Hostinger
 
 1. Entra en **hPanel → Administrador de archivos** (o conéctate por FTP).
 2. Abre la carpeta `public_html`.
 3. Arrastra **todo el contenido** de esta carpeta dentro, incluido el
    archivo `.htaccess` (empieza por punto; si tu cliente FTP no lo muestra,
    activa «ver archivos ocultos»).
-4. Listo. `index.html` es la portada.
+4. Abre `pedido.php` y cambia las cuatro primeras líneas de configuración
+   (ver más abajo).
+5. Listo. `index.html` es la portada.
 
-Sirve igual para Netlify, Cloudflare Pages, Vercel o cualquier hosting
-estático. En Netlify y Cloudflare el `.htaccess` se ignora: usa un archivo
-`_headers` equivalente si quieres el mismo control de caché.
+Sirve igual para cualquier hosting con PHP. En Netlify, Cloudflare Pages o
+GitHub Pages no hay PHP: la web se ve entera, pero al confirmar el pedido el
+cliente verá el aviso de «no hemos podido registrarlo» con dos botones para
+enviarlo por correo o WhatsApp. Funciona, pero es menos cómodo.
 
 ---
 
 ## Qué hay dentro
 
 ```
-index.html          Portada: tarifas, cobertura, la red, FAQ, contacto
-empresas.html       Página para empresas: servicios, SLA, presupuesto
-gracias.html        Acuse tras enviar el formulario sin JavaScript
-enviar.php          ← RECEPCIÓN DE LOS FORMULARIOS: configúralo (ver abajo)
+index.html          Portada: hero, cómo funciona, los 10 lotes, grados, pago, FAQ, próximo camión
+checkout.html       Tramitar pedido: datos, dirección, forma de pago, resumen
+gracias.html        Confirmación del pedido (lee el número y el pago de la URL)
+legal.html          Aviso legal, privacidad, condiciones de venta, garantía, cookies
+pedido.php          ← RECEPCIÓN DE PEDIDOS: configúralo (ver abajo)
 styles.css          Toda la hoja de estilo (incluye las tipografías)
-main.js             Comportamiento: menú, comprobador, filtros, formularios
-.htaccess           Caché, tipos MIME y protección del registro de solicitudes
+main.js             Carrito, fichas de lote, checkout, contadores, efectos
+.htaccess           Caché, tipos MIME y protección del registro de pedidos
 lib/
-  manifest.js       ← DATOS EDITABLES: municipios, tarifas, contacto, FAQ
-  gsap.min.js       Animación (local, no se carga de ningún CDN)
+  catalogo.js       ← LOS LOTES: nombres, contenido, precios, stock, contacto
+  gsap.min.js       Animación del hero (local, no se carga de ningún CDN)
   ScrollTrigger.min.js
 assets/
-  img/              Fotografías en WebP
-  fonts/            Manrope, Inter y JetBrains Mono alojadas aquí
-  credits.json      Autoría de las fotos (aparece al pie de la web)
+  img/              Fotografías en WebP (hero, muelle, mesa de revisión y un lote por ficha)
+  fonts/            Archivo Black, IBM Plex Sans e IBM Plex Mono alojadas aquí
   favicon.svg
 ```
 
 ---
 
-## Qué tienes que cambiar antes de publicar
+## Los lotes: cómo cambiar precios, stock o contenido
 
-Los datos de la empresa son de ejemplo. Sustitúyelos por los reales:
+Todo está en **`lib/catalogo.js`**. Cada lote tiene:
 
-| Dato | Dónde |
+| Campo | Qué es |
 |---|---|
-| Teléfono `900 000 000` | `index.html`, `empresas.html`, `gracias.html`, `enviar.php` y `lib/manifest.js` |
-| Correos `hola@` y `averias@tornarem.cat` | los mismos archivos, y sobre todo la cabecera de `enviar.php` |
-| Dirección de la oficina | `index.html` y `empresas.html` (bloque «O directamente» y pie) |
-| Precios y contenido de las tarifas | `index.html` (sección `#tarifas`) y `lib/manifest.js` |
-| Municipios con cobertura | `index.html` (lista `data-cover-list`) **y** `lib/manifest.js` (array `cobertura`) |
-| Textos legales del pie | `index.html`, `empresas.html` |
+| `id` | Identificador interno. Tiene que coincidir con el `data-lote` de su tarjeta en `index.html` |
+| `ref` | Referencia visible (TR-2609-01…) |
+| `nombre`, `categoria`, `resumen` | Textos de la tarjeta |
+| `uds`, `grado`, `formato`, `peso` | Datos de la etiqueta |
+| `pvp` | Valor estimado de venta al público (sirve para calcular el descuento) |
+| `precio` | **Lo que cobras**, IVA y envío incluidos |
+| `stock` | Cuántos lotes iguales tienes. A 0 el carrito no deja añadirlo |
+| `img` | Foto, en `assets/img/` |
+| `contenido` | Listado que se ve al abrir la ficha |
+| `nota` | Aclaración que sale destacada en la ficha |
 
-> Los municipios están en dos sitios a propósito: en el HTML para que la
-> lista se vea aunque falle el JavaScript, y en `manifest.js` para que el
-> comprobador del hero sepa qué responder. **Si cambias uno, cambia el otro.**
+`pedido.php` lee **este mismo archivo** para poner precio al pedido: el
+navegador nunca decide cuánto se cobra. Por eso el bloque entre `{` y `}`
+tiene que ser JSON puro: comillas dobles, sin comentarios dentro y sin coma
+después del último elemento. Si lo rompes, la web sigue funcionando pero al
+confirmar un pedido saldrá el error «el catálogo no es JSON válido».
 
-Las fotografías son de Openverse con licencia Creative Commons y la
-atribución sale automáticamente al pie. Si las sustituyes por fotos
-propias, borra `assets/credits.json` y quita el párrafo `data-credits`.
+**Las tarjetas de la portada están escritas a mano en `index.html`** (así se
+ven aunque falle el JavaScript). Si cambias un precio, un stock o una
+descripción en `catalogo.js`, cámbialo también en su tarjeta. Los datos que
+tienen que coincidir: referencia, unidades, grado, formato, PVP, precio,
+descuento y «Quedan N lotes».
+
+Para **añadir un lote nuevo**: copia un bloque `{ … }` en `catalogo.js`,
+copia una tarjeta `<article class="lote">` en `index.html`, sube su foto a
+`assets/img/` y actualiza los cuatro contadores del hero si quieres
+(`data-count`).
+
+También en `catalogo.js`: teléfono, WhatsApp, correo, dirección, hora de
+corte del envío (`horaCorte`), recargo del contrarreembolso (`porcentaje` y
+`minimo`) y el día de la semana del próximo camión (`diaSemana`: 1 = lunes …
+7 = domingo; la cuenta atrás lo calcula sola).
 
 ---
 
-## Los formularios (ya funcionan)
+## Los pedidos (ya funcionan)
 
-Los dos formularios envían a `enviar.php`, que te manda un correo con la
-solicitud. Funciona en Hostinger tal cual, sin cuentas de terceros ni
-librerías.
+Al confirmar, `main.js` envía el pedido a `pedido.php`, que:
 
-**Lo único que hay que configurar** son las cuatro primeras líneas de
-`enviar.php`:
+1. Recalcula el total con los precios del catálogo y comprueba el stock.
+2. Genera un número de pedido (`TR-AAMMDD-XXXX`).
+3. Manda **un correo a la tienda** con todos los datos y **otro al cliente**
+   con la confirmación.
+4. Guarda una línea en `pedidos.log` (JSON) por si el correo falla.
+5. Devuelve el resultado y el navegador lleva al cliente a `gracias.html`.
+
+**Lo único que hay que configurar** está al principio de `pedido.php`:
 
 ```php
-$DESTINO          = 'hola@tornarem.cat';   // a dónde llegan los avisos
-$DESTINO_EMPRESAS = 'hola@tornarem.cat';   // idem, para el formulario de empresas
-$REMITENTE        = 'web@tornarem.cat';    // desde qué dirección salen
-$REGISTRO         = __DIR__ . '/solicitudes.log';
+$DESTINO           = 'pedidos@tornarem.cat';   // a dónde llegan los pedidos
+$REMITENTE         = 'web@tornarem.cat';       // desde qué cuenta salen los correos
+$REMITENTE_NOMBRE  = 'Tornarem · Pedidos';
+$STRIPE_SECRET_KEY = '';                       // ver «Tarjeta» más abajo
 ```
 
-`$REMITENTE` **tiene que ser una cuenta real de tu propio dominio**
-(créala en hPanel → Correos). Si pones un Gmail o una dirección inventada,
-los servidores del destinatario tratarán el correo como falsificado y
-acabará en spam.
+`$REMITENTE` **tiene que ser una cuenta real de tu dominio** (créala en
+hPanel → Correos). Con un Gmail o una dirección inventada, el correo acabará
+en spam.
 
-Cómo se comporta:
+El `.htaccess` bloquea el acceso web a `pedidos.log`: contiene datos
+personales de tus clientes y nadie debe poder leerlo desde el navegador.
 
-- **Con JavaScript**: envía por detrás y muestra el acuse sin recargar.
-- **Sin JavaScript**: se envía como un formulario de toda la vida y
-  aterriza en `gracias.html`. Si algo falla, sale una página con el motivo.
-- **Si el correo no sale** (servidor mal configurado, cuota, lo que sea),
-  la solicitud queda igualmente guardada en `solicitudes.log` y el visitante
-  ve un aviso con el teléfono. No se pierde ninguna.
-- **Anti-spam**: un campo trampa invisible. Los robots lo rellenan y su
-  envío se descarta en silencio.
-- El `.htaccess` bloquea el acceso web a `solicitudes.log`: contiene datos
-  personales de tus clientes y nadie debe poder leerlo desde el navegador.
+### Contrarreembolso
 
-### Si tu hosting no tiene PHP
+No hay nada que configurar. El pedido llega por correo, lo preparas, y la
+agencia cobra al entregar. El recargo (3 %, mínimo 5 €) se define en
+`catalogo.js` y se aplica igual en la web y en el PHP.
 
-En Netlify, Cloudflare Pages o GitHub Pages no hay PHP. Cambia el `action`
-de los dos formularios por un servicio tipo Formspree
-(`action="https://formspree.io/f/TU_ID"`) y borra el atributo
-`data-contact-form` para que el JavaScript no intercepte el envío.
+### Tarjeta
 
-> Al abrir la web con doble clic (sin servidor) el formulario no puede
-> enviar: verás el aviso de error. Es lo esperado; en el hosting funciona.
+Dos modos, según tengas o no cuenta en Stripe:
+
+- **Con Stripe** (recomendado): crea una cuenta en stripe.com, copia la
+  *clave secreta* (`sk_live_…`) en `$STRIPE_SECRET_KEY` y ya está. Al
+  confirmar, el cliente pasa a la página de pago de Stripe (Visa,
+  Mastercard, Apple Pay, Google Pay) y vuelve a `gracias.html` cuando paga.
+  El correo que te llega dice «comprueba el cobro en el panel de Stripe»:
+  hazlo antes de enviar. Con `sk_test_…` puedes probar sin cobrar de verdad
+  (tarjeta 4242 4242 4242 4242).
+- **Sin Stripe**: el pedido se registra como «tarjeta · pendiente». El
+  cliente ve que le llegará un enlace de pago y tú se lo mandas como quieras
+  (Bizum, enlace de tu banco, transferencia…). El correo que recibes lo
+  marca como «ACCIÓN: enviar enlace de pago».
+
+En ningún caso pasan datos de tarjeta por esta web ni por tu servidor.
+
+### Si abres la web con doble clic (sin servidor)
+
+El carrito y las fichas funcionan, pero al confirmar el pedido verás el aviso
+de error con los botones de correo y WhatsApp: no hay PHP que lo reciba. En
+el hosting funciona.
+
+---
+
+## Las fotos
+
+Se generaron con un modelo de imagen (OpenAI, gpt-image-1.5) a partir de una
+descripción de cada lote: son **ilustrativas**, y la web lo dice en la
+sección de lotes, en el pie y en el aviso legal. Si haces fotos reales de tus
+palés, guárdalas en WebP con el mismo nombre en `assets/img/` y sustitúyelas;
+no hay que tocar nada más. Medida recomendada: 1536 × 1024 px, menos de
+300 KB.
 
 ---
 
 ## Si cambias algo y no lo ves en la web publicada
 
-Es la caché, casi siempre. En `index.html` y `empresas.html` verás:
+Es la caché, casi siempre. En los cuatro HTML verás:
 
 ```html
-<link rel="stylesheet" href="styles.css?v=20260810">
-<script defer src="main.js?v=20260810"></script>
+<link rel="stylesheet" href="styles.css?v=20260909">
+<script defer src="lib/catalogo.js?v=20260909"></script>
+<script defer src="main.js?v=20260909"></script>
 ```
 
-**Cada vez que toques el CSS o el JS, sube esa fecha** (`?v=20260811`, etc.)
-en los tres archivos HTML. El navegador lo lee como una dirección nueva y
-descarga la versión buena. El `.htaccess` ya pide al servidor que no cachee
-el HTML, el CSS ni el JS; las imágenes y tipografías sí, un mes.
+**Cada vez que toques el CSS, el JS o el catálogo, sube esa fecha**
+(`?v=20260910`, etc.) en los cuatro archivos HTML. El navegador lo lee como
+una dirección nueva y descarga la versión buena.
+
+---
+
+## Antes de publicar
+
+- [ ] Configurar `pedido.php` (correo de destino, remitente, Stripe si procede).
+- [ ] Cambiar teléfono, WhatsApp, correo y dirección en `lib/catalogo.js`
+      **y** en los cuatro HTML (pie, FAQ, botones de aviso).
+- [ ] Rellenar los datos de la empresa marcados en amarillo en `legal.html`
+      y que una asesoría revise las condiciones de venta.
+- [ ] Revisar precios y stock en `lib/catalogo.js` y en las tarjetas.
+- [ ] Sustituir las fotos ilustrativas por fotos reales cuando las tengas.
+- [ ] Cambiar `https://www.tornarem.cat/` en la etiqueta `canonical` de `index.html` por tu dominio.
 
 ---
 
 ## Detalles técnicos, por si los necesitas
 
 - Sin frameworks, sin build, sin dependencias en tiempo de ejecución.
-- Las tipografías están alojadas aquí: ninguna petición a Google. Una cosa
-  menos que declarar en la política de cookies.
-- Todo el contenido está escrito en el HTML. Si el JavaScript falla, la web
-  se sigue leyendo entera y se sigue navegando; sólo se pierden las
-  animaciones y el comprobador de cobertura.
-- Peso de la portada: unos 300 KB la primera visita (fuentes incluidas).
+- Tipografías alojadas aquí: ninguna petición a Google ni a ningún tercero.
+  La web no usa cookies; el carrito vive en `localStorage`.
+- Todo el contenido está en el HTML. Si el JavaScript falla, la portada se
+  lee entera; sólo se pierden el carrito, las fichas y las animaciones.
+- Peso de la portada: unos 3,5 MB con las once fotografías (cargan en
+  diferido según se hace scroll); 400 KB hasta el primer pintado.
 - Funciona abriendo `index.html` con doble clic, sin servidor.

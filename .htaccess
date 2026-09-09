@@ -95,8 +95,8 @@
 #   RewriteRule ^(.+?)/?$ $1.html [L]
 # </IfModule>
 
-# ----- Protege el registro de solicitudes del formulario -----
-# enviar.php guarda una copia de cada solicitud en solicitudes.log.
+# ----- Protege el registro de pedidos -----
+# pedido.php guarda una copia de cada pedido en pedidos.log.
 # Sin esto, cualquiera podría leerlo escribiendo la dirección en el
 # navegador: son datos personales de tus clientes.
 <FilesMatch "\.(log|sql|bak|ini|env)$">

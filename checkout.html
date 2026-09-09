@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tramitar pedido · Tornarem</title>
+<meta name="description" content="Confirma tu pedido de lotes de devoluciones: contrarreembolso o tarjeta, entrega en 24 horas.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#111111">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="preload" as="font" type="font/woff2" href="assets/fonts/archivo-black-400-latin.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="assets/fonts/ibm-plex-mono-400-latin.woff2" crossorigin>
+<link rel="stylesheet" href="styles.css?v=20260909">
+</head>
+
+<body>
+<a class="skip-link" href="#main">Saltar al contenido</a>
+
+<div class="ticker" aria-hidden="true">
+  <div class="ticker-track" data-ticker>
+    <span class="ticker-item">Entrega en 24 h en península</span>
+    <span class="ticker-item">Contrarreembolso o tarjeta</span>
+    <span class="ticker-item">Pago seguro</span>
+    <span class="ticker-item">Factura con IVA</span>
+    <span class="ticker-item">Recogida gratis en nave</span>
+  </div>
+</div>
+
+<header class="nav">
+  <div class="wrap nav-inner">
+    <a class="brand" href="index.html" aria-label="Tornarem, inicio">
+      <svg class="brand-mark" viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" fill="#111111"/><path d="M14 26h26v-8l12 12-12 12v-8H14z" fill="#ff4d00"/><rect x="12" y="44" width="40" height="6" fill="#ffffff"/></svg>
+      <span>Tornarem</span>
+      <small>Lotes de devoluciones</small>
+    </a>
+    <nav class="nav-links" aria-label="Principal">
+      <a href="index.html#lotes">Lotes</a>
+      <a href="index.html#como">Cómo funciona</a>
+      <a href="index.html#pago">Pago y envío</a>
+      <a href="index.html#faq">Preguntas</a>
+    </nav>
+    <div class="nav-right">
+      <a class="btn btn-solid nav-cart" href="#resumen">Carrito <span class="nav-cart-count" data-cart-count>0</span></a>
+      <button class="nav-burger" type="button" data-menu-toggle aria-label="Abrir menú" aria-expanded="false" aria-controls="menu-movil"><span></span></button>
+    </div>
+  </div>
+</header>
+<nav class="nav-menu" id="menu-movil" data-menu aria-label="Menú móvil">
+  <a href="index.html#lotes">Lotes</a>
+  <a href="index.html#como">Cómo funciona</a>
+  <a href="index.html#pago">Pago y envío</a>
+  <a href="index.html#faq">Preguntas</a>
+</nav>
+
+<main id="main">
+  <section class="page-head">
+    <div class="wrap">
+      <p class="crumbs"><a href="index.html">Inicio</a> › <a href="index.html#lotes">Lotes</a> › Pedido</p>
+      <h1>Tramitar pedido</h1>
+      <p>Sin registro y sin cuenta. Rellena la dirección, elige cómo pagar y confirma. Si lo haces antes de las 14:00, sale hoy.</p>
+    </div>
+  </section>
+
+  <section class="co">
+    <div class="wrap">
+
+      <div class="co-empty" data-co-empty style="display:none">
+        <p>El carrito está vacío.</p>
+        <a class="btn btn-accent" href="index.html#lotes">Ver los lotes en venta</a>
+      </div>
+
+      <div class="co-grid" data-co-grid>
+        <form class="co-form" data-checkout-form action="pedido.php" method="post" novalidate>
+          <p class="hp" aria-hidden="true"><label>No rellenes este campo <input type="text" name="web" tabindex="-1" autocomplete="off"></label></p>
+
+          <fieldset class="fieldset">
+            <legend>1 · Tus datos</legend>
+            <div class="field-row">
+              <div class="field">
+                <label for="f-nombre">Nombre y apellidos</label>
+                <input id="f-nombre" name="nombre" type="text" autocomplete="name" required>
+                <span class="field-error">Necesitamos un nombre para la entrega.</span>
+              </div>
+              <div class="field">
+                <label for="f-telefono">Teléfono</label>
+                <input id="f-telefono" name="telefono" type="tel" autocomplete="tel" inputmode="tel" required>
+                <span class="field-error">El transportista llama antes de entregar: pon un móvil válido.</span>
+              </div>
+            </div>
+            <div class="field">
+              <label for="f-email">Correo electrónico</label>
+              <input id="f-email" name="email" type="email" autocomplete="email" required>
+              <span class="field-error">Ahí te llega la confirmación y la factura. Revisa que esté bien escrito.</span>
+            </div>
+            <div class="field-row">
+              <div class="field">
+                <label for="f-empresa">Empresa <span class="opt">(opcional)</span></label>
+                <input id="f-empresa" name="empresa" type="text" autocomplete="organization">
+              </div>
+              <div class="field">
+                <label for="f-nif">NIF / CIF para la factura <span class="opt">(opcional)</span></label>
+                <input id="f-nif" name="nif" type="text" autocomplete="off">
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset class="fieldset">
+            <legend>2 · Dirección de entrega</legend>
+            <div class="field">
+              <label for="f-direccion">Calle, número, piso</label>
+              <input id="f-direccion" name="direccion" type="text" autocomplete="street-address" required>
+              <span class="field-error">Falta la dirección.</span>
+            </div>
+            <div class="field-row field-row--3">
+              <div class="field">
+                <label for="f-cp">Código postal</label>
+                <input id="f-cp" name="cp" type="text" inputmode="numeric" pattern="[0-9]{5}" maxlength="5" autocomplete="postal-code" required>
+                <span class="field-error">Cinco dígitos.</span>
+              </div>
+              <div class="field">
+                <label for="f-poblacion">Población</label>
+                <input id="f-poblacion" name="poblacion" type="text" autocomplete="address-level2" required>
+                <span class="field-error">Falta la población.</span>
+              </div>
+              <div class="field">
+                <label for="f-provincia">Provincia</label>
+                <input id="f-provincia" name="provincia" type="text" autocomplete="address-level1" list="provincias" required>
+                <datalist id="provincias">
+                  <option value="A Coruña"><option value="Álava"><option value="Albacete"><option value="Alicante"><option value="Almería"><option value="Asturias"><option value="Ávila"><option value="Badajoz"><option value="Barcelona"><option value="Burgos"><option value="Cáceres"><option value="Cádiz"><option value="Cantabria"><option value="Castellón"><option value="Ciudad Real"><option value="Córdoba"><option value="Cuenca"><option value="Girona"><option value="Granada"><option value="Guadalajara"><option value="Guipúzcoa"><option value="Huelva"><option value="Huesca"><option value="Jaén"><option value="La Rioja"><option value="León"><option value="Lleida"><option value="Lugo"><option value="Madrid"><option value="Málaga"><option value="Murcia"><option value="Navarra"><option value="Ourense"><option value="Palencia"><option value="Pontevedra"><option value="Salamanca"><option value="Segovia"><option value="Sevilla"><option value="Soria"><option value="Tarragona"><option value="Teruel"><option value="Toledo"><option value="Valencia"><option value="Valladolid"><option value="Vizcaya"><option value="Zamora"><option value="Zaragoza"><option value="Illes Balears"><option value="Las Palmas"><option value="Santa Cruz de Tenerife"><option value="Ceuta"><option value="Melilla">
+                </datalist>
+                <span class="field-error">Falta la provincia.</span>
+              </div>
+            </div>
+            <div class="field">
+              <label for="f-notas">Notas para la entrega <span class="opt">(opcional)</span></label>
+              <textarea id="f-notas" name="notas" rows="3" placeholder="Horario, portal, nave, muelle de carga, recogida en Girona…"></textarea>
+            </div>
+          </fieldset>
+
+          <fieldset class="fieldset">
+            <legend>3 · Forma de pago</legend>
+            <div class="pay-options">
+              <label class="pay-opt">
+                <input type="radio" name="pago" value="contrarreembolso" checked>
+                <div><b>Contrarreembolso</b><span>Pagas al transportista al recibir el lote, en efectivo o con tarjeta en su datáfono. Recargo del 3 % (mínimo 5 €) que cobra la agencia.</span></div>
+                <span class="sticker">+3 %</span>
+              </label>
+              <label class="pay-opt">
+                <input type="radio" name="pago" value="tarjeta">
+                <div><b>Tarjeta</b><span>Visa, Mastercard, Apple Pay y Google Pay a través de una pasarela cifrada. No vemos ni guardamos los datos de tu tarjeta. Sin recargo.</span></div>
+                <span class="sticker sticker--yellow">0 %</span>
+              </label>
+            </div>
+            <label class="check">
+              <input type="checkbox" name="acepta" value="1" required>
+              <span>He leído las <a href="legal.html#condiciones" target="_blank" rel="noopener">condiciones de venta</a> y la <a href="legal.html#privacidad" target="_blank" rel="noopener">política de privacidad</a>. Entiendo que los lotes se venden cerrados y que el palé sin clasificar no admite devolución.</span>
+            </label>
+          </fieldset>
+
+          <div class="co-msg" data-co-msg role="alert"></div>
+
+          <button class="btn btn-accent btn-block" type="submit" data-co-submit>Confirmar pedido</button>
+          <p class="lotes-note">Al confirmar recibirás un correo con el número de pedido, el listado de contenido de cada lote y la factura. Palés: te llamamos para concertar la entrega.</p>
+        </form>
+
+        <aside class="co-summary" id="resumen" aria-label="Resumen del pedido">
+          <h2>Resumen <a href="index.html#lotes">Añadir más lotes</a></h2>
+          <div class="co-items" data-co-items></div>
+          <div class="co-totals">
+            <div class="co-row"><span>Subtotal (IVA incl.)</span><span data-co-subtotal>0 €</span></div>
+            <div class="co-row"><span>Envío 24 h península</span><span>Incluido</span></div>
+            <div class="co-row" data-co-cod-row><span>Recargo contrarreembolso</span><span data-co-cod>0 €</span></div>
+            <div class="co-row total"><span>Total</span><b data-co-total>0 €</b></div>
+          </div>
+          <p class="co-eta" data-co-eta>Entrega prevista: —</p>
+        </aside>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <a class="brand" href="index.html" aria-label="Tornarem, inicio">
+          <svg class="brand-mark" viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" fill="#ffffff"/><path d="M14 26h26v-8l12 12-12 12v-8H14z" fill="#ff4d00"/><rect x="12" y="44" width="40" height="6" fill="#111111"/></svg>
+          <span>Tornarem</span>
+        </a>
+        <p class="footer-disclaimer">Tornarem es un liquidador independiente de excedentes y devoluciones. Amazon es una marca registrada de Amazon.com, Inc. o sus filiales. No existe ninguna afiliación, patrocinio ni respaldo por su parte.</p>
+      </div>
+      <div>
+        <h4>Pedidos</h4>
+        <ul>
+          <li><a href="tel:+34900000000">900 000 000</a></li>
+          <li><a href="https://wa.me/34600000000" target="_blank" rel="noopener">WhatsApp</a></li>
+          <li><a href="mailto:pedidos@tornarem.cat">pedidos@tornarem.cat</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>La nave</h4>
+        <p>Nave 14 · Polígono Mas Xirgu<br>17005 Girona</p>
+        <p>Lunes a viernes<br>8:00–18:00</p>
+      </div>
+      <div>
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="legal.html#aviso">Aviso legal</a></li>
+          <li><a href="legal.html#privacidad">Privacidad</a></li>
+          <li><a href="legal.html#condiciones">Condiciones de venta</a></li>
+          <li><a href="legal.html#garantia">Garantía y reclamaciones</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Tornarem · Girona · Precios con IVA</span>
+      <span>Pago seguro · Datos cifrados</span>
+    </div>
+  </div>
+</footer>
+
+<div class="toast" data-toast role="status" aria-live="polite"></div>
+
+<script defer src="lib/catalogo.js?v=20260909"></script>
+<script defer src="main.js?v=20260909"></script>
+</body>
+</html>

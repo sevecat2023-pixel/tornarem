@@ -1,2 +1,7 @@
-# Copias de las solicitudes del formulario: datos personales, nunca al repositorio
+# Registro de pedidos que escribe pedido.php: datos personales, nunca al repositorio
+pedidos.log
 solicitudes.log
+
+# Claves y configuración local
+.env
+*.local.php
