@@ -1,0 +1,51 @@
+# ============================================================================
+# TORNAREM — panel de administración
+#
+# Dos cosas y ninguna más:
+#
+# 1. NO CACHEAR. En el panel hay pedidos, direcciones y teléfonos de
+#    clientes reales. Si el navegador (o un proxy del hotel, o la caché
+#    del móvil) se guarda una copia, esos datos quedan en un disco ajeno
+#    y además se ven pedidos viejos al recargar. El .htaccess de la raíz
+#    deja cachear una hora el CSS y el JS: aquí se anula.
+#
+# 2. No listar la carpeta si algún día falta el index.html.
+# ============================================================================
+
+Options -Indexes
+
+<IfModule mod_headers.c>
+  <FilesMatch "\.(html|htm|js|css|php)$">
+    Header set Cache-Control "no-store, no-cache, must-revalidate, max-age=0"
+    Header set Pragma "no-cache"
+    Header set Expires "0"
+    Header set Referrer-Policy "same-origin"
+    Header set X-Content-Type-Options "nosniff"
+    # El panel no es una página pública: fuera de los buscadores.
+    Header set X-Robots-Tag "noindex, nofollow, noarchive"
+  </FilesMatch>
+</IfModule>
+
+# mod_expires manda sobre mod_headers cuando los dos hablan de la misma
+# cabecera, así que hay que desactivarlo también aquí.
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresDefault "access plus 0 seconds"
+  ExpiresByType text/html "access plus 0 seconds"
+  ExpiresByType text/css "access plus 0 seconds"
+  ExpiresByType application/javascript "access plus 0 seconds"
+  ExpiresByType text/javascript "access plus 0 seconds"
+  ExpiresByType application/json "access plus 0 seconds"
+</IfModule>
+
+# Por si el servidor no interpretase PHP: mejor un fichero que no se
+# sirve que un api.php enseñado en texto plano.
+<FilesMatch "\.(log|json|jsonl|bak|ini|env)$">
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+  <IfModule !mod_authz_core.c>
+    Order allow,deny
+    Deny from all
+  </IfModule>
+</FilesMatch>
