@@ -1,4 +1,6 @@
-# Registro de pedidos que escribe pedido.php: datos personales, nunca al repositorio
+# Los pedidos, el stock y la contraseña del panel viven aquí, en el servidor.
+# Son datos personales de tus clientes: nunca al repositorio.
+datos/
 pedidos.log
 solicitudes.log
 

@@ -9,6 +9,11 @@ hogar, juguetes, herramientas, moda, informática, deporte, bebé, belleza y un
 palé mixto sin clasificar), con carrito, pago contrarreembolso o con tarjeta
 y entrega en 24 horas.
 
+**Y trae panel propio.** En `tudominio.com/admin/` tienes el CRM: los pedidos
+que entran por la web aparecen ahí solos, con sus estados, el historial, los
+clientes y el stock. Sin cuentas de terceros ni integraciones: todo se guarda
+en tu propio servidor.
+
 > Tornarem es un liquidador independiente. La web lo dice en el pie, en las
 > preguntas frecuentes y en el aviso legal: no es un «portal oficial» de
 > Amazon ni puede presentarse como tal. Amazon es una marca registrada y usar
@@ -42,13 +47,26 @@ checkout.html       Tramitar pedido: datos, dirección, forma de pago, resumen
 gracias.html        Confirmación del pedido (lee el número y el pago de la URL)
 legal.html          Aviso legal, privacidad, condiciones de venta, garantía, cookies
 pedido.php          ← RECEPCIÓN DE PEDIDOS: configúralo (ver abajo)
+estado.php          Stock y precios reales que lee la portada (solo lectura)
 styles.css          Toda la hoja de estilo (incluye las tipografías)
 main.js             Carrito, fichas de lote, checkout, contadores, efectos
-.htaccess           Caché, tipos MIME y protección del registro de pedidos
+.htaccess           Caché, tipos MIME y protección de la carpeta de datos
+admin/              ← EL PANEL: pedidos, clientes, almacén
+  index.html        La aplicación del panel
+  app.js            Todo su comportamiento
+  admin.css         Su estilo (tipografías incluidas)
+  api.php           La API que lee y escribe los pedidos
+  albaran.php       Albarán imprimible de un pedido
 lib/
   catalogo.js       ← LOS LOTES: nombres, contenido, precios, stock, contacto
+  tienda.php        Capa de datos compartida: pedidos, stock, resúmenes, acceso
   gsap.min.js       Animación del hero (local, no se carga de ningún CDN)
   ScrollTrigger.min.js
+datos/              Se crea sola en el servidor. AQUÍ VIVEN TUS PEDIDOS
+  pedidos/          Una ficha JSON por pedido
+  indice.jsonl      Índice compacto para listar y sumar rápido
+  overrides.json    Precios y stock que has cambiado desde el panel
+  admin.json        La contraseña del panel, cifrada
 assets/
   img/              Fotografías en WebP (hero, muelle, mesa de revisión y un lote por ficha)
   fonts/            Archivo Black, IBM Plex Sans e IBM Plex Mono alojadas aquí
@@ -102,11 +120,14 @@ corte del envío (`horaCorte`), recargo del contrarreembolso (`porcentaje` y
 
 Al confirmar, `main.js` envía el pedido a `pedido.php`, que:
 
-1. Recalcula el total con los precios del catálogo y comprueba el stock.
+1. Recalcula el total con los precios del catálogo y comprueba el stock. El
+   navegador nunca decide lo que se cobra: si alguien manipula el precio desde
+   su ordenador, el servidor lo ignora.
 2. Genera un número de pedido (`TR-AAMMDD-XXXX`).
-3. Manda **un correo a la tienda** con todos los datos y **otro al cliente**
+3. **Guarda el pedido en `datos/pedidos/`** y descuenta el stock, así que
+   aparece en el panel al instante.
+4. Manda **un correo a la tienda** con todos los datos y **otro al cliente**
    con la confirmación.
-4. Guarda una línea en `pedidos.log` (JSON) por si el correo falla.
 5. Devuelve el resultado y el navegador lleva al cliente a `gracias.html`.
 
 **Lo único que hay que configurar** está al principio de `pedido.php`:
@@ -122,8 +143,9 @@ $STRIPE_SECRET_KEY = '';                       // ver «Tarjeta» más abajo
 hPanel → Correos). Con un Gmail o una dirección inventada, el correo acabará
 en spam.
 
-El `.htaccess` bloquea el acceso web a `pedidos.log`: contiene datos
-personales de tus clientes y nadie debe poder leerlo desde el navegador.
+El `.htaccess` de la carpeta `datos/` bloquea el acceso desde el navegador:
+ahí están los datos personales de tus clientes y nadie debe poder leerlos
+escribiendo la dirección.
 
 ### Contrarreembolso
 
@@ -157,6 +179,88 @@ el hosting funciona.
 
 ---
 
+## El panel: `tudominio.com/admin/`
+
+Aquí es donde trabajas tú. **La primera vez que entras te pide crear una
+contraseña**: la eliges, se guarda cifrada en `datos/admin.json` y a partir de
+ahí es la que usas. No hay usuarios ni cuentas de terceros; el panel vive
+entero en tu servidor.
+
+Si te la olvidas, borra `datos/admin.json` por FTP y el panel te dejará crear
+otra. Los pedidos no se tocan.
+
+### Inicio
+
+Los cuatro números de arriba (ventas, pedidos, ticket medio y unidades) más el
+gráfico de ventas por día, los pedidos pendientes de preparar, los lotes con
+stock bajo y los últimos pedidos.
+
+**Todo depende del rango de fechas**, y el rango se cambia de tres maneras:
+
+| Cómo | Para qué |
+|---|---|
+| Los botones de atajo | Hoy, Ayer, 7 días, 30 días, Este mes, Mes pasado, Este año, Todo |
+| Las dos casillas de fecha + **Aplicar** | Cualquier periodo que se te ocurra |
+| Las flechas ‹ › | Mover el periodo entero hacia atrás o hacia delante |
+
+Ejemplo: pulsas «Hoy», luego la flecha izquierda y estás viendo ayer; otra vez
+y anteayer. Con «30 días» seleccionado, la flecha te lleva a los 30 anteriores.
+Al cambiar el rango se recalcula todo lo que hay debajo, y la comparación en
+porcentaje es siempre contra el periodo anterior de la misma duración.
+
+El mismo control está en **Pedidos** y en **Clientes**.
+
+### Pedidos
+
+La lista, con filtros que se combinan: rango de fechas, estado, forma de pago
+y un buscador (número, nombre, correo, teléfono o población). Se ordena por
+columna, se pagina, y se pueden marcar varios pedidos para cambiarles el
+estado de golpe. **Exportar** descarga en CSV exactamente lo que estás viendo,
+listo para abrir en Excel.
+
+Al pulsar una fila se abre la ficha, y ahí está todo lo que se puede hacer con
+un pedido:
+
+- **Cambiar el estado**: nuevo → preparando → enviado → entregado, y desde
+  casi cualquiera a incidencia o cancelado. Solo salen los cambios que tienen
+  sentido.
+- **Cancelar devuelve el stock** al almacén. Si lo sacas de cancelado, se
+  vuelve a descontar. No hay forma de descontarlo dos veces.
+- Marcar el pago como cobrado, apuntar transportista y número de seguimiento,
+  corregir la dirección del cliente, añadir notas internas.
+- Copiar la dirección, imprimir el **albarán**, escribir al cliente o llamarle.
+- El **historial** guarda quién cambió qué y cuándo.
+
+### Clientes
+
+No hay que dar de alta a nadie: el panel agrupa los pedidos por correo
+electrónico y te dice cuántos ha hecho cada uno, cuánto se ha gastado y cuándo
+fue la última vez. Pulsas un cliente y ves sus pedidos.
+
+### Almacén
+
+El precio y el stock de los diez lotes, editables. Lo que cambias aquí lo ve
+la tienda al momento (la portada pregunta por `estado.php`): si pones un lote
+a 0, sale como **agotado** y no se puede añadir al carrito. También puedes
+desactivar un lote para que desaparezca de la portada sin borrarlo.
+
+### Lo que este panel NO hace
+
+No se conecta con Shopify, ni con EasySell, ni con GLS, ni con ninguna
+pasarela de envíos, porque para que eso funcionase de verdad harían falta
+cuentas y contratos con cada uno. Aquí no hay botones de adorno: si un botón
+está, hace algo.
+
+Lo único externo es el cobro con tarjeta, y es opcional: se activa pegando tu
+clave de Stripe en `pedido.php`.
+
+### Copia de seguridad
+
+Descarga la carpeta `datos/` por FTP de vez en cuando. Ahí está todo: pedidos,
+stock y contraseña. Para restaurar, la vuelves a subir.
+
+---
+
 ## Las fotos
 
 Se generaron con un modelo de imagen (OpenAI, gpt-image-1.5) a partir de una
@@ -187,11 +291,18 @@ una dirección nueva y descarga la versión buena.
 ## Antes de publicar
 
 - [ ] Configurar `pedido.php` (correo de destino, remitente, Stripe si procede).
+- [ ] Entrar en `tudominio.com/admin/` y **crear la contraseña del panel**. Hazlo
+      nada más subir la web: hasta que no exista, cualquiera que encuentre la
+      dirección puede crearla.
+- [ ] Comprobar que `datos/` no se puede abrir desde el navegador: escribe
+      `tudominio.com/datos/indice.jsonl` y debe salir un error 403.
+- [ ] Hacer un pedido de prueba y verlo aparecer en el panel.
 - [ ] Cambiar teléfono, WhatsApp, correo y dirección en `lib/catalogo.js`
       **y** en los cuatro HTML (pie, FAQ, botones de aviso).
 - [ ] Rellenar los datos de la empresa marcados en amarillo en `legal.html`
       y que una asesoría revise las condiciones de venta.
-- [ ] Revisar precios y stock en `lib/catalogo.js` y en las tarjetas.
+- [ ] Revisar precios y stock en `lib/catalogo.js` y en las tarjetas, o
+      ajustarlos desde el panel (Almacén).
 - [ ] Sustituir las fotos ilustrativas por fotos reales cuando las tengas.
 - [ ] Cambiar `https://www.tornarem.cat/` en la etiqueta `canonical` de `index.html` por tu dominio.
 

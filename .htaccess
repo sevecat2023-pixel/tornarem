@@ -95,11 +95,25 @@
 #   RewriteRule ^(.+?)/?$ $1.html [L]
 # </IfModule>
 
-# ----- Protege el registro de pedidos -----
-# pedido.php guarda una copia de cada pedido en pedidos.log.
-# Sin esto, cualquiera podría leerlo escribiendo la dirección en el
-# navegador: son datos personales de tus clientes.
-<FilesMatch "\.(log|sql|bak|ini|env)$">
+# ----- Protege los datos de tus clientes -----
+# En la carpeta datos/ están los pedidos, con nombres, teléfonos y
+# direcciones. Sin esto, cualquiera podría leerlos escribiendo la
+# dirección en el navegador.
+#
+# Son tres cierres para lo mismo, a propósito: si el hosting ignora uno,
+# quedan los otros dos.
+
+# 1. Nada dentro de datos/ se sirve por web (ni siquiera existe, de cara afuera).
+RedirectMatch 404 ^/datos(/|$)
+
+# 2. Por si el sitio no cuelga de la raíz del dominio.
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteRule (^|/)datos(/|$) - [R=404,L]
+</IfModule>
+
+# 3. Extensiones de datos y registros, estén donde estén.
+<FilesMatch "\.(log|jsonl|sql|bak|ini|env)$">
   <IfModule mod_authz_core.c>
     Require all denied
   </IfModule>
@@ -108,3 +122,6 @@
     Deny from all
   </IfModule>
 </FilesMatch>
+
+# ----- Nada de listados de carpetas -----
+Options -Indexes
