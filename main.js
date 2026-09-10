@@ -398,9 +398,54 @@
           safe(function () { pintarLote(l); }, "pintarLote");
           hay = true;
         });
-        if (hay) ajustarCarrito();
+        if (hay) {
+          ajustarCarrito();
+          safe(pintarCifras, "pintarCifras");
+        }
       })
       .catch(function () { if (timer) clearTimeout(timer); });
+  }
+
+  /* Los números que encabezan la portada («3.322 unidades en la nave»,
+     «39 lotes en nave», la fecha del stock) están escritos en el HTML para
+     que se lean sin JavaScript. En cuanto llega el estado real hay que
+     recalcularlos: un contador que no cuadra con lo que hay debajo hace
+     más daño que no ponerlo. */
+  function pintarCifras() {
+    var lotes = Object.keys(LOTES).map(function (id) { return LOTES[id]; })
+      .filter(function (l) { return l.activo !== false; });
+    var conStock = lotes.filter(function (l) { return l.stock > 0; });
+
+    var enNave = 0, unidades = 0, sumaDto = 0;
+    conStock.forEach(function (l) {
+      enNave += l.stock;
+      unidades += (parseInt(l.uds, 10) || 0) * l.stock;
+    });
+    lotes.forEach(function (l) { if (l.pvp > 0) sumaDto += 1 - (l.precio / l.pvp); });
+    var dto = lotes.length ? Math.round((sumaDto / lotes.length) * 100) : 0;
+
+    var mil = function (n) { return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, "."); };
+    var contador = function (clave, valor) {
+      $$('[data-cifra="' + clave + '"]').forEach(function (el) {
+        el.setAttribute("data-count", valor);   /* si aún no ha animado, animará hasta aquí */
+        el.textContent = mil(valor);            /* y si ya animó, lo corrige */
+      });
+    };
+
+    var lotesEl = $("[data-stock-lotes]");
+    if (lotesEl) lotesEl.textContent = mil(enNave);
+
+    var fecha = $("[data-stock-fecha]") || (lotesEl ? $("time", lotesEl.parentNode) : null);
+    if (fecha) {
+      var d = new Date();
+      var dd = ("0" + d.getDate()).slice(-2), mm = ("0" + (d.getMonth() + 1)).slice(-2);
+      fecha.setAttribute("datetime", d.getFullYear() + "-" + mm + "-" + dd);
+      fecha.textContent = dd + "/" + mm + "/" + d.getFullYear();
+    }
+
+    contador("unidades", unidades);
+    contador("lotes", conStock.length);
+    contador("descuento", dto);
   }
 
   /* -------------------------------------------------------------
@@ -420,9 +465,14 @@
     var els = $$("[data-count]"); if (!els.length) return;
     var fmt = function (n) { return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, "."); };
     function run(el) {
-      var to = parseFloat(el.getAttribute("data-count")) || 0, dur = reduced ? 400 : 1400, t0 = null;
+      var dur = reduced ? 400 : 1400, t0 = null;
       function step(ts) {
         if (!t0) t0 = ts;
+        /* El destino se relee en cada fotograma a propósito: si mientras la
+           cifra sube llega el stock real de estado.php y cambia el número,
+           la animación aterriza en el nuevo y no en el que había escrito
+           en el HTML. Antes ganaba la animación y la cifra quedaba vieja. */
+        var to = parseFloat(el.getAttribute("data-count")) || 0;
         var p = Math.min(1, (ts - t0) / dur); p = 1 - Math.pow(1 - p, 3);
         el.textContent = fmt(to * p);
         if (p < 1) requestAnimationFrame(step); else el.textContent = fmt(to);
