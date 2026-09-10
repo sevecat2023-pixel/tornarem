@@ -1453,8 +1453,13 @@ function tienda_csv($f) {
     $lineas = tienda_filtrar_indice($f);
     $estados = tienda_estados();
     $pagos = tienda_estados_pago();
-    $columnas = array('Numero', 'Fecha', 'Hora', 'Estado', 'Pago', 'Estado del pago', 'Cliente',
-                      'Correo', 'Telefono', 'Poblacion', 'Provincia', 'Lotes', 'Unidades', 'Total');
+    /* El CSV lleva BOM UTF-8 (abajo), así que Excel entiende los acentos y
+       las cabeceras pueden ir bien escritas. Y en la columna de lotes va el
+       nombre del lote, no su identificador interno: esto lo abre una persona,
+       no un programa. */
+    $catalogo = tienda_lotes();
+    $columnas = array('Número', 'Fecha', 'Hora', 'Estado', 'Pago', 'Estado del pago', 'Cliente',
+                      'Correo', 'Teléfono', 'Población', 'Provincia', 'Lotes', 'Unidades', 'Total');
     $celda = function ($v) {
         return '"' . str_replace('"', '""', (string) $v) . '"';
     };
@@ -1475,7 +1480,11 @@ function tienda_csv($f) {
             $l['telefono'],
             $l['poblacion'],
             $l['provincia'],
-            (isset($l['lotes']) && is_array($l['lotes'])) ? implode(' | ', $l['lotes']) : '',
+            (isset($l['lotes']) && is_array($l['lotes']))
+                ? implode(' | ', array_map(function ($id) use ($catalogo) {
+                    return isset($catalogo[$id]['nombre']) ? $catalogo[$id]['nombre'] : $id;
+                  }, $l['lotes']))
+                : '',
             (int) $l['unidades'],
             number_format((float) $l['total'], 2, ',', ''),
         )));
