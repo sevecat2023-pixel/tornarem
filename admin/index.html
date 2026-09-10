@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Panel · Tornarem</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#111111">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="preload" as="font" type="font/woff2" href="../assets/fonts/archivo-black-400-latin.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="../assets/fonts/ibm-plex-sans-latin.woff2" crossorigin>
+<link rel="stylesheet" href="admin.css?v=20260910">
+</head>
+
+<body class="panel">
+<a class="skip-link" href="#principal">Saltar al contenido</a>
+
+<!-- ============================ ACCESO ============================
+     Se ve mientras no hay sesión. Si el servidor dice que todavía no hay
+     contraseña, app.js cambia los textos y enseña el campo de repetirla. -->
+<section class="acceso" data-acceso>
+  <div class="acceso-caja">
+    <div class="acceso-marca">
+      <svg viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" fill="#111111"/><path d="M14 26h26v-8l12 12-12 12v-8H14z" fill="#ff4d00"/><rect x="12" y="44" width="40" height="6" fill="#ffffff"/></svg>
+      <span>Tornarem</span>
+      <small>Panel</small>
+    </div>
+
+    <h2 class="acceso-titulo" data-acceso-titulo>Entrar al panel</h2>
+
+    <form data-form-acceso novalidate>
+      <div class="acceso-campo">
+        <label for="acceso-password">Contraseña</label>
+        <input type="password" id="acceso-password" name="password" autocomplete="current-password" autocapitalize="off" spellcheck="false" required>
+      </div>
+
+      <div class="acceso-campo" data-acceso-repetir hidden>
+        <label for="acceso-password2">Repite la contraseña</label>
+        <input type="password" id="acceso-password2" name="password2" autocomplete="new-password" autocapitalize="off" spellcheck="false">
+      </div>
+
+      <button class="btn btn-accent" type="submit" data-acceso-enviar>Entrar</button>
+      <p class="acceso-error" data-acceso-error role="alert"></p>
+    </form>
+
+    <p class="acceso-pie">La contraseña se guarda cifrada en el servidor, en <code>datos/admin.json</code>, y no se puede recuperar. Si la pierdes, borra ese fichero por FTP y el panel te pedirá una nueva.</p>
+  </div>
+</section>
+
+<!-- ============================ PANEL ============================ -->
+<div class="app" data-app hidden>
+
+  <aside class="lado">
+    <div class="lado-marca">
+      <svg viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" fill="#111111"/><path d="M14 26h26v-8l12 12-12 12v-8H14z" fill="#ff4d00"/><rect x="12" y="44" width="40" height="6" fill="#ffffff"/></svg>
+      <span>Tornarem</span>
+      <small>Panel</small>
+    </div>
+
+    <nav class="lado-nav" aria-label="Secciones del panel">
+      <a class="lado-link is-activa" href="#inicio" data-ir="inicio" aria-current="page"><span class="lado-icono" aria-hidden="true">◆</span>Inicio</a>
+      <a class="lado-link" href="#pedidos" data-ir="pedidos"><span class="lado-icono" aria-hidden="true">▤</span>Pedidos</a>
+      <a class="lado-link" href="#clientes" data-ir="clientes"><span class="lado-icono" aria-hidden="true">◉</span>Clientes</a>
+      <a class="lado-link" href="#almacen" data-ir="almacen"><span class="lado-icono" aria-hidden="true">▥</span>Almacén</a>
+      <a class="lado-link" href="#ajustes" data-ir="ajustes"><span class="lado-icono" aria-hidden="true">≡</span>Ajustes</a>
+    </nav>
+
+    <div class="lado-pie">
+      <button class="lado-salir" type="button" data-salir>Cerrar sesión</button>
+    </div>
+  </aside>
+
+  <main class="principal" id="principal" tabindex="-1">
+
+    <header class="cabecera">
+      <h1 class="cabecera-titulo" data-titulo>Inicio</h1>
+      <p class="cabecera-sub" data-subtitulo></p>
+      <div class="cabecera-acciones" data-acciones></div>
+    </header>
+
+    <!-- Rango de fechas: manda sobre Inicio, Pedidos y Clientes. -->
+    <div class="rango" data-rango>
+      <div class="rango-presets">
+        <button class="rango-preset" type="button" data-preset="hoy">Hoy</button>
+        <button class="rango-preset" type="button" data-preset="ayer">Ayer</button>
+        <button class="rango-preset" type="button" data-preset="7d">7 días</button>
+        <button class="rango-preset is-activo" type="button" data-preset="30d">30 días</button>
+        <button class="rango-preset" type="button" data-preset="mes">Este mes</button>
+        <button class="rango-preset" type="button" data-preset="mes-1">Mes pasado</button>
+        <button class="rango-preset" type="button" data-preset="ano">Este año</button>
+        <button class="rango-preset" type="button" data-preset="todo">Todo</button>
+      </div>
+
+      <div class="rango-fechas">
+        <label for="rango-desde">Desde</label>
+        <input type="date" id="rango-desde" data-desde>
+        <label for="rango-hasta">Hasta</label>
+        <input type="date" id="rango-hasta" data-hasta>
+        <button class="btn btn-line btn-mini" type="button" data-rango-aplicar>Aplicar</button>
+      </div>
+
+      <div class="rango-nav">
+        <button class="btn btn-line btn-mini" type="button" data-rango-prev aria-label="Periodo anterior"><span aria-hidden="true">←</span></button>
+        <span class="rango-etiqueta" data-rango-etiqueta></span>
+        <button class="btn btn-line btn-mini" type="button" data-rango-next aria-label="Periodo siguiente"><span aria-hidden="true">→</span></button>
+      </div>
+    </div>
+
+    <!-- ---------------------------- INICIO ---------------------------- -->
+    <section class="vista" data-vista="inicio" hidden>
+
+      <div class="kpis">
+        <div class="kpi">
+          <div class="kpi-label">Ventas</div>
+          <div class="kpi-valor" data-kpi="ventas">—</div>
+          <div class="kpi-delta"></div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">Pedidos</div>
+          <div class="kpi-valor" data-kpi="pedidos">—</div>
+          <div class="kpi-delta"></div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">Ticket medio</div>
+          <div class="kpi-valor" data-kpi="ticket">—</div>
+          <div class="kpi-delta"></div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">Unidades</div>
+          <div class="kpi-valor" data-kpi="unidades">—</div>
+          <div class="kpi-delta"></div>
+        </div>
+      </div>
+
+      <div class="cuadro">
+        <div class="cuadro-cab">
+          <h2>Ventas por día</h2>
+          <div class="cuadro-acciones"><span class="x-cuadro-nota">Una barra por cada día del periodo</span></div>
+        </div>
+        <div class="cuadro-cuerpo">
+          <svg class="grafico" data-grafico role="img" aria-label="Ventas por día del periodo" viewBox="0 0 720 220"></svg>
+          <p class="grafico-vacio">No hay ventas en el periodo seleccionado.</p>
+        </div>
+      </div>
+
+      <div class="cuadro">
+        <div class="cuadro-cab">
+          <h2>Pendientes de preparar</h2>
+          <div class="cuadro-acciones"><a class="btn btn-line btn-mini" href="#pedidos" data-ir="pedidos">Ver pedidos</a></div>
+        </div>
+        <div class="cuadro-cuerpo">
+          <ul class="lista" data-pendientes></ul>
+        </div>
+      </div>
+
+      <div class="cuadro">
+        <div class="cuadro-cab">
+          <h2>Stock bajo</h2>
+          <div class="cuadro-acciones"><a class="btn btn-line btn-mini" href="#almacen" data-ir="almacen">Ir al almacén</a></div>
+        </div>
+        <div class="cuadro-cuerpo">
+          <ul class="lista" data-stock-bajo></ul>
+        </div>
+      </div>
+
+      <div class="cuadro">
+        <div class="cuadro-cab">
+          <h2>Últimos pedidos</h2>
+          <div class="cuadro-acciones"><a class="btn btn-line btn-mini" href="#pedidos" data-ir="pedidos">Ver todos</a></div>
+        </div>
+        <div class="cuadro-cuerpo">
+          <div class="tabla-wrap">
+            <table class="tabla" data-ultimos>
+              <thead>
+                <tr>
+                  <th scope="col">Número</th>
+                  <th scope="col">Fecha</th>
+                  <th scope="col">Cliente</th>
+                  <th scope="col">Total</th>
+                  <th scope="col">Estado</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="cuadro">
+        <div class="cuadro-cab">
+          <h2>Por forma de pago</h2>
+        </div>
+        <div class="cuadro-cuerpo">
+          <div class="barras" data-por-pago></div>
+        </div>
+      </div>
+
+      <div class="cuadro">
+        <div class="cuadro-cab">
+          <h2>Por estado</h2>
+        </div>
+        <div class="cuadro-cuerpo">
+          <div class="barras" data-por-estado></div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ---------------------------- PEDIDOS ---------------------------- -->
+    <section class="vista" data-vista="pedidos" hidden>
+
+      <div class="filtros">
+        <div class="chips">
+          <button class="chip is-activo" type="button" data-estado="">Todos</button>
+          <button class="chip" type="button" data-estado="nuevo">Nuevos</button>
+          <button class="chip" type="button" data-estado="preparando">Preparando</button>
+          <button class="chip" type="button" data-estado="enviado">Enviados</button>
+          <button class="chip" type="button" data-estado="entregado">Entregados</button>
+          <button class="chip" type="button" data-estado="incidencia">Incidencias</button>
+          <button class="chip" type="button" data-estado="cancelado">Cancelados</button>
+        </div>
+
+        <label class="campo-linea">Pago
+          <select data-pago>
+            <option value="">Todas</option>
+            <option value="contrarreembolso">Contrarreembolso</option>
+            <option value="tarjeta">Tarjeta</option>
+          </select>
+        </label>
+
+        <div class="buscador">
+          <input class="campo" type="search" data-buscar placeholder="Número, nombre, correo o teléfono" aria-label="Buscar pedidos">
+          <button class="btn btn-line btn-mini" type="button" data-buscar-limpiar>Limpiar</button>
+        </div>
+      </div>
+
+      <div class="barra-bulk" data-bulk hidden>
+        <span data-bulk-num></span>
+        <label class="campo-linea">Cambiar a
+          <select data-bulk-estado>
+            <option value="">Elige estado</option>
+            <option value="nuevo">Nuevo</option>
+            <option value="preparando">Preparando</option>
+            <option value="enviado">Enviado</option>
+            <option value="entregado">Entregado</option>
+            <option value="incidencia">Incidencia</option>
+            <option value="cancelado">Cancelado</option>
+          </select>
+        </label>
+        <button class="btn btn-solid btn-mini" type="button" data-bulk-aplicar>Aplicar</button>
+      </div>
+
+      <div class="tabla-wrap">
+        <table class="tabla" data-tabla-pedidos>
+          <thead>
+            <tr>
+              <th scope="col"><input type="checkbox" data-bulk-todos aria-label="Seleccionar todos los pedidos de la página"></th>
+              <th scope="col">Número</th>
+              <th scope="col" data-orden="creado" aria-sort="descending">Fecha</th>
+              <th scope="col" data-orden="nombre" aria-sort="none">Cliente</th>
+              <th scope="col">Población</th>
+              <th scope="col">Lotes</th>
+              <th scope="col">Uds</th>
+              <th scope="col" data-orden="total" aria-sort="none">Total</th>
+              <th scope="col">Pago</th>
+              <th scope="col" data-orden="estado" aria-sort="none">Estado</th>
+            </tr>
+          </thead>
+          <tbody data-cuerpo-pedidos></tbody>
+        </table>
+      </div>
+
+      <p class="tabla-vacia" data-pedidos-vacio hidden>No hay pedidos en este periodo. Cambia el rango de fechas o quita los filtros.</p>
+
+      <div class="paginacion">
+        <button class="btn btn-line btn-mini" type="button" data-pagina-prev>Anterior</button>
+        <span data-pagina-info></span>
+        <button class="btn btn-line btn-mini" type="button" data-pagina-next>Siguiente</button>
+        <label class="campo-linea">Por página
+          <select data-por-pagina>
+            <option value="25">25</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+            <option value="200">200</option>
+          </select>
+        </label>
+      </div>
+
+    </section>
+
+    <!-- ---------------------------- CLIENTES ---------------------------- -->
+    <section class="vista" data-vista="clientes" hidden>
+
+      <div class="filtros">
+        <div class="buscador">
+          <input class="campo" type="search" data-buscar-clientes placeholder="Nombre, correo, teléfono o población" aria-label="Buscar clientes">
+        </div>
+      </div>
+
+      <div class="tabla-wrap">
+        <table class="tabla" data-tabla-clientes>
+          <thead>
+            <tr>
+              <th scope="col">Cliente</th>
+              <th scope="col">Correo</th>
+              <th scope="col">Teléfono</th>
+              <th scope="col">Población</th>
+              <th scope="col">Provincia</th>
+              <th scope="col">Pedidos</th>
+              <th scope="col">Gastado</th>
+              <th scope="col">Primer pedido</th>
+              <th scope="col">Último pedido</th>
+            </tr>
+          </thead>
+          <tbody data-cuerpo-clientes></tbody>
+        </table>
+      </div>
+
+      <p class="tabla-vacia" data-clientes-vacio hidden>No hay clientes con pedidos en este periodo.</p>
+
+    </section>
+
+    <!-- ---------------------------- ALMACÉN ---------------------------- -->
+    <section class="vista" data-vista="almacen" hidden>
+
+      <p class="aviso-linea">Lo que cambies aquí se guarda en el servidor y la tienda lo enseña al momento: el precio de venta, las unidades que quedan y si el lote se puede comprar. El PVP, las fotos y el contenido de cada lote se editan en <code>lib/catalogo.js</code>.</p>
+
+      <div class="tabla-wrap">
+        <table class="tabla" data-tabla-almacen>
+          <thead>
+            <tr>
+              <th scope="col">Lote</th>
+              <th scope="col">Ref</th>
+              <th scope="col">Grado</th>
+              <th scope="col">PVP</th>
+              <th scope="col">Precio</th>
+              <th scope="col">Stock</th>
+              <th scope="col">Vendidos</th>
+              <th scope="col">Activo</th>
+              <th scope="col">Guardar</th>
+            </tr>
+          </thead>
+          <tbody data-cuerpo-almacen></tbody>
+        </table>
+      </div>
+
+    </section>
+
+    <!-- ---------------------------- AJUSTES ---------------------------- -->
+    <section class="vista" data-vista="ajustes" hidden>
+
+      <div class="caja-form">
+        <h2>Cambiar la contraseña</h2>
+        <form data-form-password novalidate>
+          <div class="campo-linea">
+            <label for="ajustes-actual">Contraseña actual</label>
+            <input class="campo" type="password" id="ajustes-actual" name="actual" autocomplete="current-password" required>
+          </div>
+          <div class="campo-linea">
+            <label for="ajustes-nueva">Contraseña nueva</label>
+            <input class="campo" type="password" id="ajustes-nueva" name="nueva" autocomplete="new-password" minlength="8" required>
+          </div>
+          <div class="campo-linea">
+            <label for="ajustes-nueva2">Repite la nueva</label>
+            <input class="campo" type="password" id="ajustes-nueva2" name="nueva2" autocomplete="new-password" minlength="8" required>
+          </div>
+          <button class="btn btn-accent" type="submit">Guardar contraseña</button>
+          <p class="ajustes-error" data-password-error role="alert"></p>
+        </form>
+        <p>Mínimo ocho caracteres. Si fallas cinco veces al entrar, el panel se bloquea cinco minutos.</p>
+      </div>
+
+      <div class="caja-form">
+        <h2>Dónde están los pedidos</h2>
+        <p>Todo lo que ves en este panel sale de la carpeta <code>datos</code> del servidor, la que está junto a los ficheros de la web. Cada pedido es un fichero <code>datos/pedidos/TR-AAMMDD-XXXX.json</code> con el cliente, las líneas, los importes y el historial. Al lado hay un <code>datos/indice.jsonl</code> con una línea por pedido, que es lo que se lee para listar y sumar.</p>
+        <p>Los precios, el stock y el interruptor de activo que tocas en Almacén se guardan aparte, en <code>datos/overrides.json</code>, para no tener que editar el catálogo a mano. La contraseña, cifrada, está en <code>datos/admin.json</code>. Esa carpeta tiene su propio <code>.htaccess</code> que impide abrirla desde el navegador: sólo se llega por FTP o desde el propio servidor.</p>
+      </div>
+
+      <div class="caja-form">
+        <h2>Copia de seguridad</h2>
+        <p>Conéctate por FTP con el mismo usuario con el que subiste la web, entra en la carpeta del dominio y descarga la carpeta <code>datos</code> entera. Eso es la copia: son ficheros de texto, se abren con cualquier editor y no hacen falta programas raros. Para restaurar, súbela de vuelta al mismo sitio.</p>
+        <p>Hazlo de vez en cuando, y sobre todo antes de tocar nada por FTP. En Pedidos también tienes el botón de exportar, que descarga en CSV los pedidos del periodo y los filtros que estés mirando; ese fichero se abre directamente con Excel.</p>
+      </div>
+
+      <div class="caja-form">
+        <h2>Cobrar con tarjeta</h2>
+        <p>El contrarreembolso funciona sin configurar nada: el cliente paga al transportista y tú marcas el pedido como cobrado desde su ficha. Para cobrar con tarjeta hace falta una cuenta de Stripe: entra en tu panel de Stripe, copia la clave secreta (empieza por <code>sk_live_</code>) y pégala en <code>pedido.php</code>, en la línea <code>$STRIPE_SECRET_KEY = '';</code>, entre las comillas. Sube el fichero por FTP y listo.</p>
+        <p>Mientras esa línea esté vacía, la tienda sigue aceptando pedidos con tarjeta, pero el cobro no se hace: el pedido entra con el pago pendiente y tienes que cobrarlo tú por otro medio antes de enviarlo.</p>
+      </div>
+
+    </section>
+
+  </main>
+</div>
+
+<!-- ============================ FICHA DEL PEDIDO ============================ -->
+<div class="fondo" data-fondo hidden></div>
+<aside class="cajon" data-cajon hidden aria-label="Ficha del pedido" tabindex="-1">
+  <div class="cajon-cab">
+    <h2 data-cajon-titulo></h2>
+    <span class="cajon-estado" data-cajon-estado></span>
+    <button class="cajon-cerrar" type="button" data-cajon-cerrar aria-label="Cerrar la ficha del pedido"><span aria-hidden="true">×</span></button>
+  </div>
+  <div class="cajon-cuerpo" data-cajon-cuerpo></div>
+  <div class="cajon-pie" data-cajon-pie></div>
+</aside>
+
+<div class="aviso" data-aviso role="status" aria-live="polite" hidden></div>
+
+<dialog class="confirmar" data-confirmar>
+  <p data-confirmar-texto></p>
+  <button class="btn btn-solid" type="button" data-confirmar-si>Sí, adelante</button>
+  <button class="btn btn-line" type="button" data-confirmar-no>Cancelar</button>
+</dialog>
+
+<script defer src="../lib/catalogo.js?v=20260910"></script>
+<script defer src="app.js?v=20260910"></script>
+</body>
+</html>

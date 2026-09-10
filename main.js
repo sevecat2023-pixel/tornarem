@@ -314,6 +314,96 @@
   }
 
   /* -------------------------------------------------------------
+     Estado real del catálogo (estado.php)
+     El HTML se sube con el precio y el stock del día que se publicó.
+     Al cargar, el servidor dice cuáles son los de verdad: así se ve el
+     stock que queda después de los pedidos de esta mañana y lo que se
+     haya cambiado en el panel. Si no hay respuesta (index.html abierto
+     con doble clic, hosting sin PHP, servidor caído) se queda lo que
+     está escrito en el HTML y no pasa nada.
+     ------------------------------------------------------------- */
+  function pintarLote(l) {
+    var card = $('[data-lote="' + l.id + '"]');
+    if (!card) return;
+    /* Un lote desactivado desaparece de la portada. El atributo hidden
+       no basta: la tarjeta es display:grid por hoja de estilo. */
+    if (l.activo === false) { card.hidden = true; card.style.display = "none"; return; }
+    card.hidden = false; card.style.display = "";
+    card.setAttribute("data-precio", l.precio);
+
+    var precio = $(".lote-price .precio", card);
+    if (precio) precio.textContent = eur(l.precio);
+    var off = $(".lote-price .off", card);
+    if (off) off.textContent = "−" + pct(l) + " %";
+
+    var esPale = /pal[eé]/i.test(l.formato || "");
+    var stockEl = $(".lote-stock", card);
+    if (stockEl) {
+      var bar = $(".stock-bar", stockEl);
+      var casillas = bar ? $$("i", bar).length : 0;
+      if (!casillas) casillas = 6;
+      var llenas = Math.max(0, Math.min(l.stock, casillas));
+      var barras = "";
+      for (var i = 0; i < casillas; i++) barras += (i < llenas) ? "<i></i>" : '<i class="off"></i>';
+      stockEl.innerHTML = '<span class="stock-bar" aria-hidden="true">' + barras + "</span>" +
+        escHTML(l.stock > 0 ? ("Quedan " + l.stock + (esPale ? " palés" : " lotes")) : "Agotado");
+      stockEl.classList.toggle("is-low", l.stock <= 2);
+    }
+
+    var add = $("[data-add]", card);
+    if (add) {
+      add.disabled = l.stock <= 0;
+      add.textContent = l.stock > 0 ? "Añadir al carrito" : "Agotado";
+    }
+  }
+
+  /* Con el stock nuevo el carrito puede haberse quedado pidiendo de más */
+  function ajustarCarrito() {
+    var tocado = false;
+    Object.keys(cart.items).forEach(function (id) {
+      var l = LOTES[id];
+      var max = (l && l.activo !== false) ? Math.max(0, parseInt(l.stock, 10) || 0) : 0;
+      if (cart.items[id] > max) {
+        if (max > 0) cart.items[id] = max; else delete cart.items[id];
+        tocado = true;
+      }
+    });
+    if (tocado) {
+      cart.save();
+      toast("Hemos ajustado el carrito: el stock de algún lote ha cambiado.");
+    } else {
+      /* Aunque no cambie ninguna cantidad, el precio sí puede haber cambiado */
+      document.dispatchEvent(new CustomEvent("cart:change"));
+    }
+  }
+
+  function initEstado() {
+    if (!window.fetch || location.protocol === "file:") return;
+    var ctrl = ("AbortController" in window) ? new AbortController() : null;
+    var timer = ctrl ? setTimeout(function () { ctrl.abort(); }, 8000) : null;
+    fetch("estado.php", { headers: { "Accept": "application/json" }, signal: ctrl ? ctrl.signal : undefined })
+      .then(function (r) { return r.json(); })
+      .then(function (d) {
+        if (timer) clearTimeout(timer);
+        if (!d || d.ok !== true || !d.lotes) return;
+        var hay = false;
+        Object.keys(d.lotes).forEach(function (id) {
+          var l = LOTES[id], e = d.lotes[id];
+          if (!l || !e) return;
+          var p = Number(e.precio);
+          if (p > 0) l.precio = p;
+          var s = parseInt(e.stock, 10);
+          if (!isNaN(s) && s >= 0) l.stock = s;
+          l.activo = (e.activo !== false);
+          safe(function () { pintarLote(l); }, "pintarLote");
+          hay = true;
+        });
+        if (hay) ajustarCarrito();
+      })
+      .catch(function () { if (timer) clearTimeout(timer); });
+  }
+
+  /* -------------------------------------------------------------
      Efectos: revelado, contadores, cuenta atrás, hero
      ------------------------------------------------------------- */
   function initReveals() {
@@ -551,6 +641,7 @@
     safe(initHero, "initHero");
     safe(initCheckout, "initCheckout");
     safe(initGracias, "initGracias");
+    safe(initEstado, "initEstado");
     /* Sincroniza el carrito entre pestañas */
     window.addEventListener("storage", function (e) { if (e.key === CART_KEY) { cart.load(); document.dispatchEvent(new CustomEvent("cart:change")); } });
   }

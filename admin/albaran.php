@@ -227,8 +227,10 @@ body{margin:0;padding:1.5rem 1rem 3rem;background:var(--hormigon);color:var(--ti
 .dato dt{font-family:var(--mono);font-size:.62rem;text-transform:uppercase;letter-spacing:.1em;color:var(--apagado);margin:0}
 .dato dd{margin:.15rem 0 0;font-family:var(--mono);font-size:.9rem}
 
-/* Tabla de líneas */
-table{width:100%;border-collapse:collapse;margin-top:1.1rem}
+/* Tabla de líneas. En una pantalla estrecha rueda la tabla, no la
+   página: así el albarán se puede consultar desde el móvil del almacén. */
+.tabla-wrap{overflow-x:auto;margin-top:1.1rem}
+table{width:100%;min-width:30rem;border-collapse:collapse}
 caption{text-align:left;font-family:var(--mono);font-size:.68rem;text-transform:uppercase;
   letter-spacing:.12em;color:var(--apagado);padding-bottom:.35rem}
 th,td{padding:.5rem .5rem;border-bottom:1px solid var(--linea);vertical-align:top;text-align:left}
@@ -248,6 +250,9 @@ tfoot .total .etiqueta,tfoot .total .num{font-size:1.05rem;font-weight:600;borde
 .cobro-txt h2{font-family:var(--mono);font-size:.7rem;font-weight:600;text-transform:uppercase;
   letter-spacing:.12em;margin:0 0 .2rem;color:var(--apagado)}
 .cobro-txt p{margin:0;font-size:.9rem}
+.cobro-cifra{text-align:right}
+.cobro-rotulo{font-family:var(--mono);font-size:.66rem;font-weight:600;text-transform:uppercase;
+  letter-spacing:.12em;color:var(--apagado);margin-bottom:.15rem}
 .cobro-importe{font-family:var(--titular);font-size:2.1rem;line-height:1;white-space:nowrap}
 .cobro--cobrar .cobro-importe{color:var(--acento)}
 .cobro-nada{font-family:var(--titular);font-size:1.35rem;line-height:1.1;text-transform:uppercase}
@@ -279,6 +284,8 @@ tfoot .total .etiqueta,tfoot .total .num{font-size:1.05rem;font-weight:600;borde
   body{background:#fff;padding:0;font-size:10.5pt}
   .hoja{width:auto;border:0;padding:0;margin:0}
   .mando{display:none}
+  .tabla-wrap{overflow:visible}
+  table{min-width:0}
   .cobro{border-color:#111}
   .cobro--cobrar .cobro-importe{color:#111;text-decoration:underline}
   tr{page-break-inside:avoid}
@@ -351,6 +358,7 @@ tfoot .total .etiqueta,tfoot .total .num{font-size:1.05rem;font-weight:600;borde
     </div>
   </dl>
 
+  <div class="tabla-wrap">
   <table>
     <caption>Contenido del envío</caption>
     <thead>
@@ -411,6 +419,7 @@ foreach ($lineas as $ln) {
       </tr>
     </tfoot>
   </table>
+  </div>
 
   <section class="cobro<?php echo ($esContrarreembolso && !$cobrado) ? ' cobro--cobrar' : ''; ?>">
     <div class="cobro-txt">
@@ -427,7 +436,8 @@ foreach ($lineas as $ln) {
 <?php } ?>
     </div>
 <?php if ($esContrarreembolso && !$cobrado) { ?>
-    <div>
+    <div class="cobro-cifra">
+      <div class="cobro-rotulo">A cobrar en la entrega</div>
       <div class="cobro-importe"><?php echo alb_e(tienda_eur($total)); ?></div>
     </div>
 <?php } else { ?>

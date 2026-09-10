@@ -1,0 +1,1173 @@
+/* =============================================================
+   TORNAREM · Panel de administración — hoja de estilo
+   Autosuficiente: no depende de styles.css.
+
+   Misma identidad que la tienda (retícula de líneas de 1px, cero
+   esquinas redondeadas, Archivo Black en mayúsculas, monoespaciada
+   para cifras y etiquetas) pero apretada: esto es una herramienta de
+   trabajo, no un escaparate. Más densidad, tablas cómodas de leer,
+   cabeceras pegajosas y estados de pedido reconocibles de un vistazo.
+
+   Índice
+     0. Tipografías locales
+     1. Tokens
+     2. Reset y base
+     3. Utilidades
+     4. Botones
+     5. Distintivos de estado (badge)
+     6. Campos de formulario
+     7. Pantalla de acceso
+     8. Armazón: barra lateral y contenido
+     9. Cabecera de vista
+    10. Selector de rango de fechas
+    11. Vistas, KPIs y cuadros
+    12. Gráfico, listas y barras
+    13. Tablas
+    14. Filtros, selección múltiple y paginación
+    15. Almacén y ajustes
+    16. Cajón de la ficha de pedido
+    17. Aviso flotante y diálogo de confirmación
+    18. Responsive
+    19. Impresión y reducción de movimiento
+   ============================================================= */
+
+/* =============================================================
+   0. Tipografías alojadas en local (sin peticiones a Google)
+   ============================================================= */
+/* Archivo Black · 400 latin-ext */
+@font-face {
+  font-family: 'Archivo Black';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(../assets/fonts/archivo-black-400-latin-ext.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* Archivo Black · 400 latin */
+@font-face {
+  font-family: 'Archivo Black';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(../assets/fonts/archivo-black-400-latin.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* IBM Plex Sans · 400–600 latin-ext (fichero variable) */
+@font-face {
+  font-family: 'IBM Plex Sans';
+  font-style: normal;
+  font-weight: 400 600;
+  font-display: swap;
+  src: url(../assets/fonts/ibm-plex-sans-latin-ext.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* IBM Plex Sans · 400–600 latin (fichero variable) */
+@font-face {
+  font-family: 'IBM Plex Sans';
+  font-style: normal;
+  font-weight: 400 600;
+  font-display: swap;
+  src: url(../assets/fonts/ibm-plex-sans-latin.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* IBM Plex Mono · 400 latin-ext */
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(../assets/fonts/ibm-plex-mono-400-latin-ext.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* IBM Plex Mono · 400 latin */
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(../assets/fonts/ibm-plex-mono-400-latin.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* IBM Plex Mono · 600 latin-ext */
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(../assets/fonts/ibm-plex-mono-600-latin-ext.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* IBM Plex Mono · 600 latin */
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(../assets/fonts/ibm-plex-mono-600-latin.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* =============================================================
+   1. Tokens
+   ============================================================= */
+:root {
+  --ink: #111111;
+  --ink-2: #33322f;
+  --apagado: #6a6862;
+  --accent: #ff4d00;
+  --yellow: #ffd400;
+  --kraft: #e4d0a9;
+  --concrete: #f1f0ec;
+  --papel: #ffffff;
+  --linea: #dcdad3;          /* línea fina de retícula, más suave que la tienda */
+
+  /* Colores de estado: cada uno se usa SIEMPRE junto a su texto,
+     nunca como única señal. */
+  --verde: #0f7a3d;
+  --azul: #1b4dd8;
+  --rojo: #b3001b;
+  --marcado: #fff1e9;        /* fila seleccionada */
+
+  --display: 'Archivo Black', Impact, 'Arial Black', sans-serif;
+  --sans: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --lado-w: 224px;           /* ancho de la barra lateral en escritorio */
+  --tabla-alto: min(70vh, 820px);
+}
+
+/* =============================================================
+   2. Reset y base
+   ============================================================= */
+*, *::before, *::after { box-sizing: border-box; margin: 0; }
+
+/* El cajón y su fondo se ocultan con visibilidad, no con display, para
+   que puedan deslizarse al abrirse. El resto se oculta de verdad. */
+[hidden]:not(.cajon):not(.fondo) { display: none !important; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  color-scheme: light;
+}
+body.panel {
+  font-family: var(--sans);
+  font-size: .9375rem;
+  line-height: 1.5;
+  color: var(--ink);
+  background: var(--concrete);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+}
+img, svg { display: block; max-width: 100%; }
+img { height: auto; }
+button { font: inherit; color: inherit; cursor: pointer; border: 0; background: none; border-radius: 0; }
+input, select, textarea { font: inherit; color: inherit; border-radius: 0; }
+a { color: inherit; text-decoration: none; }
+p { text-wrap: pretty; }
+h1, h2, h3, h4 { text-wrap: balance; line-height: 1.05; font-weight: 400; }
+::selection { background: var(--accent); color: var(--papel); }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 1px; }
+
+/* =============================================================
+   3. Utilidades
+   ============================================================= */
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+}
+.skip-link {
+  position: fixed; top: -100px; left: 1rem; z-index: 9999;
+  padding: .6rem 1rem; background: var(--ink); color: var(--papel);
+  font-family: var(--mono); font-size: .8rem; text-transform: uppercase;
+}
+.skip-link:focus { top: 1rem; }
+
+.mono { font-family: var(--mono); }
+/* Cifras: monoespaciadas, alineadas a la derecha y de ancho fijo para
+   que las columnas de euros se puedan comparar de un vistazo. */
+.num {
+  font-family: var(--mono);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.apagado { color: var(--apagado); }
+.vacio {
+  font-family: var(--mono); font-size: .74rem; letter-spacing: .05em;
+  text-transform: uppercase; color: var(--apagado);
+}
+/* Rutas y nombres de fichero dentro de los textos de ayuda. */
+code {
+  font-family: var(--mono); font-size: .86em;
+  background: var(--concrete); border: 1px solid var(--linea);
+  padding: 0 .25em; overflow-wrap: anywhere;
+}
+
+/* Estados compartidos. is-cargando también sirve para bloques que
+   están esperando respuesta del servidor. */
+.is-cargando { cursor: progress; }
+.is-cargando:not(.btn) { opacity: .55; pointer-events: none; }
+.is-sube { color: var(--verde); font-weight: 600; }
+.is-baja { color: var(--rojo); font-weight: 600; }
+
+@keyframes parpadeo { to { visibility: hidden; } }
+
+/* =============================================================
+   4. Botones
+   ============================================================= */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: .45rem;
+  padding: .55rem .85rem;
+  font-family: var(--mono); font-size: .74rem; font-weight: 600;
+  letter-spacing: .06em; text-transform: uppercase; line-height: 1;
+  border: 2px solid var(--ink); background: var(--papel); color: var(--ink);
+  white-space: nowrap; text-align: center; transition: none;
+}
+.btn-solid { background: var(--ink); color: var(--papel); }
+.btn-accent { background: var(--accent); border-color: var(--accent); color: var(--ink); }
+.btn-line { background: transparent; }
+.btn-mini { padding: .35rem .5rem; font-size: .66rem; border-width: 1px; }
+.btn-peligro { border-color: var(--rojo); color: var(--rojo); }
+@media (hover: hover) {
+  .btn:hover { background: var(--ink); color: var(--papel); }
+  .btn-solid:hover { background: var(--papel); color: var(--ink); }
+  .btn-accent:hover { background: var(--ink); border-color: var(--ink); color: var(--accent); }
+  .btn-peligro:hover { background: var(--rojo); border-color: var(--rojo); color: var(--papel); }
+}
+.btn:active { transform: translate(1px, 1px); }
+.btn[disabled] { opacity: .4; cursor: not-allowed; pointer-events: none; }
+/* Esperando al servidor: el botón no se puede pulsar y lo dice con un
+   cuadradito que parpadea. Nunca se queda en un estado ambiguo. */
+.btn.is-cargando { opacity: .6; pointer-events: none; }
+.btn.is-cargando::after { content: "▮"; animation: parpadeo .7s steps(2, start) infinite; }
+.btn-block { width: 100%; }
+
+/* =============================================================
+   5. Distintivos de estado (badge)
+   El color acompaña al texto; el texto nunca se sustituye por color.
+   ============================================================= */
+.badge {
+  display: inline-flex; align-items: center; gap: .35em;
+  padding: .2rem .42rem;
+  font-family: var(--mono); font-size: .66rem; font-weight: 600;
+  letter-spacing: .06em; text-transform: uppercase; line-height: 1.3;
+  border: 1px solid var(--ink); background: var(--papel); color: var(--ink);
+  white-space: nowrap;
+}
+.badge--nuevo { background: var(--accent); border-color: var(--accent); color: var(--papel); }
+.badge--preparando { background: var(--yellow); border-color: #c9a600; color: var(--ink); }
+.badge--enviado { background: var(--azul); border-color: var(--azul); color: var(--papel); }
+.badge--entregado { background: var(--verde); border-color: var(--verde); color: var(--papel); }
+.badge--incidencia { background: var(--rojo); border-color: var(--rojo); color: var(--papel); }
+.badge--cancelado { background: var(--apagado); border-color: var(--apagado); color: var(--papel); }
+.badge--pagado { background: var(--papel); border-color: var(--verde); color: var(--verde); }
+.badge--pendiente { background: var(--papel); border-color: #c9a600; color: #7a6500; }
+.badge--cobrado_entrega { background: var(--kraft); border-color: #b79b62; color: var(--ink); }
+.badge--fallido { background: var(--papel); border-color: var(--rojo); color: var(--rojo); }
+
+/* =============================================================
+   6. Campos de formulario
+   ============================================================= */
+.campo { display: grid; gap: .25rem; min-width: 0; }
+.campo > label,
+.campo-linea > label {
+  font-family: var(--mono); font-size: .66rem; letter-spacing: .08em;
+  text-transform: uppercase; color: var(--ink-2);
+}
+.campo input,
+.campo select,
+.campo textarea,
+.caja-form input,
+.caja-form select,
+.caja-form textarea {
+  width: 100%;
+  border: 1px solid var(--ink);
+  background: var(--papel);
+  padding: .5rem .6rem;
+  font-size: .9rem;
+}
+/* La clase campo también se pone directamente sobre el control. */
+input.campo, select.campo, textarea.campo {
+  display: block; width: 100%;
+  border: 1px solid var(--ink); background: var(--papel);
+  padding: .45rem .55rem; font-size: .88rem;
+}
+.campo textarea { min-height: 4.5rem; resize: vertical; }
+.campo input:focus,
+.campo select:focus,
+.campo textarea:focus { outline: 3px solid var(--accent); outline-offset: 0; }
+.campo input[aria-invalid="true"] { border-color: var(--rojo); background: #fff1eb; }
+.campo input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--ink); }
+/* Etiqueta y control en la misma línea, o varios campos seguidos. Se
+   apila solo cuando no cabe, así vale igual para el formulario de
+   ajustes que para el "Pago" de los filtros. */
+.campo-linea {
+  display: flex; flex-wrap: wrap; align-items: center;
+  gap: .3rem .6rem;
+  min-width: 0;
+}
+label.campo-linea {
+  display: inline-flex; flex: 0 1 auto;
+  font-family: var(--mono); font-size: .66rem; letter-spacing: .08em;
+  text-transform: uppercase; color: var(--ink-2);
+}
+.campo-linea > .campo,
+.campo-linea > input,
+.campo-linea > textarea { flex: 1 1 12rem; min-width: 0; }
+.campo-linea > select { flex: 0 1 auto; min-width: 0; }
+select {
+  border: 1px solid var(--ink); background: var(--papel);
+  padding: .42rem .5rem;
+  font-family: var(--mono); font-size: .74rem;
+  text-transform: uppercase; letter-spacing: .04em;
+}
+input[type="search"], input[type="date"] {
+  border: 1px solid var(--ink); background: var(--papel);
+  padding: .42rem .5rem; font-family: var(--mono); font-size: .78rem;
+}
+
+/* =============================================================
+   7. Pantalla de acceso
+   ============================================================= */
+.acceso {
+  min-height: 100vh;
+  display: grid; place-items: center;
+  padding: 1.5rem 1rem;
+  background: var(--concrete);
+}
+.acceso-caja {
+  width: min(100%, 25rem);
+  background: var(--papel);
+  border: 2px solid var(--ink);
+  padding: 1.5rem 1.4rem 1.3rem;
+  display: grid; gap: 1rem;
+}
+.acceso-marca {
+  display: flex; align-items: center; gap: .6rem;
+  font-family: var(--display); font-size: 1.35rem;
+  text-transform: uppercase; letter-spacing: -.01em;
+  padding-bottom: .9rem; border-bottom: 2px solid var(--ink);
+}
+.acceso-marca svg { width: 32px; height: 32px; flex: none; border: 1px solid var(--ink); }
+.acceso-marca small {
+  font-family: var(--mono); font-size: .6rem; letter-spacing: .12em;
+  color: var(--apagado); text-transform: uppercase;
+}
+.acceso-titulo,
+.acceso-caja h1,
+.acceso-caja h2 {
+  font-family: var(--display); text-transform: uppercase;
+  font-size: 1.1rem; line-height: 1.1;
+}
+.acceso-caja p { font-size: .88rem; color: var(--ink-2); }
+.acceso-caja form { display: grid; gap: .9rem; }
+.acceso-campo { display: grid; gap: .3rem; }
+.acceso-campo label {
+  font-family: var(--mono); font-size: .68rem; letter-spacing: .08em;
+  text-transform: uppercase; color: var(--ink-2);
+}
+.acceso-campo input {
+  width: 100%; border: 2px solid var(--ink); background: var(--papel);
+  padding: .65rem .7rem; font-family: var(--mono); font-size: .95rem;
+}
+.acceso-campo input:focus { outline: 3px solid var(--accent); outline-offset: 0; }
+.acceso-error {
+  font-family: var(--mono); font-size: .72rem; line-height: 1.4;
+  color: var(--rojo); border-left: 3px solid var(--rojo);
+  background: #fff1eb; padding: .5rem .6rem;
+}
+.acceso-error:empty { display: none; }
+.acceso-pie {
+  font-family: var(--mono); font-size: .66rem; line-height: 1.5;
+  letter-spacing: .03em; color: var(--apagado);
+  padding-top: .9rem; border-top: 1px solid var(--linea);
+}
+
+/* =============================================================
+   8. Armazón: barra lateral y contenido
+   ============================================================= */
+.app {
+  display: grid;
+  grid-template-columns: var(--lado-w) minmax(0, 1fr);
+  min-height: 100vh;
+  align-items: start;
+}
+
+.lado {
+  position: sticky; top: 0;
+  height: 100vh;
+  display: flex; flex-direction: column;
+  background: var(--papel);
+  border-right: 2px solid var(--ink);
+  z-index: 40;
+}
+.lado-marca {
+  display: flex; align-items: center; gap: .55rem; flex-wrap: wrap;
+  padding: .9rem 1rem;
+  border-bottom: 2px solid var(--ink);
+  font-family: var(--display); font-size: 1.1rem;
+  text-transform: uppercase; letter-spacing: -.01em; line-height: 1;
+}
+.lado-marca svg { width: 30px; height: 30px; flex: none; border: 1px solid var(--ink); }
+.lado-marca small {
+  width: 100%;
+  font-family: var(--mono); font-size: .6rem; font-weight: 600;
+  letter-spacing: .14em; text-transform: uppercase; color: var(--accent);
+}
+.lado-nav {
+  flex: 1 1 auto; min-height: 0; overflow-y: auto;
+  display: flex; flex-direction: column;
+  padding-block: .3rem;
+}
+.lado-link {
+  display: flex; align-items: center; gap: .65rem;
+  padding: .65rem .9rem;
+  font-family: var(--mono); font-size: .76rem; font-weight: 600;
+  letter-spacing: .06em; text-transform: uppercase;
+  border-left: 4px solid transparent;
+  color: var(--ink-2);
+}
+.lado-icono {
+  width: 1.5em; flex: none; text-align: center;
+  font-size: .95rem; line-height: 1; color: var(--apagado);
+}
+@media (hover: hover) {
+  .lado-link:hover { background: var(--concrete); color: var(--ink); }
+  .lado-link:hover .lado-icono { color: var(--accent); }
+}
+.lado-link.is-activa {
+  background: var(--ink); color: var(--papel);
+  border-left-color: var(--accent);
+}
+.lado-link.is-activa .lado-icono { color: var(--accent); }
+.lado-pie { padding: .8rem .9rem; border-top: 1px solid var(--linea); }
+.lado-salir {
+  width: 100%;
+  padding: .55rem .7rem;
+  font-family: var(--mono); font-size: .72rem; font-weight: 600;
+  letter-spacing: .06em; text-transform: uppercase;
+  border: 2px solid var(--ink); background: var(--papel); color: var(--ink);
+}
+@media (hover: hover) {
+  .lado-salir:hover { background: var(--ink); color: var(--papel); }
+}
+
+.principal {
+  min-width: 0;
+  padding: 0 clamp(.9rem, 2vw, 1.6rem) 3rem;
+}
+
+/* =============================================================
+   9. Cabecera de vista
+   ============================================================= */
+.cabecera {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    "titulo acciones"
+    "sub    acciones";
+  align-items: center;
+  gap: .15rem .9rem;
+  padding-block: 1rem .8rem;
+  border-bottom: 2px solid var(--ink);
+}
+.cabecera-titulo {
+  grid-area: titulo;
+  font-family: var(--display); text-transform: uppercase;
+  font-size: clamp(1.35rem, 2.4vw, 1.95rem); letter-spacing: -.015em; line-height: 1;
+}
+.cabecera-sub {
+  grid-area: sub;
+  font-family: var(--mono); font-size: .7rem; letter-spacing: .06em;
+  text-transform: uppercase; color: var(--apagado);
+}
+.cabecera-acciones {
+  grid-area: acciones;
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end;
+  gap: .4rem;
+}
+
+/* =============================================================
+   10. Selector de rango de fechas
+   Es real: los atajos, los dos campos y las flechas cambian todo lo
+   que hay debajo, así que va pegado arriba y siempre a la vista.
+   ============================================================= */
+.rango {
+  position: sticky; top: 0; z-index: 30;
+  display: flex; flex-wrap: wrap; align-items: center;
+  justify-content: space-between; gap: .5rem .9rem;
+  padding: .55rem .65rem;
+  background: var(--papel);
+  border: 1px solid var(--ink); border-top: 0;
+  margin-bottom: 1rem;
+}
+.rango-presets { display: flex; flex-wrap: wrap; gap: .25rem; }
+.rango-preset {
+  padding: .38rem .55rem;
+  font-family: var(--mono); font-size: .68rem; font-weight: 600;
+  letter-spacing: .05em; text-transform: uppercase; line-height: 1;
+  border: 1px solid var(--ink); background: var(--papel); color: var(--ink);
+}
+@media (hover: hover) {
+  .rango-preset:hover { background: var(--concrete); }
+}
+.rango-preset.is-activo { background: var(--ink); color: var(--papel); }
+.rango-fechas {
+  display: flex; flex-wrap: wrap; align-items: center; gap: .35rem .5rem;
+}
+.rango-fechas label {
+  font-family: var(--mono); font-size: .64rem; letter-spacing: .08em;
+  text-transform: uppercase; color: var(--apagado);
+}
+.rango-fechas input[type="date"] { min-width: 8.5rem; }
+.rango-fechas button {
+  padding: .4rem .6rem;
+  font-family: var(--mono); font-size: .68rem; font-weight: 600;
+  letter-spacing: .05em; text-transform: uppercase; line-height: 1;
+  border: 1px solid var(--ink); background: var(--ink); color: var(--papel);
+}
+@media (hover: hover) {
+  .rango-fechas button:hover { background: var(--papel); color: var(--ink); }
+}
+.rango-nav { display: flex; align-items: center; gap: .35rem; }
+.rango-nav button {
+  width: 32px; height: 32px; flex: none;
+  display: grid; place-items: center;
+  border: 1px solid var(--ink); background: var(--papel);
+  font-family: var(--mono); font-size: .9rem; line-height: 1;
+}
+@media (hover: hover) {
+  .rango-nav button:hover:not([disabled]) { background: var(--ink); color: var(--papel); }
+}
+.rango-nav button[disabled] { opacity: .3; cursor: not-allowed; }
+.rango-etiqueta {
+  font-family: var(--mono); font-size: .72rem; font-weight: 600;
+  letter-spacing: .04em; text-align: center; min-width: 14ch;
+}
+
+/* =============================================================
+   11. Vistas, KPIs y cuadros
+   ============================================================= */
+.vista {
+  display: grid;
+  gap: 1rem;
+  align-content: start;
+  min-width: 0;
+}
+@media (min-width: 1100px) {
+  .vista[data-vista="inicio"] { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .vista[data-vista="inicio"] > .kpis { grid-column: 1 / -1; }
+  /* El gráfico y la tabla de últimos pedidos piden ancho completo. */
+  .vista[data-vista="inicio"] > .cuadro:has(.grafico),
+  .vista[data-vista="inicio"] > .cuadro:has(.tabla) { grid-column: 1 / -1; }
+}
+
+/* Retícula de KPIs: las líneas son el hueco de la rejilla, así nunca
+   sobra un borde al saltar de fila. */
+.kpis {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(11.5rem, 1fr));
+  gap: 1px;
+  background: var(--linea);
+  border: 1px solid var(--ink);
+}
+.kpi {
+  background: var(--papel);
+  padding: .75rem .9rem .8rem;
+  display: grid; align-content: start; gap: .15rem;
+  min-width: 0;
+}
+.kpi-label {
+  font-family: var(--mono); font-size: .64rem; font-weight: 600;
+  letter-spacing: .1em; text-transform: uppercase; color: var(--apagado);
+}
+.kpi-valor {
+  font-family: var(--display); font-size: clamp(1.4rem, 2.6vw, 2rem);
+  line-height: 1; letter-spacing: -.02em;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+.kpi-delta {
+  font-family: var(--mono); font-size: .68rem; letter-spacing: .04em;
+  color: var(--apagado);
+}
+
+.cuadro {
+  display: flex; flex-direction: column;
+  background: var(--papel);
+  border: 1px solid var(--ink);
+  min-width: 0;
+}
+.cuadro-cab {
+  display: flex; flex-wrap: wrap; align-items: center;
+  justify-content: space-between; gap: .4rem .8rem;
+  padding: .55rem .8rem;
+  background: var(--concrete);
+  border-bottom: 1px solid var(--ink);
+}
+.cuadro-cab h2 {
+  font-family: var(--display); font-size: .92rem;
+  text-transform: uppercase; letter-spacing: -.005em;
+}
+.cuadro-acciones {
+  margin-left: auto;
+  display: flex; flex-wrap: wrap; align-items: center; gap: .35rem;
+}
+.x-cuadro-nota {
+  font-family: var(--mono); font-size: .64rem; letter-spacing: .04em;
+  text-transform: uppercase; color: var(--apagado);
+}
+.cuadro-cuerpo {
+  flex: 1 1 auto; min-width: 0;
+  padding: .8rem;
+  overflow-x: auto;
+}
+/* Listas y tablas llegan con su propio ritmo: sin doble margen. */
+.cuadro-cuerpo:has(> .lista),
+.cuadro-cuerpo:has(> .tabla),
+.cuadro-cuerpo:has(> .tabla-wrap) { padding: 0; }
+
+/* =============================================================
+   12. Gráfico, listas y barras
+   ============================================================= */
+/* El svg trae su propio viewBox: se deja escalar por su proporción para
+   que las barras ocupen todo el ancho y no queden franjas vacías. */
+.grafico {
+  display: block; width: 100%; height: auto;
+  overflow: visible;
+}
+.grafico rect { fill: var(--ink); }
+.grafico rect.is-activo { fill: var(--accent); }
+@media (hover: hover) {
+  .grafico rect:hover { fill: var(--accent); }
+}
+.grafico line { stroke: var(--linea); stroke-width: 1; }
+.grafico text {
+  font-family: var(--mono); font-size: 9px;
+  letter-spacing: .04em; fill: var(--apagado);
+}
+.grafico-vacio {
+  padding: 2.5rem 1rem; text-align: center;
+  font-family: var(--mono); font-size: .74rem; letter-spacing: .06em;
+  text-transform: uppercase; color: var(--apagado);
+}
+
+.lista { list-style: none; margin: 0; padding: 0; }
+.lista li { border-top: 1px solid var(--linea); }
+.lista li:first-child { border-top: 0; }
+.lista li > a,
+.lista li > button,
+.lista li > span {
+  display: flex; width: 100%; gap: .5rem 1rem;
+  align-items: baseline; justify-content: space-between;
+  padding: .55rem .8rem;
+  text-align: left; font-size: .86rem;
+}
+@media (hover: hover) {
+  .lista li > a:hover,
+  .lista li > button:hover { background: var(--concrete); }
+}
+.lista li b {
+  font-family: var(--mono); font-size: .78rem; font-weight: 600;
+  white-space: nowrap;
+}
+.lista li small {
+  font-family: var(--mono); font-size: .66rem; letter-spacing: .04em;
+  color: var(--apagado); text-transform: uppercase;
+}
+.lista-vacia,
+.lista li.es-vacia {
+  padding: 1.4rem .8rem; text-align: center;
+  font-family: var(--mono); font-size: .72rem; letter-spacing: .05em;
+  text-transform: uppercase; color: var(--apagado);
+}
+
+/* Reparto por forma de pago y por estado: etiqueta, barra y cifra. */
+.barras { display: grid; gap: .45rem; }
+.barras > * {
+  display: grid;
+  grid-template-columns: minmax(6rem, 30%) minmax(0, 1fr) auto;
+  align-items: center; gap: .55rem;
+  font-family: var(--mono); font-size: .72rem;
+  letter-spacing: .03em;
+}
+.barras > * > span:first-child { text-transform: uppercase; color: var(--ink-2); }
+/* Carril de la barra: fondo hormigón, relleno sólido en tinta. */
+.barra,
+.barras i,
+.barras .pista {
+  display: block; height: 12px; min-width: 0;
+  background: var(--concrete);
+  border: 1px solid var(--linea);
+}
+.barra > span,
+.barras i > span,
+.barras .pista > span {
+  display: block; height: 100%;
+  background: var(--ink);
+}
+.barras b {
+  font-family: var(--mono); font-weight: 600; font-size: .74rem;
+  font-variant-numeric: tabular-nums; white-space: nowrap;
+}
+
+/* =============================================================
+   13. Tablas
+   El scroll pasa DENTRO de .tabla-wrap, nunca en la página, y la
+   cabecera se queda pegada arriba mientras se recorre la lista.
+   ============================================================= */
+.tabla-wrap {
+  overflow: auto;
+  max-height: var(--tabla-alto);
+  background: var(--papel);
+  border: 1px solid var(--ink);
+  overscroll-behavior: contain;
+}
+/* Dentro de un cuadro la caja ya pone el borde. */
+.cuadro .tabla-wrap { border: 0; }
+
+.tabla {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: .84rem;
+  background: var(--papel);
+}
+.tabla th, .tabla td {
+  text-align: left; vertical-align: middle;
+  padding: .5rem .65rem;
+  border-bottom: 1px solid var(--linea);
+  white-space: nowrap;
+}
+.tabla thead th {
+  position: sticky; top: 0; z-index: 2;
+  background: var(--concrete);
+  border-bottom: 1px solid var(--ink);
+  font-family: var(--mono); font-size: .64rem; font-weight: 600;
+  letter-spacing: .08em; text-transform: uppercase; color: var(--ink);
+}
+.tabla thead th.num, .tabla td.num { text-align: right; }
+.tabla tbody tr:last-child td { border-bottom: 0; }
+@media (hover: hover) {
+  .tabla tbody tr:hover { background: var(--concrete); }
+}
+.tabla tbody tr[data-numero],
+.tabla tbody tr[data-email] { cursor: pointer; }
+.tabla tbody tr.is-marcada { background: var(--marcado); }
+.tabla tbody tr.is-marcada td:first-child { box-shadow: inset 3px 0 0 var(--accent); }
+.tabla .mono, .tabla .num { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+.tabla td b { font-weight: 600; }
+/* Nombre del cliente y del lote: ahí sí interesa que se lea entero. */
+.tabla td.ancho, .tabla td.envuelve { white-space: normal; min-width: 12rem; }
+.tabla input[type="checkbox"] {
+  width: 17px; height: 17px; accent-color: var(--ink); cursor: pointer;
+}
+.tabla input[type="number"],
+.tabla input[type="text"] {
+  width: 6.5rem; padding: .3rem .4rem;
+  border: 1px solid var(--ink); background: var(--papel);
+  font-family: var(--mono); font-size: .78rem; text-align: right;
+}
+.tabla input[type="number"]:focus,
+.tabla input[type="text"]:focus { outline: 3px solid var(--accent); outline-offset: 0; }
+
+/* Columnas ordenables: la flecha dice cuál manda y en qué sentido. */
+.tabla th[data-orden] { cursor: pointer; user-select: none; }
+.tabla th[data-orden]::after {
+  content: "↕"; margin-left: .35em; opacity: .4; font-weight: 400;
+}
+@media (hover: hover) {
+  .tabla th[data-orden]:hover { background: var(--kraft); }
+}
+.tabla th[aria-sort="ascending"]::after { content: "↑"; opacity: 1; color: var(--accent); }
+.tabla th[aria-sort="descending"]::after { content: "↓"; opacity: 1; color: var(--accent); }
+
+.tabla-vacia {
+  padding: 2.2rem 1rem; text-align: center;
+  font-family: var(--mono); font-size: .76rem; letter-spacing: .05em;
+  text-transform: uppercase; color: var(--apagado);
+  background: var(--papel); border: 1px dashed var(--ink);
+}
+
+/* =============================================================
+   14. Filtros, selección múltiple y paginación
+   ============================================================= */
+.filtros {
+  display: flex; flex-wrap: wrap; align-items: center;
+  justify-content: space-between; gap: .5rem .9rem;
+  padding: .55rem .65rem;
+  background: var(--papel);
+  border: 1px solid var(--ink);
+}
+.chips { display: flex; flex-wrap: wrap; gap: .25rem; }
+.chip {
+  padding: .38rem .55rem;
+  font-family: var(--mono); font-size: .68rem; font-weight: 600;
+  letter-spacing: .05em; text-transform: uppercase; line-height: 1;
+  border: 1px solid var(--ink); background: var(--papel); color: var(--ink);
+}
+@media (hover: hover) { .chip:hover { background: var(--concrete); } }
+.chip.is-activo { background: var(--ink); color: var(--papel); }
+.buscador { display: flex; align-items: center; gap: .3rem; min-width: 0; }
+.buscador input[type="search"] { width: min(100%, 18rem); min-width: 9rem; }
+.buscador button {
+  padding: .38rem .5rem;
+  font-family: var(--mono); font-size: .68rem; text-transform: uppercase;
+  border: 1px solid var(--ink); background: var(--papel);
+}
+@media (hover: hover) {
+  .buscador button:hover { background: var(--ink); color: var(--papel); }
+}
+
+.barra-bulk {
+  display: flex; flex-wrap: wrap; align-items: center; gap: .5rem .7rem;
+  padding: .5rem .65rem;
+  background: var(--yellow);
+  border: 1px solid var(--ink);
+  font-family: var(--mono); font-size: .72rem; font-weight: 600;
+  letter-spacing: .04em; text-transform: uppercase;
+}
+.barra-bulk select { background: var(--papel); }
+
+.paginacion {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end;
+  gap: .4rem .6rem;
+  font-family: var(--mono); font-size: .72rem; letter-spacing: .04em;
+}
+.paginacion button {
+  padding: .38rem .6rem;
+  font-family: var(--mono); font-size: .7rem; font-weight: 600;
+  text-transform: uppercase; letter-spacing: .05em;
+  border: 1px solid var(--ink); background: var(--papel);
+}
+@media (hover: hover) {
+  .paginacion button:hover:not([disabled]) { background: var(--ink); color: var(--papel); }
+}
+.paginacion button[disabled] { opacity: .3; cursor: not-allowed; }
+.paginacion select { text-transform: none; }
+
+/* =============================================================
+   15. Almacén y ajustes
+   ============================================================= */
+.aviso-linea {
+  padding: .5rem .7rem;
+  background: var(--yellow);
+  border: 1px solid var(--ink);
+  font-family: var(--mono); font-size: .72rem; line-height: 1.5;
+  letter-spacing: .03em;
+}
+.aviso-linea::before { content: "▮ "; color: var(--accent); }
+/* Stock a cero o a uno: en rojo, que se vea desde lejos. */
+.tabla .is-bajo,
+.tabla .stock-bajo,
+.tabla input.is-bajo {
+  color: var(--rojo); font-weight: 600; border-color: var(--rojo);
+}
+.tabla td.is-bajo { background: #fff1eb; }
+
+.caja-form {
+  background: var(--papel);
+  border: 1px solid var(--ink);
+  padding: 1rem 1.1rem 1.2rem;
+  display: grid; gap: .8rem; align-content: start;
+  max-width: 34rem;
+}
+.caja-form h2 {
+  font-family: var(--display); font-size: 1rem; text-transform: uppercase;
+  padding-bottom: .6rem; border-bottom: 1px solid var(--linea);
+}
+.caja-form h3 {
+  font-family: var(--mono); font-size: .7rem; font-weight: 600;
+  letter-spacing: .08em; text-transform: uppercase; color: var(--ink-2);
+}
+.caja-form p { font-size: .88rem; color: var(--ink-2); }
+.caja-form ul { margin: 0; padding-left: 1.1rem; font-size: .88rem; color: var(--ink-2); }
+.caja-form li { margin-bottom: .3rem; }
+.caja-form form { display: grid; gap: .7rem; }
+.caja-form label {
+  font-family: var(--mono); font-size: .66rem; letter-spacing: .08em;
+  text-transform: uppercase; color: var(--ink-2);
+  display: block; margin-bottom: .2rem;
+}
+.caja-form .btn { justify-self: start; }
+.ajustes-error {
+  font-family: var(--mono); font-size: .72rem; line-height: 1.4;
+  color: var(--rojo); border-left: 3px solid var(--rojo);
+  background: #fff1eb; padding: .5rem .6rem;
+}
+.ajustes-error:empty { display: none; }
+
+/* =============================================================
+   16. Cajón de la ficha de pedido
+   ============================================================= */
+.fondo {
+  position: fixed; inset: 0; z-index: 80;
+  background: rgba(17, 17, 17, .55);
+  opacity: 1; transition: opacity .3s var(--ease-out);
+}
+.fondo[hidden] { opacity: 0; visibility: hidden; pointer-events: none; }
+
+.cajon {
+  position: fixed; top: 0; right: 0; bottom: 0; z-index: 90;
+  width: min(100%, 560px);
+  background: var(--papel);
+  border-left: 2px solid var(--ink);
+  display: grid; grid-template-rows: auto minmax(0, 1fr) auto;
+  transform: none;
+  transition: transform .35s var(--ease-out), visibility 0s linear 0s;
+}
+.cajon[hidden] {
+  transform: translateX(102%);
+  visibility: hidden;
+  transition: transform .35s var(--ease-out), visibility 0s linear .35s;
+}
+/* Rejilla en vez de fila: así el botón de cerrar se queda arriba a la
+   derecha aunque el número y los distintivos no quepan en un renglón. */
+.cajon-cab {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center; gap: .35rem .7rem;
+  padding: .8rem 1rem;
+  border-bottom: 2px solid var(--ink);
+  background: var(--concrete);
+}
+.cajon-cab h2 {
+  grid-column: 1; grid-row: 1;
+  font-family: var(--mono); font-size: 1rem; font-weight: 600;
+  letter-spacing: .04em;
+}
+.cajon-estado {
+  grid-column: 1; grid-row: 2;
+  display: flex; flex-wrap: wrap; align-items: center; gap: .3rem;
+}
+.cajon-cerrar {
+  grid-column: 2; grid-row: 1 / span 2;
+  width: 34px; height: 34px; flex: none;
+  display: grid; place-items: center;
+  border: 2px solid var(--ink); background: var(--papel);
+  font-family: var(--mono); font-size: 1.1rem; line-height: 1;
+}
+@media (hover: hover) {
+  .cajon-cerrar:hover { background: var(--ink); color: var(--papel); }
+}
+.cajon-cuerpo {
+  overflow-y: auto; overscroll-behavior: contain;
+  padding: .9rem 1rem 1.2rem;
+  display: grid; gap: .9rem; align-content: start;
+}
+/* Lo que pinta app.js dentro del cajón hereda el mismo ritmo sin
+   necesitar clases nuevas. */
+.cajon-cuerpo h3 {
+  font-family: var(--display); font-size: .9rem; text-transform: uppercase;
+  padding-bottom: .35rem; border-bottom: 1px solid var(--ink);
+}
+.cajon-cuerpo p { font-size: .88rem; }
+.cajon-cuerpo dl {
+  display: grid; grid-template-columns: auto minmax(0, 1fr);
+  gap: .3rem .8rem; font-size: .86rem; margin: 0;
+}
+.cajon-cuerpo dt {
+  font-family: var(--mono); font-size: .66rem; letter-spacing: .06em;
+  text-transform: uppercase; color: var(--apagado);
+}
+.cajon-cuerpo dd { margin: 0; overflow-wrap: anywhere; }
+.cajon-cuerpo ul { list-style: none; margin: 0; padding: 0; }
+/* La foto del lote va pegada a su nombre, no encima. */
+.cajon-cuerpo img {
+  display: inline-block; vertical-align: middle;
+  width: 46px; height: 46px; flex: none;
+  margin-right: .45rem;
+  object-fit: cover; border: 1px solid var(--ink);
+}
+.cajon-cuerpo .tabla { font-size: .8rem; }
+.cajon-cuerpo .tabla th, .cajon-cuerpo .tabla td { padding: .4rem .45rem; }
+/* En 560px de ancho es mejor que el nombre del lote parta línea a que
+   la tabla se salga. */
+.cajon-cuerpo .tabla td { white-space: normal; }
+.cajon-cuerpo .tabla td.num, .cajon-cuerpo .tabla td.mono { white-space: nowrap; }
+.cajon-cuerpo .tabla-wrap { max-height: none; }
+.cajon-cuerpo form { display: grid; gap: .6rem; }
+.cajon-cuerpo form .btn, .cajon-cuerpo form button { justify-self: start; }
+.cajon-cuerpo textarea {
+  width: 100%; min-height: 3.5rem; resize: vertical;
+  border: 1px solid var(--ink); background: var(--papel);
+  padding: .5rem .6rem; font-size: .88rem;
+}
+/* Historial y notas: en mono, con la marca de tiempo apagada. */
+.cajon-cuerpo time,
+.cajon-cuerpo .ts {
+  font-family: var(--mono); font-size: .64rem; letter-spacing: .04em;
+  text-transform: uppercase; color: var(--apagado);
+}
+.cajon-pie {
+  display: flex; flex-wrap: wrap; gap: .4rem;
+  padding: .8rem 1rem;
+  border-top: 2px solid var(--ink);
+  background: var(--concrete);
+}
+
+/* =============================================================
+   17. Aviso flotante y diálogo de confirmación
+   ============================================================= */
+.aviso {
+  position: fixed; left: 50%; bottom: 1.1rem; z-index: 120;
+  transform: translateX(-50%);
+  max-width: min(92vw, 34rem);
+  display: flex; align-items: center; gap: .8rem;
+  padding: .7rem 1rem;
+  background: var(--ink); color: var(--papel);
+  border: 2px solid var(--papel); outline: 2px solid var(--ink);
+  font-family: var(--mono); font-size: .74rem; letter-spacing: .05em;
+  text-transform: uppercase; line-height: 1.4;
+}
+.aviso.is-error,
+.aviso.aviso--error { background: var(--rojo); outline-color: var(--rojo); }
+.aviso.is-ok,
+.aviso.aviso--ok { background: var(--verde); outline-color: var(--verde); }
+.aviso a { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
+
+.confirmar {
+  border: 2px solid var(--ink); padding: 0;
+  width: min(94vw, 30rem);
+  background: var(--papel); color: var(--ink);
+}
+/* Sólo cuando está abierto: si se pusiera el display en .confirmar a
+   secas, el diálogo cerrado dejaría de ocultarse. */
+.confirmar[open] {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: .9rem .5rem;
+  padding: 1.2rem 1.3rem 1.1rem;
+}
+.confirmar::backdrop { background: rgba(17, 17, 17, .6); }
+.confirmar p { grid-column: 1 / -1; font-size: .95rem; }
+.confirmar button[data-confirmar-si] { justify-self: end; }
+.confirmar button[data-confirmar-no] { justify-self: start; }
+.confirmar button {
+  padding: .55rem .85rem;
+  font-family: var(--mono); font-size: .74rem; font-weight: 600;
+  letter-spacing: .06em; text-transform: uppercase; line-height: 1;
+  border: 2px solid var(--ink); background: var(--papel); color: var(--ink);
+}
+.confirmar button[data-confirmar-si] { background: var(--ink); color: var(--papel); }
+@media (hover: hover) {
+  .confirmar button:hover { background: var(--accent); border-color: var(--accent); color: var(--ink); }
+}
+
+/* =============================================================
+   18. Responsive
+   Probado a 390px (móvil), 800px (tableta) y 1440px (escritorio).
+   ============================================================= */
+@media (max-width: 900px) {
+  /* En una sola columna se deja de usar la rejilla: como fila de la
+     rejilla, la barra de pestañas reservaba su altura de contenido
+     máximo y dejaba un hueco muerto encima del título. */
+  .app { display: block; }
+
+  /* La barra lateral se convierte en una fila de pestañas arriba. */
+  .lado {
+    position: sticky; top: 0; height: auto;
+    flex-direction: row; flex-wrap: wrap; align-items: center;
+    border-right: 0; border-bottom: 2px solid var(--ink);
+    padding-inline: .6rem;
+  }
+  .lado-marca {
+    padding: .6rem 0; border-bottom: 0; font-size: .95rem;
+    margin-right: auto;
+  }
+  .lado-marca svg { width: 24px; height: 24px; }
+  .lado-marca small { width: auto; margin-left: .3rem; }
+  .lado-nav {
+    order: 3; width: 100%;
+    flex-direction: row; flex-wrap: nowrap;
+    overflow-x: auto; overflow-y: hidden;
+    border-top: 1px solid var(--linea);
+    padding-block: 0;
+    scrollbar-width: thin;
+  }
+  .lado-link {
+    flex: 0 0 auto;
+    border-left: 0; border-bottom: 4px solid transparent;
+    padding: .6rem .7rem; font-size: .7rem;
+  }
+  .lado-link.is-activa { border-left-color: transparent; border-bottom-color: var(--accent); }
+  .lado-pie { padding: .5rem 0; border-top: 0; }
+  .lado-salir { width: auto; }
+
+  /* Con las pestañas ya pegadas arriba, el rango deja de ser pegajoso
+     para no comerse media pantalla. */
+  .rango { position: static; }
+  .principal { padding-inline: .9rem; }
+
+  .cabecera {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: "titulo" "sub" "acciones";
+    gap: .4rem;
+  }
+  .cabecera-acciones { justify-content: flex-start; }
+
+  /* El cajón ocupa toda la pantalla. */
+  .cajon { width: 100%; border-left: 0; }
+
+  .tabla-wrap { max-height: min(65vh, 620px); }
+}
+
+@media (max-width: 620px) {
+  .rango { gap: .5rem; }
+  .rango-presets, .rango-fechas, .rango-nav { width: 100%; }
+  .rango-nav { justify-content: space-between; }
+  /* Cada fecha con su etiqueta delante y el botón debajo: si se deja en
+     fila, "Hasta" se queda colgando al final del renglón. */
+  .rango-fechas {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    gap: .35rem .5rem;
+  }
+  .rango-fechas input[type="date"] { width: 100%; min-width: 0; }
+  .rango-fechas button { grid-column: 1 / -1; justify-self: start; }
+  .filtros { flex-direction: column; align-items: stretch; }
+  .buscador input[type="search"] { width: 100%; }
+  .paginacion { justify-content: space-between; }
+  .aviso { left: .6rem; right: .6rem; transform: none; max-width: none; }
+  .caja-form { max-width: none; }
+  .cajon-cuerpo dl { grid-template-columns: minmax(0, 1fr); gap: .1rem; }
+  .cajon-cuerpo dd { margin-bottom: .4rem; }
+}
+
+/* Con el cajón ancho, el número y los distintivos caben en la misma
+   línea que el botón de cerrar. */
+@media (min-width: 620px) {
+  .cajon-cab { grid-template-columns: auto minmax(0, 1fr) auto; }
+  .cajon-cab h2 { grid-row: 1; grid-column: 1; }
+  .cajon-estado { grid-row: 1; grid-column: 2; }
+  .cajon-cerrar { grid-row: 1; grid-column: 3; }
+}
+
+@media (min-width: 1500px) {
+  .principal { padding-inline: 2rem; }
+  .vista { gap: 1.2rem; }
+}
+
+/* =============================================================
+   19. Impresión y reducción de movimiento
+   ============================================================= */
+@media (prefers-reduced-motion: reduce) {
+  .cajon { transition: none; }
+  .fondo { transition: none; }
+  .btn.is-cargando::after { animation: none; }
+}
+
+@media print {
+  body.panel { background: var(--papel); }
+  .lado, .rango, .fondo, .cajon, .aviso, .confirmar,
+  .cabecera-acciones, .filtros, .barra-bulk, .paginacion,
+  .skip-link { display: none !important; }
+  .app { display: block; }
+  .principal { padding: 0; }
+  .cabecera { border-bottom: 2px solid var(--ink); }
+  .tabla-wrap { max-height: none; overflow: visible; border: 0; }
+  .tabla thead th { position: static; }
+  .cuadro, .kpi, .tabla tbody tr { break-inside: avoid; }
+}

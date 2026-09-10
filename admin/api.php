@@ -168,6 +168,18 @@ function panel_filtros($in, $conOrden) {
    fichas. Los cancelados no cuentan: su stock vuelve al almacén. */
 function panel_vendidos() {
     $vendidos = [];
+    /* Si la capa de datos ya lo cuenta, mejor: lleva su propio tope de
+       fichas leídas para no quedarse colgada con miles de pedidos. */
+    if (function_exists('tienda_vendidos')) {
+        $filas = tienda_vendidos('', '');
+        if (is_array($filas)) {
+            foreach ($filas as $id => $fila) {
+                if (is_array($fila)) $vendidos[(string) $id] = isset($fila['qty']) ? (int) $fila['qty'] : 0;
+                else $vendidos[(string) $id] = (int) $fila;
+            }
+        }
+        return $vendidos;
+    }
     $indice = tienda_indice();
     if (!is_array($indice)) return $vendidos;
     foreach ($indice as $linea) {
@@ -188,18 +200,41 @@ function panel_vendidos() {
     return $vendidos;
 }
 
-/* Marca la sesión como entrada. La clave la pone la capa de datos, pero
-   dejamos también las nuestras: así tienda_sesion_activa() reconoce la
-   sesión venga como venga, y al salir se borra todo de una pasada. */
+/* Marca la sesión como entrada. La capa de datos tiene su propia forma
+   de abrirla (y de caducarla a las horas), así que si está, manda ella;
+   si no, se marca a mano. Identificador nuevo en los dos casos: si
+   alguien había fijado el de la cookie antes de que se escribiera la
+   contraseña, ese ya no vale para nada. */
 function panel_entrar() {
-    /* Identificador nuevo al entrar: si alguien había fijado el de la
-       cookie antes de la contraseña, ese ya no vale para nada. */
+    if (function_exists('tienda_sesion_abrir')) {
+        tienda_sesion_abrir();
+        return;
+    }
     if (session_status() === PHP_SESSION_ACTIVE) session_regenerate_id(true);
     $_SESSION['admin'] = true;
-    $_SESSION['tornarem_admin'] = true;
-    $_SESSION['autenticado'] = true;
-    $_SESSION['tornarem'] = ['admin' => true];
-    $_SESSION['entrada'] = date('c');
+    $_SESSION['visto'] = time();
+}
+
+/* Cierra la sesión y borra la cookie: al salir no queda nada. */
+function panel_salir() {
+    if (function_exists('tienda_sesion_cerrar')) {
+        tienda_sesion_cerrar();
+        return;
+    }
+    $_SESSION = [];
+    if (!headers_sent() && ini_get('session.use_cookies')) {
+        $p = session_get_cookie_params();
+        setcookie(
+            session_name(),
+            '',
+            time() - 42000,
+            isset($p['path']) ? $p['path'] : '/',
+            isset($p['domain']) ? $p['domain'] : '',
+            isset($p['secure']) ? $p['secure'] : false,
+            isset($p['httponly']) ? $p['httponly'] : true
+        );
+    }
+    if (session_status() === PHP_SESSION_ACTIVE) session_destroy();
 }
 
 /* -------------------------------------------------------------
@@ -284,20 +319,7 @@ try {
     }
 
     if ($accion === 'salir') {
-        $_SESSION = [];
-        if (ini_get('session.use_cookies')) {
-            $p = session_get_cookie_params();
-            setcookie(
-                session_name(),
-                '',
-                time() - 42000,
-                isset($p['path']) ? $p['path'] : '/',
-                isset($p['domain']) ? $p['domain'] : '',
-                isset($p['secure']) ? $p['secure'] : false,
-                isset($p['httponly']) ? $p['httponly'] : true
-            );
-        }
-        if (session_status() === PHP_SESSION_ACTIVE) session_destroy();
+        panel_salir();
         tienda_responder(['ok' => true, 'autenticado' => false]);
     }
 
@@ -423,19 +445,21 @@ try {
         case 'guardar_cliente': {
             $pedido = panel_pedido(panel_valor($in, 'numero'));
             $c = (isset($in['cliente']) && is_array($in['cliente'])) ? $in['cliente'] : [];
+            $antes = (isset($pedido['cliente']) && is_array($pedido['cliente'])) ? $pedido['cliente'] : [];
 
-            $cliente = [
-                'nombre'    => panel_texto(panel_valor($c, 'nombre'), 120),
-                'email'     => panel_texto(panel_valor($c, 'email'), 160),
-                'telefono'  => panel_texto(panel_valor($c, 'telefono'), 40),
-                'direccion' => panel_texto(panel_valor($c, 'direccion'), 200),
-                'cp'        => panel_texto(panel_valor($c, 'cp'), 10),
-                'poblacion' => panel_texto(panel_valor($c, 'poblacion'), 120),
-                'provincia' => panel_texto(panel_valor($c, 'provincia'), 80),
-                'nif'       => panel_texto(panel_valor($c, 'nif'), 24),
-                'empresa'   => panel_texto(panel_valor($c, 'empresa'), 160),
-                'notas'     => panel_parrafo(panel_valor($c, 'notas'), 2000),
-            ];
+            /* Sólo se toca lo que llega. Si el formulario del panel no
+               trae un campo (las notas del cliente, por ejemplo), se
+               queda como estaba en vez de borrarse sin querer. */
+            $largos = ['nombre' => 120, 'email' => 160, 'telefono' => 40, 'direccion' => 200,
+                       'cp' => 10, 'poblacion' => 120, 'provincia' => 80, 'nif' => 24, 'empresa' => 160];
+            $cliente = [];
+            foreach ($largos as $campo => $max) {
+                if (array_key_exists($campo, $c)) $cliente[$campo] = panel_texto(panel_valor($c, $campo), $max);
+                else $cliente[$campo] = isset($antes[$campo]) ? (string) $antes[$campo] : '';
+            }
+            if (array_key_exists('notas', $c)) $cliente['notas'] = panel_parrafo(panel_valor($c, 'notas'), 2000);
+            else $cliente['notas'] = isset($antes['notas']) ? (string) $antes['notas'] : '';
+
             if ($cliente['nombre'] === '') panel_fallo('El cliente necesita un nombre.', 422);
             if ($cliente['email'] === '' || !filter_var($cliente['email'], FILTER_VALIDATE_EMAIL)) {
                 panel_fallo('El correo no parece válido.', 422);

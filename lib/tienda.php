@@ -634,6 +634,31 @@ function tienda_indice_actualizar($linea) {
     return $ok;
 }
 
+/* Deja una línea del índice con todas sus claves y del tipo que toca.
+   Así, si alguien edita indice.jsonl a mano por FTP, el panel sigue
+   funcionando y no salta ni un aviso de PHP. */
+function tienda_linea_normal($d) {
+    $texto = array('numero', 'creado', 'estado', 'pago', 'pago_estado', 'nombre', 'email',
+                   'telefono', 'poblacion', 'provincia');
+    foreach ($texto as $k) {
+        $d[$k] = isset($d[$k]) ? (string) $d[$k] : '';
+    }
+    if ($d['estado'] === '') {
+        $d['estado'] = 'nuevo';
+    }
+    if ($d['pago'] === '') {
+        $d['pago'] = 'contrarreembolso';
+    }
+    if ($d['pago_estado'] === '') {
+        $d['pago_estado'] = 'pendiente';
+    }
+    $d['total'] = isset($d['total']) ? round((float) $d['total'], 2) : 0.0;
+    $d['unidades'] = isset($d['unidades']) ? (int) $d['unidades'] : 0;
+    $d['lotes'] = (isset($d['lotes']) && is_array($d['lotes'])) ? array_values($d['lotes']) : array();
+    $d['es_pale'] = (isset($d['es_pale']) && $d['es_pale']) ? true : false;
+    return $d;
+}
+
 /* Todas las líneas del índice, en el orden en que se escribieron. */
 function tienda_indice() {
     $ruta = tienda_ruta_indice();
@@ -653,7 +678,7 @@ function tienda_indice() {
         }
         $d = json_decode($l, true);
         if (is_array($d) && isset($d['numero'])) {
-            $salida[] = $d;
+            $salida[] = tienda_linea_normal($d);
         }
     }
     return $salida;
@@ -734,7 +759,15 @@ function tienda_crear_pedido($entrada) {
             throw new RuntimeException('«' . $l['nombre'] . '» ya no está a la venta.');
         }
         if ($qty > (int) $l['stock']) {
-            throw new RuntimeException('Sólo quedan ' . (int) $l['stock'] . ' unidades de «' . $l['nombre'] . '».');
+            /* Con cero no se dice "quedan 0": se dice que se ha agotado, que es
+               lo que el cliente necesita entender. Con uno, singular. */
+            $quedan = (int) $l['stock'];
+            if ($quedan === 0) {
+                throw new RuntimeException('«' . $l['nombre'] . '» se ha agotado mientras comprabas. Quítalo del carrito para seguir.');
+            }
+            throw new RuntimeException($quedan === 1
+                ? 'Sólo queda 1 lote de «' . $l['nombre'] . '».'
+                : 'Sólo quedan ' . $quedan . ' lotes de «' . $l['nombre'] . '».');
         }
         $precio = (float) $l['precio'];
         $lineas[] = array(
