@@ -95,6 +95,30 @@ if (trim((string) (isset($in['web']) ? $in['web'] : '')) !== '') {
     responder(array('ok' => true, 'pedido' => 'TR-000000-0000', 'pago' => 'contrarreembolso', 'total' => 0, 'url' => null));
 }
 
+/* ---- Freno de la puerta pública ----
+   El stock se descuenta en cuanto entra el pedido y en contrarreembolso
+   no se cobra nada por la web, así que sin un freno cualquiera con un
+   script deja el catálogo a cero en un segundo, llena el panel de
+   pedidos falsos y usa el servidor para mandar correos a quien quiera.
+   El campo trampa de arriba sólo pilla a los robots de formularios: uno
+   que hable JSON pasa de largo.
+
+   Cinco pedidos por hora desde el mismo sitio y ciento veinte en total.
+   Un cliente de verdad no llega a cinco, y el tope general está alto a
+   propósito: más vale que pase un ataque repartido entre muchas
+   máquinas a que un buen día de ventas deje fuera a gente que paga.
+   Los dos números se cambian en lib/catalogo.js, en "freno". */
+$cfg = tienda_catalogo_base();
+$porIP    = isset($cfg['freno']['porHora']) ? (int) $cfg['freno']['porHora'] : 5;
+$enTotal  = isset($cfg['freno']['totalPorHora']) ? (int) $cfg['freno']['totalPorHora'] : 120;
+$espera = tienda_freno('pedidos', $porIP, $enTotal, 3600);
+if ($espera > 0) {
+    responder(array(
+        'ok' => false,
+        'mensaje' => 'Has hecho varios pedidos seguidos. Espera unos minutos o llámanos por teléfono y lo cerramos contigo.',
+    ), 429);
+}
+
 /* ---- De dónde viene: se guarda con el pedido para poder rastrearlo ---- */
 $origen = array(
     'ip'     => isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '',
@@ -255,7 +279,12 @@ $pasosCliente = array(
 );
 
 $cuerpoCliente = implode("\n", array_merge(array(
-    'Hola ' . $cliente['nombre'] . ',',
+    /* El nombre va filtrado a letras, espacios y poco más. Es texto que
+       escribe cualquiera en un formulario público y acaba en la primera
+       línea de un correo que sale con el remitente de la tienda: sin
+       filtrar, serviría para colar una frase o una dirección web a
+       nombre del dominio. */
+    'Hola ' . trim(preg_replace('/[^\p{L}\p{M} .\'-]/u', '', $cliente['nombre'])) . ',',
     '',
     'Hemos recibido tu pedido ' . $numero . '. Gracias.',
     '',
@@ -305,5 +334,10 @@ responder(array(
     'pago'   => $estadoPago,
     'total'  => $total,
     'url'    => $urlPago,
+    /* La fecha de entrega la calcula el servidor, que es el único que
+       sabe si el pedido lleva palé (un día más). Antes la página de
+       gracias la calculaba por su cuenta sin saberlo y prometía un día
+       antes de lo que decía el correo. */
+    'entrega' => isset($pedido['envio']['fecha_prevista']) ? $pedido['envio']['fecha_prevista'] : '',
     'correo' => $enviadoCliente ? 'enviado' : 'no enviado',
 ));

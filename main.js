@@ -62,6 +62,23 @@
   /* -------------------------------------------------------------
      Carrito (localStorage)
      ------------------------------------------------------------- */
+  /* Cuántas unidades se pueden llevar de un lote. Ojo con el cero: antes
+     el tope se escribía como `l.stock || 99`, y como 0 es falso en
+     JavaScript, un lote agotado pasaba a tener tope 99 y se podía añadir
+     al carrito. Con el stock real de estado.php eso ocurre a diario. */
+  function topeStock(l) {
+    if (!l || l.activo === false) return 0;
+    var s = parseInt(l.stock, 10);
+    return isNaN(s) ? 0 : Math.max(0, s);
+  }
+
+  /* «Queda 1 lote», no «Quedan 1 lotes». Se lee justo cuando queda uno,
+     que es cuando más mira el cliente. */
+  function textoQuedan(n, esPale) {
+    var palabra = esPale ? (n === 1 ? "palé" : "palés") : (n === 1 ? "lote" : "lotes");
+    return (n === 1 ? "Queda " : "Quedan ") + n + " " + palabra;
+  }
+
   var CART_KEY = "tornarem_cart_v1";
   var cart = {
     items: {},
@@ -73,7 +90,8 @@
         var self = this;
         Object.keys(data.items || {}).forEach(function (id) {
           var l = LOTES[id]; var q = parseInt(data.items[id], 10);
-          if (l && q > 0) self.items[id] = Math.min(q, l.stock || 99);
+          var tope = topeStock(l);
+          if (l && q > 0 && tope > 0) self.items[id] = Math.min(q, tope);
         });
       } catch (_) { this.items = {}; }
     },
@@ -84,13 +102,13 @@
     add: function (id, qty) {
       var l = LOTES[id]; if (!l) return false;
       var cur = this.items[id] || 0;
-      var next = Math.min(cur + (qty || 1), l.stock || 99);
+      var next = Math.min(cur + (qty || 1), topeStock(l));
       if (next === cur) return false;
       this.items[id] = next; this.save(); return true;
     },
     set: function (id, qty) {
       var l = LOTES[id]; if (!l) return;
-      qty = Math.max(0, Math.min(parseInt(qty, 10) || 0, l.stock || 99));
+      qty = Math.max(0, Math.min(parseInt(qty, 10) || 0, topeStock(l)));
       if (qty === 0) delete this.items[id]; else this.items[id] = qty;
       this.save();
     },
@@ -273,10 +291,19 @@
       nota.textContent = l.nota || ""; nota.style.display = l.nota ? "" : "none";
       precio.textContent = eur(l.precio); off.textContent = "−" + pct(l) + " %"; pvp.textContent = "PVP estimado " + eur(l.pvp) + " · IVA y envío incluidos";
       var esPale = /pal[eé]/i.test(l.formato || "");
-      stock.textContent = "Quedan " + l.stock + (esPale ? " palés" : " lotes") + " · Entrega prevista: " + fechaLarga(fechaEntrega(esPale));
-      stock.classList.toggle("is-low", l.stock <= 2);
+      /* Un lote agotado o retirado no puede tener un botón de comprar
+         activo: la tarjeta ya lo hacía bien, pero esta ficha ofrecía un
+         «Añadir al carrito» perfectamente pulsable encima de un
+         «Quedan 0 lotes». */
+      var quedan = topeStock(l);
+      var agotado = quedan <= 0;
+      stock.textContent = agotado
+        ? (l.activo === false ? "Retirado de la venta" : "Agotado")
+        : (textoQuedan(quedan, esPale) + " · Entrega prevista: " + fechaLarga(fechaEntrega(esPale)));
+      stock.classList.toggle("is-low", quedan <= 2);
       add.setAttribute("data-add", id);
-      add.textContent = "Añadir al carrito · " + eur(l.precio);
+      add.disabled = agotado;
+      add.textContent = agotado ? "Agotado" : ("Añadir al carrito · " + eur(l.precio));
       if (typeof dlg.showModal === "function") dlg.showModal(); else dlg.setAttribute("open", "");
       dlg.scrollTop = 0;
     }
@@ -289,7 +316,7 @@
 
     /* Enlace directo: index.html#lote-moda abre la ficha */
     var h = location.hash.replace("#", "");
-    if (h && LOTES[h]) setTimeout(function () { openLote(h); }, 400);
+    if (h && LOTES[h] && LOTES[h].activo !== false) setTimeout(function () { openLote(h); }, 400);
   }
 
   /* -------------------------------------------------------------
@@ -346,7 +373,7 @@
       var barras = "";
       for (var i = 0; i < casillas; i++) barras += (i < llenas) ? "<i></i>" : '<i class="off"></i>';
       stockEl.innerHTML = '<span class="stock-bar" aria-hidden="true">' + barras + "</span>" +
-        escHTML(l.stock > 0 ? ("Quedan " + l.stock + (esPale ? " palés" : " lotes")) : "Agotado");
+        escHTML(l.stock > 0 ? textoQuedan(l.stock, esPale) : "Agotado");
       stockEl.classList.toggle("is-low", l.stock <= 2);
     }
 
@@ -586,6 +613,13 @@
     function showMsg(html, isError) {
       if (!msg) return;
       msg.innerHTML = html; msg.classList.add("is-on"); msg.classList.toggle("co-msg--error", !!isError);
+      /* El aviso vive dentro del formulario, que se oculta cuando el
+         carrito está vacío. Si hay algo que decir y no hay carrito (por
+         ejemplo, al volver de la pasarela sin pagar), el aviso se mueve
+         al bloque de «carrito vacío» para que se lea igual. */
+      if (emptyEl && gridEl && gridEl.style.display === "none" && msg.parentNode !== emptyEl) {
+        emptyEl.appendChild(msg);
+      }
       msg.scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "center" });
     }
     function field(name) { return form.elements[name]; }
@@ -640,9 +674,13 @@
         .then(function (d) {
           if (timer) clearTimeout(timer);
           if (!d.ok) { throw new Error(d.mensaje || "No se ha podido registrar el pedido."); }
-          cart.clear();
+          /* Si hay pasarela, el carrito NO se vacía todavía: quien se
+             arrepiente a mitad del pago vuelve a checkout.html?cancelado=1
+             y tiene que encontrar su pedido donde lo dejó. Al volver
+             pagando, lo vacía initGracias. */
           if (d.url) { location.href = d.url; return; }
-          location.href = "gracias.html?p=" + encodeURIComponent(d.pedido) + "&pago=" + encodeURIComponent(d.pago) + "&total=" + encodeURIComponent(d.total) + "&email=" + encodeURIComponent(payload.cliente.email);
+          cart.clear();
+          location.href = "gracias.html?p=" + encodeURIComponent(d.pedido) + "&pago=" + encodeURIComponent(d.pago) + "&total=" + encodeURIComponent(d.total) + "&email=" + encodeURIComponent(payload.cliente.email) + (d.entrega ? "&entrega=" + encodeURIComponent(d.entrega) : "");
         })
         .catch(function (err) {
           if (timer) clearTimeout(timer);
@@ -672,7 +710,15 @@
     $$("[data-g-pago]", box).forEach(function (el) { el.style.display = (el.getAttribute("data-g-pago") === pago) ? "" : "none"; });
     if (!pago) { var g = $('[data-g-pago="generico"]', box); if (g) g.style.display = ""; }
     if (q.stripe === "ok") cart.clear();
-    var eta = $("[data-g-eta]", box); if (eta) eta.textContent = fechaLarga(fechaEntrega(false));
+    /* La fecha buena es la que calculó el servidor, que sabe si el
+       pedido llevaba palé (un día más). El cálculo de aquí se queda sólo
+       como red de seguridad, porque al llegar a esta página el carrito ya
+       está vacío y no hay forma de saberlo. */
+    var eta = $("[data-g-eta]", box);
+    if (eta) {
+      var d = q.entrega ? new Date(q.entrega + "T00:00:00") : null;
+      eta.textContent = (d && !isNaN(d.getTime())) ? fechaLarga(d) : fechaLarga(fechaEntrega(false));
+    }
   }
 
   /* -------------------------------------------------------------

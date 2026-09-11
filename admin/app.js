@@ -50,7 +50,8 @@
   /* Acciones que escriben en disco: llevan el testigo CSRF. */
   var ESCRIBEN = [
     "cambiar_estado", "cambiar_pago", "guardar_envio", "guardar_cliente",
-    "anadir_nota", "estado_lote", "guardar_lote", "cambiar_password"
+    "anadir_nota", "estado_lote", "guardar_lote", "cambiar_password",
+    "salir"
   ];
 
   var VISTAS = ["inicio", "pedidos", "clientes", "almacen", "ajustes"];
@@ -402,9 +403,15 @@
     var titulo = $("[data-acceso-titulo]");
     var boton = $("[data-acceso-enviar]");
     var repetir = $("[data-acceso-repetir]");
+    var codigo = $("[data-acceso-codigo]");
     if (titulo) titulo.textContent = setup ? "Crear la contraseña del panel" : "Entrar al panel";
     if (boton) boton.textContent = setup ? "Crear contraseña y entrar" : "Entrar";
     if (repetir) repetir.hidden = !setup;
+    /* El código de alta sólo se pide la primera vez. Es lo que impide que
+       el primero que encuentre esta dirección se quede con el panel. */
+    if (codigo) codigo.hidden = !setup;
+    var cod = $("#acceso-codigo");
+    if (cod) cod.value = "";
     var p1 = $("#acceso-password");
     if (p1) {
       p1.setAttribute("autocomplete", setup ? "new-password" : "current-password");
@@ -433,7 +440,11 @@
       var password = p1 ? String(p1.value) : "";
       if (err) err.textContent = "";
 
+      var cod = $("#acceso-codigo");
+      var codigo = cod ? String(cod.value || "").trim() : "";
+
       if (S.setup) {
+        if (codigo === "") { if (err) err.textContent = "Falta el código de alta. Está en el fichero datos/codigo-de-alta.txt de tu servidor."; if (cod) cod.focus(); return; }
         if (password.length < 8) { if (err) err.textContent = "La contraseña necesita ocho caracteres como mínimo."; return; }
         if (!p2 || String(p2.value) !== password) { if (err) err.textContent = "Las dos contraseñas no coinciden."; return; }
       } else if (password === "") {
@@ -442,7 +453,7 @@
       }
 
       ocupado(boton, true);
-      api(S.setup ? "crear_admin" : "entrar", { password: password })
+      api(S.setup ? "crear_admin" : "entrar", S.setup ? { password: password, codigo: codigo } : { password: password })
         .then(function (d) {
           ocupado(boton, false);
           S.csrf = d.csrf || "";
@@ -456,6 +467,8 @@
           if (err) err.textContent = e.message || "No se ha podido entrar.";
           if (e.datos && e.datos.setup_pendiente) mostrarAcceso(true);
           if (p1) { p1.value = ""; p1.focus(); }
+          /* El código sí se conserva: quien lo ha copiado del servidor no
+             tiene por qué volver a buscarlo porque la contraseña fallara. */
         });
     });
   }
@@ -549,7 +562,7 @@
         return;
       }
       var exp = e.target.closest("[data-exportar]");
-      if (exp) { location.href = urlExportar(); aviso("Descargando el CSV de los pedidos del periodo."); }
+      if (exp) descargarCsv(exp);
     });
     window.addEventListener("hashchange", function () {
       if (hashPropio) return;
@@ -568,6 +581,43 @@
     if (S.pago) p.push("pago=" + encodeURIComponent(S.pago));
     if (S.q) p.push("q=" + encodeURIComponent(S.q));
     return "api.php?" + p.join("&");
+  }
+
+  /* El CSV se pide con fetch y se descarga desde memoria, en vez de
+     navegar la ventana. Navegando, si la sesión había caducado el
+     servidor contestaba un JSON de error y el navegador reemplazaba el
+     panel por ese texto: la persona perdía la vista, los filtros y el
+     rango que estaba mirando. Así, si caduca, se vuelve a la pantalla de
+     acceso como en cualquier otra acción. */
+  function descargarCsv(boton) {
+    if (boton) { boton.classList.add("is-cargando"); boton.disabled = true; }
+    var soltar = function () { if (boton) { boton.classList.remove("is-cargando"); boton.disabled = false; } };
+    fetch(urlExportar(), { credentials: "same-origin", headers: { "Accept": "text/csv" } })
+      .then(function (r) {
+        if (r.status === 401) { soltar(); sesionCaducada(); return null; }
+        if (!r.ok) { soltar(); aviso("No se ha podido generar el CSV.", true); return null; }
+        return r.blob().then(function (b) { return { blob: b, nombre: nombreDescarga(r) }; });
+      })
+      .then(function (d) {
+        if (!d) return;
+        var url = URL.createObjectURL(d.blob);
+        var a = document.createElement("a");
+        a.href = url; a.download = d.nombre;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        setTimeout(function () { URL.revokeObjectURL(url); }, 4000);
+        soltar();
+        aviso("CSV descargado: " + d.nombre);
+      })
+      .catch(function () { soltar(); aviso("No se ha podido generar el CSV.", true); });
+  }
+
+  /* El nombre del fichero lo manda el servidor en Content-Disposition. */
+  function nombreDescarga(r) {
+    var cd = r.headers.get("Content-Disposition") || "";
+    var m = cd.match(/filename="([^"]+)"/);
+    return m ? m[1] : "tornarem-pedidos.csv";
   }
 
   /* -------------------------------------------------------------
@@ -708,8 +758,14 @@
     poner("ticket", eur(r.ticket_medio));
     poner("unidades", num(r.unidades));
 
-    pintaDelta("ventas", v.ventas, comparable);
-    pintaDelta("pedidos", v.pedidos, comparable);
+    /* Hay dos motivos para no poder comparar y conviene distinguirlos:
+       que el rango sea abierto («Todo»), o que en el periodo anterior no
+       se vendiera nada. Pasar de cero a vender no es «un 100 % más». */
+    var sinComparar = (r.desde && r.hasta)
+      ? "Sin ventas en el periodo anterior"
+      : "Sin periodo anterior con el que comparar";
+    pintaDelta("ventas", v.ventas, comparable, sinComparar);
+    pintaDelta("pedidos", v.pedidos, comparable, sinComparar);
 
     /* El ticket medio anterior se saca de las dos cifras que ya envía
        el servidor: no hace falta otra consulta. */
@@ -765,6 +821,19 @@
     var titulo = svgEl("title", {});
     titulo.textContent = "Ventas por " + (porSemana ? "semana" : "día") + ": " + eur(r.ventas) + " en " + n + (porSemana ? " semanas" : " días");
     svg.appendChild(titulo);
+
+    /* Para rangos largos el servidor agrupa por semanas. El encabezado y
+       el rótulo están escritos en el HTML para que se lean sin
+       JavaScript, pero hay que corregirlos o dirían «una barra por cada
+       día» encima de 37 barras que cubren 253 días. */
+    var h2 = $("[data-grafico-titulo]");
+    if (h2) h2.textContent = porSemana ? "Ventas por semana" : "Ventas por día";
+    var nota = $("[data-grafico-nota]");
+    if (nota) {
+      nota.textContent = porSemana
+        ? "Una barra por cada semana; la primera puede empezar antes del periodo"
+        : "Una barra por cada día del periodo";
+    }
     svg.setAttribute("aria-label", titulo.textContent + ". " + serie.map(function (p) {
       return fechaDiaMes(p.fecha) + " " + eur(p.ventas);
     }).join(", "));
@@ -801,7 +870,9 @@
       barra.appendChild(tb);
       svg.appendChild(barra);
 
-      if (i % cada === 0 || i === n - 1) {
+      /* La etiqueta del último punto sólo se pinta si no queda pegada a
+         la anterior: con 37 barras se solapaban y se leía «31/0*7/09». */
+      if (i % cada === 0 || (i === n - 1 && (n - 1) % cada >= Math.ceil(cada / 2))) {
         var t = svgEl("text", {
           x: izq + paso * i + paso / 2, y: arr + alto + 18,
           "text-anchor": "middle", "font-size": 11, fill: "#6a6862"
@@ -961,6 +1032,19 @@
     var tabla = $("[data-tabla-pedidos]");
     if (!tbody) return;
     var lista = d.pedidos || [];
+
+    /* La selección sólo puede contener pedidos que están en pantalla.
+       Antes sobrevivía a cambiar de filtro, de página o de rango, y el
+       botón de cambio en bloque acababa tocando pedidos que la persona
+       no estaba viendo: el único sitio del panel donde un botón hacía
+       algo distinto de lo que parecía. */
+    var enPantalla = {};
+    for (var i = 0; i < lista.length; i++) enPantalla[lista[i].numero] = true;
+    var limpia = {};
+    for (var k in S.seleccion) {
+      if (tiene(S.seleccion, k) && S.seleccion[k] && enPantalla[k]) limpia[k] = true;
+    }
+    S.seleccion = limpia;
 
     if (vacio) vacio.hidden = lista.length > 0;
     if (tabla && tabla.parentNode) tabla.parentNode.hidden = (lista.length === 0);

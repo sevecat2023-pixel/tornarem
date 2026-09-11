@@ -269,24 +269,49 @@ try {
     if ($accion === 'estado_sesion') {
         $catalogo = tienda_catalogo_base();
         $marca = (is_array($catalogo) && isset($catalogo['marca'])) ? (string) $catalogo['marca'] : 'Tornarem';
+        $falta_admin = !tienda_admin_existe();
+        /* Si todavía no hay contraseña, se deja escrito el código de alta
+           para que el dueño lo encuentre en su servidor antes de
+           intentarlo. Nunca se devuelve aquí: el que pregunta por la web
+           es justo quien no tiene que verlo. */
+        if ($falta_admin) {
+            tienda_codigo_alta();
+        }
         tienda_responder([
             'ok'              => true,
             'autenticado'     => tienda_sesion_activa(),
-            'setup_pendiente' => !tienda_admin_existe(),
+            'setup_pendiente' => $falta_admin,
             'csrf'            => tienda_csrf(),
             'marca'           => $marca,
             'version'         => PANEL_VERSION,
-            'bloqueo'         => tienda_intentos_bloqueado(),
+            'bloqueo'         => tienda_sesion_activa() ? 0 : tienda_intentos_bloqueado(),
         ]);
     }
 
     if ($accion === 'crear_admin') {
         /* Sólo la primera vez. Después, la contraseña se cambia desde
-           Ajustes con la actual delante. */
+           Ajustes con la actual delante.
+
+           Hace falta el código de alta que hay en datos/codigo-de-alta.txt.
+           Sin él, el primero que encontrase esta dirección después de
+           subir la web elegiría la contraseña y se quedaría con todos los
+           pedidos. El código sólo lo puede leer quien tiene el FTP. */
         if (tienda_admin_existe()) panel_fallo('Ya hay una contraseña creada: entra con ella.', 403);
+
+        $espera = tienda_intentos_bloqueado();
+        if ($espera > 0) {
+            tienda_responder(['ok' => false, 'mensaje' => 'Demasiados intentos fallidos. Vuelve a probar dentro de ' . ceil($espera / 60) . ' min.', 'segundos' => $espera], 429);
+        }
+        $codigo = (string) panel_valor($in, 'codigo');
+        if (!tienda_codigo_valido($codigo)) {
+            tienda_intentos_fallo();
+            panel_fallo('El código de alta no es correcto. Lo tienes en el fichero datos/codigo-de-alta.txt de tu servidor.', 403);
+        }
         $password = (string) panel_valor($in, 'password');
         if (mb_strlen($password) < 8) panel_fallo('La contraseña necesita ocho caracteres como mínimo.', 422);
         if (!tienda_admin_crear($password)) panel_fallo('No se ha podido guardar la contraseña.', 500);
+        tienda_codigo_borrar();
+        tienda_intentos_limpiar();
         panel_entrar();
         tienda_responder(['ok' => true, 'autenticado' => tienda_sesion_activa(), 'csrf' => tienda_csrf()]);
     }
@@ -319,6 +344,18 @@ try {
     }
 
     if ($accion === 'salir') {
+        /* Cerrar la sesión cambia el estado del servidor, así que pide el
+           testigo igual que el resto: sin él, una página ajena podría
+           echar del panel a quien está trabajando, una y otra vez.
+           Si ya no había sesión, se contesta que sí y en paz. */
+        if (tienda_sesion_activa()) {
+            $token = null;
+            if (isset($_SERVER['HTTP_X_CSRF'])) $token = (string) $_SERVER['HTTP_X_CSRF'];
+            elseif (isset($in['csrf']) && !is_array($in['csrf'])) $token = (string) $in['csrf'];
+            if (!tienda_csrf_valido($token)) {
+                tienda_responder(['ok' => false, 'mensaje' => 'La sesión no coincide. Recarga el panel.'], 403);
+            }
+        }
         panel_salir();
         tienda_responder(['ok' => true, 'autenticado' => false]);
     }
@@ -415,7 +452,13 @@ try {
             $pedido['pago']['estado'] = $estado;
             $pedido['pago']['referencia'] = $referencia;
             if ($antes !== $estado) {
-                tienda_historial($pedido, 'Cobro: ' . $antes . ' → ' . $estado, PANEL_AUTOR);
+                /* Con la etiqueta, no con la clave interna: el historial lo
+                   lee una persona, y ahí convivían «Estado: Preparando →
+                   Enviado» y «Cobro: pendiente → cobrado_entrega». */
+                $pagos = tienda_estados_pago();
+                $etqA = isset($pagos[$antes]['etiqueta']) ? $pagos[$antes]['etiqueta'] : ($antes === '' ? 'sin definir' : $antes);
+                $etqB = isset($pagos[$estado]['etiqueta']) ? $pagos[$estado]['etiqueta'] : $estado;
+                tienda_historial($pedido, 'Cobro: ' . $etqA . ' → ' . $etqB, PANEL_AUTOR);
             } else {
                 tienda_historial($pedido, 'Referencia de cobro actualizada.', PANEL_AUTOR);
             }

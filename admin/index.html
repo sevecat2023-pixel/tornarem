@@ -29,6 +29,12 @@
     <h2 class="acceso-titulo" data-acceso-titulo>Entrar al panel</h2>
 
     <form data-form-acceso novalidate>
+      <div class="acceso-campo" data-acceso-codigo hidden>
+        <label for="acceso-codigo">Código de alta</label>
+        <input type="text" id="acceso-codigo" name="codigo" autocomplete="off" autocapitalize="characters" spellcheck="false" inputmode="text" placeholder="A1B2C3D4">
+        <small class="acceso-ayuda">Ábrelo en tu servidor: <code>datos/codigo-de-alta.txt</code>, con el gestor de archivos del hosting o por FTP.</small>
+      </div>
+
       <div class="acceso-campo">
         <label for="acceso-password">Contraseña</label>
         <input type="password" id="acceso-password" name="password" autocomplete="current-password" autocapitalize="off" spellcheck="false" required>
@@ -43,7 +49,7 @@
       <p class="acceso-error" data-acceso-error role="alert"></p>
     </form>
 
-    <p class="acceso-pie">La contraseña se guarda cifrada en el servidor, en <code>datos/admin.json</code>, y no se puede recuperar. Si la pierdes, borra ese fichero por FTP y el panel te pedirá una nueva.</p>
+    <p class="acceso-pie">La contraseña se guarda cifrada en el servidor, en <code>datos/admin.json.php</code>, y no se puede recuperar. Si la pierdes, borra ese fichero en tu servidor y el panel te pedirá una nueva.</p>
   </div>
 </section>
 
@@ -134,8 +140,8 @@
 
       <div class="cuadro">
         <div class="cuadro-cab">
-          <h2>Ventas por día</h2>
-          <div class="cuadro-acciones"><span class="x-cuadro-nota">Una barra por cada día del periodo</span></div>
+          <h2 data-grafico-titulo>Ventas por día</h2>
+          <div class="cuadro-acciones"><span class="x-cuadro-nota" data-grafico-nota>Una barra por cada día del periodo</span></div>
         </div>
         <div class="cuadro-cuerpo">
           <svg class="grafico" data-grafico role="img" aria-label="Ventas por día del periodo" viewBox="0 0 720 220"></svg>

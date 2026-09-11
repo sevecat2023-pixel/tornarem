@@ -63,10 +63,11 @@ lib/
   gsap.min.js       Animación del hero (local, no se carga de ningún CDN)
   ScrollTrigger.min.js
 datos/              Se crea sola en el servidor. AQUÍ VIVEN TUS PEDIDOS
-  pedidos/          Una ficha JSON por pedido
-  indice.jsonl      Índice compacto para listar y sumar rápido
-  overrides.json    Precios y stock que has cambiado desde el panel
-  admin.json        La contraseña del panel, cifrada
+  pedidos/          Una ficha por pedido
+  indice.jsonl.php  Índice compacto para listar y sumar rápido
+  overrides.json.php  Precios y stock que has cambiado desde el panel
+  admin.json.php    La contraseña del panel, cifrada
+  codigo-de-alta.txt  Sólo hasta que creas la contraseña (ver abajo)
 assets/
   img/              Fotografías en WebP (hero, muelle, mesa de revisión y un lote por ficha)
   fonts/            Archivo Black, IBM Plex Sans e IBM Plex Mono alojadas aquí
@@ -111,8 +112,12 @@ copia una tarjeta `<article class="lote">` en `index.html`, sube su foto a
 
 También en `catalogo.js`: teléfono, WhatsApp, correo, dirección, hora de
 corte del envío (`horaCorte`), recargo del contrarreembolso (`porcentaje` y
-`minimo`) y el día de la semana del próximo camión (`diaSemana`: 1 = lunes …
-7 = domingo; la cuenta atrás lo calcula sola).
+`minimo`), el día de la semana del próximo camión (`diaSemana`: 1 = lunes …
+7 = domingo; la cuenta atrás lo calcula sola) y el freno del formulario
+(`freno`: cuántos pedidos por hora se aceptan desde un mismo sitio y en
+total). El freno existe porque el stock se descuenta al recibir el pedido:
+sin él, cualquiera con un script te dejaría el catálogo a cero. Si algún día
+te frena a un cliente de verdad, súbelo ahí.
 
 ---
 
@@ -143,9 +148,14 @@ $STRIPE_SECRET_KEY = '';                       // ver «Tarjeta» más abajo
 hPanel → Correos). Con un Gmail o una dirección inventada, el correo acabará
 en spam.
 
-El `.htaccess` de la carpeta `datos/` bloquea el acceso desde el navegador:
-ahí están los datos personales de tus clientes y nadie debe poder leerlos
-escribiendo la dirección.
+Los datos de tus clientes están cerrados por dos vías a la vez, y son dos
+a propósito: el `.htaccess` le dice al servidor que no sirva esa carpeta, y
+además **cada fichero de datos es un PHP que se cierra solo en la primera
+línea**. Si un día caes en un hosting que ignora el `.htaccess`, pedir esos
+ficheros por el navegador sigue sin devolver nada. Por eso acaban en `.php`.
+
+Si prefieres que la carpeta viva fuera de `public_html`, define la variable
+de entorno `TORNAREM_DATOS` con la ruta que quieras.
 
 ### Contrarreembolso
 
@@ -182,12 +192,21 @@ el hosting funciona.
 ## El panel: `tudominio.com/admin/`
 
 Aquí es donde trabajas tú. **La primera vez que entras te pide crear una
-contraseña**: la eliges, se guarda cifrada en `datos/admin.json` y a partir de
-ahí es la que usas. No hay usuarios ni cuentas de terceros; el panel vive
-entero en tu servidor.
+contraseña**, y para eso te pide dos cosas:
 
-Si te la olvidas, borra `datos/admin.json` por FTP y el panel te dejará crear
-otra. Los pedidos no se tocan.
+1. **El código de alta.** Está en tu servidor, en `datos/codigo-de-alta.txt`.
+   Ábrelo con el gestor de archivos de hPanel o por FTP y copia las ocho
+   letras. Sirve una sola vez y se borra al usarlo.
+2. **La contraseña que quieras**, de ocho caracteres para arriba. Se guarda
+   cifrada en `datos/admin.json.php` y no se puede recuperar.
+
+El código existe por un motivo concreto: sin él, el primero que encontrara la
+dirección del panel después de subir la web elegiría la contraseña y se
+quedaría con todos tus pedidos. Como el fichero sólo lo puede leer quien tiene
+acceso a tu servidor, esa carrera no existe.
+
+Si olvidas la contraseña, borra `datos/admin.json.php` por FTP y el panel te
+dejará crear otra (con un código nuevo). Los pedidos no se tocan.
 
 ### Inicio
 
@@ -295,7 +314,11 @@ una dirección nueva y descarga la versión buena.
       nada más subir la web: hasta que no exista, cualquiera que encuentre la
       dirección puede crearla.
 - [ ] Comprobar que `datos/` no se puede abrir desde el navegador: escribe
-      `tudominio.com/datos/indice.jsonl` y debe salir un error 403.
+      `tudominio.com/datos/indice.jsonl.php` y debe salir un error o una
+      página en blanco, nunca el contenido.
+- [ ] Comprobar que la web entra por `https://`. El `.htaccess` la redirige
+      sola; si tu dominio todavía no tiene certificado, comenta ese bloque
+      hasta que lo tenga (está señalado en el fichero).
 - [ ] Hacer un pedido de prueba y verlo aparecer en el panel.
 - [ ] Cambiar teléfono, WhatsApp, correo y dirección en `lib/catalogo.js`
       **y** en los cuatro HTML (pie, FAQ, botones de aviso).

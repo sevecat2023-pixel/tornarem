@@ -59,24 +59,47 @@ function tienda_datos_dir() {
     return dirname(__DIR__) . '/datos';
 }
 
+/* Todos los ficheros de datos acaban en .php y empiezan por esta línea.
+   Es el segundo cierre, y el que no depende de la configuración del
+   servidor: la carpeta datos/ está tapada por dos .htaccess, pero un
+   hosting que no los lea (Nginx, Apache con AllowOverride None, o una
+   subida por FTP que se deje los ficheros ocultos) los serviría en
+   crudo, con el nombre y la dirección de cada cliente dentro. Con la
+   guarda, pedirlos por el navegador no devuelve nada: PHP los ejecuta,
+   se encuentra el exit en la primera línea y contesta vacío.
+   Al leerlos desde aquí la línea se salta. */
+define('TIENDA_GUARDA', "<?php exit; /* datos de Tornarem: no se sirven por web */ ?>\n");
+
 function tienda_pedidos_dir() {
     return tienda_datos_dir() . '/pedidos';
 }
 
 function tienda_ruta_indice() {
-    return tienda_datos_dir() . '/indice.jsonl';
+    return tienda_datos_dir() . '/indice.jsonl.php';
 }
 
 function tienda_ruta_overrides() {
-    return tienda_datos_dir() . '/overrides.json';
+    return tienda_datos_dir() . '/overrides.json.php';
 }
 
 function tienda_ruta_admin() {
-    return tienda_datos_dir() . '/admin.json';
+    return tienda_datos_dir() . '/admin.json.php';
 }
 
 function tienda_ruta_intentos() {
-    return tienda_datos_dir() . '/intentos.json';
+    return tienda_datos_dir() . '/intentos.json.php';
+}
+
+function tienda_ruta_frenos() {
+    return tienda_datos_dir() . '/frenos.json.php';
+}
+
+/* Código de un solo uso para crear la primera contraseña del panel.
+   Se escribe en texto plano a propósito: el dueño lo lee por FTP o con
+   el gestor de archivos del hosting, que es justo la prueba de que es
+   quien dice ser. Se borra al usarlo. */
+function tienda_ruta_codigo() {
+    return tienda_datos_dir() . '/codigo-de-alta.txt';
 }
 
 /* Contenido del .htaccess de datos/. Sirve para Apache 2.2 y 2.4:
@@ -94,19 +117,62 @@ function tienda_htaccess_datos() {
          . "Options -Indexes\n";
 }
 
-/* Crea datos/, datos/pedidos/ y el .htaccess si faltan. */
+/* Crea datos/, datos/pedidos/ y el .htaccess si faltan.
+   Los permisos son 0700 y 0600: aquí hay datos personales de clientes y
+   el hash de la contraseña, y en un hosting compartido lo lee cualquier
+   proceso de la máquina si se dejan abiertos. El servidor web escribe y
+   lee con el mismo usuario, así que no se pierde nada por cerrarlos. */
 function tienda_asegurar_datos() {
     $dir = tienda_datos_dir();
     if (!is_dir($dir)) {
-        @mkdir($dir, 0755, true);
+        @mkdir($dir, 0700, true);
     }
     $pedidos = tienda_pedidos_dir();
     if (!is_dir($pedidos)) {
-        @mkdir($pedidos, 0755, true);
+        @mkdir($pedidos, 0700, true);
     }
     $htaccess = $dir . '/.htaccess';
     if (is_dir($dir) && !file_exists($htaccess)) {
         @file_put_contents($htaccess, tienda_htaccess_datos());
+    }
+    tienda_migrar_datos();
+}
+
+/* Traslado de los nombres antiguos (sin la guarda .php) a los nuevos.
+   Sólo hace algo una vez, en instalaciones que ya tenían pedidos de las
+   primeras versiones. Sin esto, actualizar el código haría desaparecer
+   los pedidos de la vista. */
+function tienda_migrar_datos() {
+    $dir = tienda_datos_dir();
+    $viejos = array(
+        $dir . '/indice.jsonl'   => tienda_ruta_indice(),
+        $dir . '/overrides.json' => tienda_ruta_overrides(),
+        $dir . '/admin.json'     => tienda_ruta_admin(),
+        $dir . '/intentos.json'  => tienda_ruta_intentos(),
+    );
+    foreach ($viejos as $viejo => $nuevo) {
+        if (is_file($viejo) && !is_file($nuevo)) {
+            $raw = @file_get_contents($viejo);
+            if ($raw !== false && tienda_escribir_atomico($nuevo, $raw)) {
+                @unlink($viejo);
+            }
+        }
+    }
+    $pedidos = tienda_pedidos_dir();
+    if (is_dir($pedidos)) {
+        $lista = @glob($pedidos . '/TR-*.json');
+        if (is_array($lista)) {
+            foreach ($lista as $viejo) {
+                $nuevo = $viejo . '.php';
+                if (is_file($nuevo)) {
+                    continue;
+                }
+                $raw = @file_get_contents($viejo);
+                if ($raw !== false && tienda_escribir_atomico($nuevo, $raw)) {
+                    @unlink($viejo);
+                }
+            }
+        }
     }
 }
 
@@ -115,10 +181,16 @@ function tienda_asegurar_datos() {
 function tienda_escribir_atomico($ruta, $contenido) {
     $dir = dirname($ruta);
     if (!is_dir($dir)) {
-        @mkdir($dir, 0755, true);
+        @mkdir($dir, 0700, true);
     }
     if (!is_dir($dir)) {
         return false;
+    }
+    /* Los ficheros .php llevan delante la guarda que los deja mudos si
+       alguien los pide por el navegador. Si el contenido ya la trae
+       (por ejemplo al reescribir el índice) no se duplica. */
+    if (substr($ruta, -4) === '.php' && strncmp($contenido, '<?php', 5) !== 0) {
+        $contenido = TIENDA_GUARDA . $contenido;
     }
     $tmp = @tempnam($dir, 'tmp');
     if ($tmp === false) {
@@ -129,7 +201,7 @@ function tienda_escribir_atomico($ruta, $contenido) {
         @unlink($tmp);
         return false;
     }
-    @chmod($tmp, 0644);
+    @chmod($tmp, 0600);
     if (!@rename($tmp, $ruta)) {
         @unlink($tmp);
         return false;
@@ -169,8 +241,19 @@ function tienda_leer_json($ruta) {
     if ($raw === false || trim($raw) === '') {
         return array();
     }
+    $raw = tienda_sin_guarda($raw);
     $datos = json_decode($raw, true);
     return is_array($datos) ? $datos : array();
+}
+
+/* Quita la línea de guarda de PHP con la que empiezan los ficheros de
+   datos, para que lo que quede sea JSON puro. */
+function tienda_sin_guarda($raw) {
+    if (strncmp($raw, '<?php', 5) !== 0) {
+        return $raw;
+    }
+    $salto = strpos($raw, "\n");
+    return ($salto === false) ? '' : substr($raw, $salto + 1);
 }
 
 function tienda_json($datos, $bonito = true) {
@@ -515,7 +598,7 @@ function tienda_numero_valido($numero) {
 }
 
 function tienda_ruta_pedido($numero) {
-    return tienda_pedidos_dir() . '/' . $numero . '.json';
+    return tienda_pedidos_dir() . '/' . $numero . '.json.php';
 }
 
 /* Reserva un número libre creando el fichero en exclusiva: si dos
@@ -580,7 +663,15 @@ function tienda_indice_anadir($linea) {
     try {
         $txt = tienda_json($linea, false);
         if ($txt !== '') {
-            $ok = @file_put_contents(tienda_ruta_indice(), $txt . "\n", FILE_APPEND) !== false;
+            $ruta = tienda_ruta_indice();
+            /* La primera línea del índice es la guarda de PHP. Si el
+               fichero aún no existe hay que escribirla antes de añadir
+               nada, o el índice quedaría servible por el navegador. */
+            if (!is_file($ruta)) {
+                @file_put_contents($ruta, TIENDA_GUARDA);
+                @chmod($ruta, 0600);
+            }
+            $ok = @file_put_contents($ruta, $txt . "\n", FILE_APPEND) !== false;
         }
     } catch (Exception $e) {
         tienda_desbloquear($fh);
@@ -607,10 +698,12 @@ function tienda_indice_actualizar($linea) {
         $nueva = tienda_json($linea, false);
         $raw = is_file(tienda_ruta_indice()) ? @file_get_contents(tienda_ruta_indice()) : '';
         if (is_string($raw) && $raw !== '') {
-            $lineas = explode("\n", $raw);
+            /* Fuera la guarda: la vuelve a poner tienda_escribir_atomico.
+               Si se arrastrase aquí acabaría duplicada o partida. */
+            $lineas = explode("\n", tienda_sin_guarda($raw));
             foreach ($lineas as $l) {
                 $l = trim($l);
-                if ($l === '') {
+                if ($l === '' || strncmp($l, '<?php', 5) === 0) {
                     continue;
                 }
                 $d = json_decode($l, true);
@@ -954,10 +1047,17 @@ function tienda_cambiar_estado($numero, $estado, $nota, $autor) {
         $aviso = ' Stock devuelto al almacén.';
     } elseif ($anterior === 'cancelado' && !$descontado) {
         $cortos = tienda_stock_mover($lineas, -1, false);
-        $pedido['stock_descontado'] = true;
         $aviso = ' Stock descontado de nuevo.';
         if (count($cortos)) {
-            $aviso .= ' Sin stock suficiente de: ' . implode(', ', $cortos) . '. Revisa el almacén.';
+            /* Si el almacén estaba a cero no se ha podido descontar nada,
+               así que el pedido NO queda marcado como descontado: si se
+               marcase, al volver a cancelarlo se devolverían unas unidades
+               que nunca salieron y el almacén acabaría inventándose stock. */
+            $pedido['stock_descontado'] = false;
+            $aviso = ' No se ha podido descontar el stock de: ' . implode(', ', $cortos)
+                   . '. El pedido sigue sin descontar: repón en Almacén y vuelve a cambiar el estado.';
+        } else {
+            $pedido['stock_descontado'] = true;
         }
     }
 
@@ -1176,11 +1276,14 @@ function tienda_totales_rango($lineas, $desde, $hasta) {
     return array('ventas' => round($ventas, 2), 'pedidos' => $pedidos, 'unidades' => $unidades);
 }
 
+/* Pasar de no vender nada a vender algo no es «un 100 % más»: no hay
+   porcentaje que calcular. En ese caso devuelve null y el panel escribe
+   «Sin ventas en el periodo anterior», que es la verdad. */
 function tienda_variacion($actual, $anterior) {
     $actual = (float) $actual;
     $anterior = (float) $anterior;
     if ($anterior <= 0) {
-        return ($actual > 0) ? 100.0 : 0.0;
+        return ($actual > 0) ? null : 0.0;
     }
     return round((($actual - $anterior) / $anterior) * 100, 1);
 }
@@ -1323,6 +1426,12 @@ function tienda_resumen($desde, $hasta) {
             'ventas'  => tienda_variacion($ventas, $ant['ventas']),
             'pedidos' => tienda_variacion($pedidos, $ant['pedidos']),
         );
+        /* Si en el periodo anterior no hubo ni un pedido no hay nada con
+           lo que comparar, y decirlo es más honrado que pintar una flecha
+           hacia arriba. El panel ya tiene el texto preparado. */
+        if ((int) $ant['pedidos'] <= 0) {
+            $comparable = false;
+        }
     }
 
     /* ---- Pendientes de preparar: sin filtrar por fecha, los más viejos primero ---- */
@@ -1460,8 +1569,18 @@ function tienda_csv($f) {
     $catalogo = tienda_lotes();
     $columnas = array('Número', 'Fecha', 'Hora', 'Estado', 'Pago', 'Estado del pago', 'Cliente',
                       'Correo', 'Teléfono', 'Población', 'Provincia', 'Lotes', 'Unidades', 'Total');
+    /* Excel evalúa como fórmula cualquier celda que empiece por =, +, -,
+       @ o un tabulador, aunque venga entre comillas. Y el nombre, la
+       población y la provincia los escribe quien quiera en el formulario
+       público de la tienda. Un cliente que se llame =HYPERLINK(...)
+       ejecutaría algo en el ordenador de quien abre el listado. Con un
+       apóstrofo delante, Excel lo enseña como texto y no lo evalúa. */
     $celda = function ($v) {
-        return '"' . str_replace('"', '""', (string) $v) . '"';
+        $s = (string) $v;
+        if ($s !== '' && strpos("=+-@\t\r", $s[0]) !== false) {
+            $s = "'" . $s;
+        }
+        return '"' . str_replace('"', '""', $s) . '"';
     };
     $filas = array();
     $filas[] = implode(';', array_map($celda, $columnas));
@@ -1570,10 +1689,26 @@ function tienda_admin_cambiar($actual, $nuevo) {
 }
 
 /* Segundos que faltan para poder volver a intentarlo. 0 = adelante. */
+/* Quién está intentando entrar. Se guarda el hash, no la IP: el
+   fichero no tiene por qué llevar dentro de dónde se conecta nadie. */
+function tienda_quien() {
+    $ip = isset($_SERVER['REMOTE_ADDR']) ? (string) $_SERVER['REMOTE_ADDR'] : 'desconocido';
+    return substr(md5('tornarem|' . $ip), 0, 16);
+}
+
+/* El bloqueo por intentos fallidos es POR ORIGEN, no global. Antes
+   cinco contraseñas malas desde cualquier parte de internet dejaban al
+   dueño sin entrar en su propio panel durante cinco minutos, y bastaba
+   repetirlo para dejarlo fuera para siempre. Ahora quien falla se
+   bloquea a sí mismo. Queda un tope general mucho más alto como red
+   contra un ataque repartido entre muchas máquinas. */
 function tienda_intentos_bloqueado() {
     $datos = tienda_leer_json(tienda_ruta_intentos());
-    $hasta = isset($datos['bloqueo_hasta']) ? (int) $datos['bloqueo_hasta'] : 0;
-    $faltan = $hasta - time();
+    $yo = tienda_quien();
+    $ahora = time();
+    $mio = isset($datos['origenes'][$yo]['bloqueo_hasta']) ? (int) $datos['origenes'][$yo]['bloqueo_hasta'] : 0;
+    $global = isset($datos['global']['bloqueo_hasta']) ? (int) $datos['global']['bloqueo_hasta'] : 0;
+    $faltan = max($mio, $global) - $ahora;
     return ($faltan > 0) ? $faltan : 0;
 }
 
@@ -1581,35 +1716,173 @@ function tienda_intentos_fallo() {
     tienda_asegurar_datos();
     $fh = tienda_bloquear('intentos');
     $datos = tienda_leer_json(tienda_ruta_intentos());
-    $fallos = isset($datos['fallos']) ? (int) $datos['fallos'] : 0;
-    $ultimo = isset($datos['ultimo']) ? (int) $datos['ultimo'] : 0;
-    /* Un fallo suelto de hace un cuarto de hora ya no cuenta. */
-    if ($ultimo > 0 && (time() - $ultimo) > 900) {
-        $fallos = 0;
+    $ahora = time();
+    $yo = tienda_quien();
+
+    $origenes = isset($datos['origenes']) && is_array($datos['origenes']) ? $datos['origenes'] : array();
+    /* Se tiran los orígenes de hace más de una hora para que el fichero
+       no crezca sin fin. */
+    foreach ($origenes as $clave => $o) {
+        $visto = isset($o['ultimo']) ? (int) $o['ultimo'] : 0;
+        $hasta = isset($o['bloqueo_hasta']) ? (int) $o['bloqueo_hasta'] : 0;
+        if (($ahora - $visto) > 3600 && $hasta < $ahora) {
+            unset($origenes[$clave]);
+        }
+    }
+
+    $mio = isset($origenes[$yo]) ? $origenes[$yo] : array('fallos' => 0, 'ultimo' => 0, 'bloqueo_hasta' => 0);
+    $fallos = (int) $mio['fallos'];
+    if ((int) $mio['ultimo'] > 0 && ($ahora - (int) $mio['ultimo']) > 900) {
+        $fallos = 0;   /* un fallo suelto de hace un cuarto de hora ya no cuenta */
     }
     $fallos++;
-    $bloqueo = isset($datos['bloqueo_hasta']) ? (int) $datos['bloqueo_hasta'] : 0;
+    $bloqueo = (int) $mio['bloqueo_hasta'];
     if ($fallos >= TORNAREM_INTENTOS_MAX) {
-        $bloqueo = time() + TORNAREM_BLOQUEO_SEG;
+        $bloqueo = $ahora + TORNAREM_BLOQUEO_SEG;
         $fallos = 0;
     }
+    $origenes[$yo] = array('fallos' => $fallos, 'ultimo' => $ahora, 'bloqueo_hasta' => $bloqueo);
+
+    /* Red general: 60 fallos en un cuarto de hora, vengan de donde vengan. */
+    $g = isset($datos['global']) && is_array($datos['global']) ? $datos['global'] : array('fallos' => 0, 'desde' => 0, 'bloqueo_hasta' => 0);
+    if ((int) $g['desde'] === 0 || ($ahora - (int) $g['desde']) > 900) {
+        $g['fallos'] = 0;
+        $g['desde'] = $ahora;
+    }
+    $g['fallos'] = (int) $g['fallos'] + 1;
+    if ($g['fallos'] >= 60) {
+        $g['bloqueo_hasta'] = $ahora + TORNAREM_BLOQUEO_SEG;
+        $g['fallos'] = 0;
+        $g['desde'] = $ahora;
+    }
+
     tienda_escribir_atomico(tienda_ruta_intentos(), tienda_json(array(
-        'fallos'        => $fallos,
-        'ultimo'        => time(),
-        'bloqueo_hasta' => $bloqueo,
+        'origenes' => $origenes,
+        'global'   => $g,
     )));
     tienda_desbloquear($fh);
 }
 
+/* Al entrar bien se limpia sólo el contador de quien ha entrado. */
 function tienda_intentos_limpiar() {
     tienda_asegurar_datos();
     $fh = tienda_bloquear('intentos');
+    $datos = tienda_leer_json(tienda_ruta_intentos());
+    $origenes = isset($datos['origenes']) && is_array($datos['origenes']) ? $datos['origenes'] : array();
+    unset($origenes[tienda_quien()]);
     tienda_escribir_atomico(tienda_ruta_intentos(), tienda_json(array(
-        'fallos'        => 0,
-        'ultimo'        => 0,
-        'bloqueo_hasta' => 0,
+        'origenes' => $origenes,
+        'global'   => isset($datos['global']) ? $datos['global'] : array('fallos' => 0, 'desde' => 0, 'bloqueo_hasta' => 0),
     )));
     tienda_desbloquear($fh);
+}
+
+/* -------------------------------------------------------------
+   Freno para la puerta pública
+
+   El stock se descuenta en cuanto entra el pedido, y en
+   contrarreembolso no se cobra nada por la web. Sin un freno,
+   cualquiera con un script deja el catálogo a cero en un segundo y de
+   paso usa el servidor para mandar correos. Esto cuenta peticiones por
+   origen y en total, con la misma mecánica de bloqueo del panel.
+
+   Devuelve 0 si puede pasar, o los segundos que faltan si no.
+   ------------------------------------------------------------- */
+function tienda_freno($clave, $max_origen, $max_total, $ventana) {
+    tienda_asegurar_datos();
+    $fh = tienda_bloquear('frenos');
+    $datos = tienda_leer_json(tienda_ruta_frenos());
+    $ahora = time();
+    $yo = tienda_quien();
+    $bloque = isset($datos[$clave]) && is_array($datos[$clave]) ? $datos[$clave] : array();
+    $origenes = isset($bloque['origenes']) && is_array($bloque['origenes']) ? $bloque['origenes'] : array();
+    $todos = isset($bloque['todos']) && is_array($bloque['todos']) ? $bloque['todos'] : array('n' => 0, 'desde' => 0);
+
+    foreach ($origenes as $k => $o) {
+        if (($ahora - (int) $o['desde']) > $ventana) {
+            unset($origenes[$k]);
+        }
+    }
+    if ((int) $todos['desde'] === 0 || ($ahora - (int) $todos['desde']) > $ventana) {
+        $todos = array('n' => 0, 'desde' => $ahora);
+    }
+
+    $mio = isset($origenes[$yo]) ? $origenes[$yo] : array('n' => 0, 'desde' => $ahora);
+    $espera = 0;
+    if ((int) $mio['n'] >= $max_origen) {
+        $espera = $ventana - ($ahora - (int) $mio['desde']);
+    } elseif ((int) $todos['n'] >= $max_total) {
+        $espera = $ventana - ($ahora - (int) $todos['desde']);
+    } else {
+        $mio['n'] = (int) $mio['n'] + 1;
+        $origenes[$yo] = $mio;
+        $todos['n'] = (int) $todos['n'] + 1;
+        $datos[$clave] = array('origenes' => $origenes, 'todos' => $todos);
+        tienda_escribir_atomico(tienda_ruta_frenos(), tienda_json($datos));
+    }
+    tienda_desbloquear($fh);
+    return ($espera > 0) ? $espera : 0;
+}
+
+/* -------------------------------------------------------------
+   Código de alta del panel
+
+   Sin esto, el primero que encontrase /admin/ después de subir la web
+   elegiría la contraseña y se quedaría con los pedidos y los datos de
+   los clientes. El código se escribe en datos/codigo-de-alta.txt, que
+   sólo puede leer quien tiene el FTP o el gestor de archivos del
+   hosting: o sea, el dueño.
+   ------------------------------------------------------------- */
+/* El código se guarda en dos sitios y cada uno tiene su papel: el .txt
+   es para que lo lea el dueño (por eso va con explicación y en claro), y
+   el .php guardado es el que se compara, para no tener que adivinar cuál
+   de las líneas del texto era el código. */
+function tienda_ruta_alta() {
+    return tienda_datos_dir() . '/alta.json.php';
+}
+
+function tienda_codigo_alta() {
+    tienda_asegurar_datos();
+    if (tienda_admin_existe()) {
+        return '';
+    }
+    $guardado = tienda_leer_json(tienda_ruta_alta());
+    $codigo = isset($guardado['codigo']) ? (string) $guardado['codigo'] : '';
+    if ($codigo !== '' && is_file(tienda_ruta_codigo())) {
+        return $codigo;
+    }
+    if ($codigo === '') {
+        $codigo = strtoupper(bin2hex(random_bytes(4)));
+        tienda_escribir_atomico(tienda_ruta_alta(), tienda_json(array(
+            'codigo' => $codigo,
+            'creado' => tienda_ahora(),
+        )));
+    }
+    $texto = "CODIGO DE ALTA DEL PANEL DE TORNAREM\n"
+           . "====================================\n\n"
+           . "    " . $codigo . "\n\n"
+           . "Copia ese codigo en la pantalla de /admin/ para crear la\n"
+           . "contrasena del panel. Sirve una sola vez: en cuanto la crees,\n"
+           . "este fichero se borra solo.\n\n"
+           . "Si alguien te pide este codigo, no se lo des: con el puede\n"
+           . "quedarse con todos tus pedidos.\n";
+    @file_put_contents(tienda_ruta_codigo(), $texto);
+    @chmod(tienda_ruta_codigo(), 0600);
+    return $codigo;
+}
+
+function tienda_codigo_valido($codigo) {
+    $bueno = tienda_codigo_alta();
+    $dado = strtoupper(trim((string) $codigo));
+    return ($bueno !== '' && $dado !== '' && hash_equals($bueno, $dado));
+}
+
+function tienda_codigo_borrar() {
+    foreach (array(tienda_ruta_codigo(), tienda_ruta_alta()) as $ruta) {
+        if (is_file($ruta)) {
+            @unlink($ruta);
+        }
+    }
 }
 
 

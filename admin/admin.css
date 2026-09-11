@@ -373,6 +373,15 @@ input[type="search"], input[type="date"] {
   padding: .65rem .7rem; font-family: var(--mono); font-size: .95rem;
 }
 .acceso-campo input:focus { outline: 3px solid var(--accent); outline-offset: 0; }
+.acceso-ayuda {
+  font-family: var(--mono); font-size: .64rem; line-height: 1.5;
+  letter-spacing: .03em; color: var(--apagado);
+}
+.acceso-ayuda code {
+  background: var(--concrete); padding: 0 .25em;
+  border: 1px solid var(--linea);
+}
+#acceso-codigo { text-transform: uppercase; letter-spacing: .18em; }
 .acceso-error {
   font-family: var(--mono); font-size: .72rem; line-height: 1.4;
   color: var(--rojo); border-left: 3px solid var(--rojo);
@@ -638,12 +647,16 @@ input[type="search"], input[type="date"] {
   display: block; width: 100%; height: auto;
   overflow: visible;
 }
-.grafico rect { fill: var(--ink); }
-.grafico rect.is-activo { fill: var(--accent); }
+/* El color de cada barra y de la línea del cero lo decide app.js con
+   atributos de presentación, porque depende de si ese día hubo ventas.
+   Una regla CSS gana siempre al atributo, así que aquí no se fija ni el
+   relleno ni el trazo: sólo el grosor y el resalte al pasar por encima.
+   Antes salían todas las barras negras y el trabajo del JavaScript no se
+   veía. */
 @media (hover: hover) {
   .grafico rect:hover { fill: var(--accent); }
 }
-.grafico line { stroke: var(--linea); stroke-width: 1; }
+.grafico line { stroke-width: 1; }
 .grafico text {
   font-family: var(--mono); font-size: 9px;
   letter-spacing: .04em; fill: var(--apagado);
@@ -1020,7 +1033,11 @@ input[type="search"], input[type="date"] {
   border: 2px solid var(--papel); outline: 2px solid var(--ink);
   font-family: var(--mono); font-size: .74rem; letter-spacing: .05em;
   text-transform: uppercase; line-height: 1.4;
+  /* app.js pone y quita la clase is-on: quien decide si se ve es el
+     atributo hidden, esto sólo le da la entrada y la salida suaves. */
+  opacity: 0; transition: opacity .2s var(--ease-out);
 }
+.aviso.is-on { opacity: 1; }
 .aviso.is-error,
 .aviso.aviso--error { background: var(--rojo); outline-color: var(--rojo); }
 .aviso.is-ok,
