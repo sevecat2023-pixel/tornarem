@@ -18,7 +18,184 @@
 <link rel="preload" as="font" type="font/woff2" href="assets/fonts/archivo-black-400-latin.woff2" crossorigin>
 <link rel="preload" as="font" type="font/woff2" href="assets/fonts/ibm-plex-mono-400-latin.woff2" crossorigin>
 <link rel="preload" as="image" href="assets/img/hero-almacen.webp" fetchpriority="high">
-<link rel="stylesheet" href="styles.css?v=20260910">
+<link rel="stylesheet" href="styles.css?v=20260917">
+<!-- datos-estructurados:inicio · los reescribe tools/generar.php con los precios del catálogo -->
+<script type="application/ld+json">{
+    "@context": "https://schema.org",
+    "@graph": [
+        {
+            "@type": "Organization",
+            "@id": "https://www.tornarem.cat/#organizacion",
+            "name": "Tornarem",
+            "url": "https://www.tornarem.cat/",
+            "logo": "https://www.tornarem.cat/assets/favicon.svg",
+            "image": "https://www.tornarem.cat/assets/img/hero-almacen.webp",
+            "description": "Liquidador independiente de devoluciones y excedentes. Venta de lotes y palés con factura, contrarreembolso o tarjeta y entrega en 24 h.",
+            "email": "pedidos@tornarem.cat",
+            "telephone": "+34900000000",
+            "address": {
+                "@type": "PostalAddress",
+                "streetAddress": "Nave 14, Polígono Mas Xirgu",
+                "postalCode": "17005",
+                "addressLocality": "Girona",
+                "addressRegion": "Girona",
+                "addressCountry": "ES"
+            },
+            "areaServed": {
+                "@type": "Country",
+                "name": "España"
+            },
+            "disambiguatingDescription": "Tornarem no está afiliada, patrocinada ni respaldada por Amazon.com, Inc. ni por sus filiales."
+        },
+        {
+            "@type": "WebSite",
+            "@id": "https://www.tornarem.cat/#web",
+            "url": "https://www.tornarem.cat/",
+            "name": "Tornarem",
+            "inLanguage": "es-ES",
+            "publisher": {
+                "@id": "https://www.tornarem.cat/#organizacion"
+            }
+        },
+        {
+            "@type": "ItemList",
+            "name": "Lotes de devoluciones de Amazon en venta",
+            "numberOfItems": 10,
+            "itemListElement": [
+                {
+                    "@type": "ListItem",
+                    "position": 1,
+                    "url": "https://www.tornarem.cat/lotes/electronica.html",
+                    "name": "Electrónica de consumo"
+                },
+                {
+                    "@type": "ListItem",
+                    "position": 2,
+                    "url": "https://www.tornarem.cat/lotes/hogar-cocina.html",
+                    "name": "Pequeño electrodoméstico"
+                },
+                {
+                    "@type": "ListItem",
+                    "position": 3,
+                    "url": "https://www.tornarem.cat/lotes/juguetes.html",
+                    "name": "Juguetes y juegos"
+                },
+                {
+                    "@type": "ListItem",
+                    "position": 4,
+                    "url": "https://www.tornarem.cat/lotes/herramientas.html",
+                    "name": "Herramientas y bricolaje"
+                },
+                {
+                    "@type": "ListItem",
+                    "position": 5,
+                    "url": "https://www.tornarem.cat/lotes/moda.html",
+                    "name": "Moda y calzado"
+                },
+                {
+                    "@type": "ListItem",
+                    "position": 6,
+                    "url": "https://www.tornarem.cat/lotes/informatica.html",
+                    "name": "Informática y periféricos"
+                },
+                {
+                    "@type": "ListItem",
+                    "position": 7,
+                    "url": "https://www.tornarem.cat/lotes/deporte.html",
+                    "name": "Deporte y fitness"
+                },
+                {
+                    "@type": "ListItem",
+                    "position": 8,
+                    "url": "https://www.tornarem.cat/lotes/bebe.html",
+                    "name": "Bebé y puericultura"
+                },
+                {
+                    "@type": "ListItem",
+                    "position": 9,
+                    "url": "https://www.tornarem.cat/lotes/belleza.html",
+                    "name": "Belleza y cuidado personal"
+                },
+                {
+                    "@type": "ListItem",
+                    "position": 10,
+                    "url": "https://www.tornarem.cat/lotes/pale-mixto.html",
+                    "name": "Palé mixto sin clasificar"
+                }
+            ]
+        },
+        {
+            "@type": "FAQPage",
+            "mainEntity": [
+                {
+                    "@type": "Question",
+                    "name": "¿Sois Amazon?",
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "No. Tornarem es un liquidador independiente. Compramos a los mayoristas que gestionan las devoluciones de la plataforma y las revendemos por nuestra cuenta. Amazon no participa en esta web ni respalda lo que vendemos."
+                    }
+                },
+                {
+                    "@type": "Question",
+                    "name": "¿Qué es exactamente una devolución?",
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "Un producto que alguien compró en la tienda online y devolvió: porque no era su talla, porque cambió de opinión, porque abrió la caja y no le gustó. La mayoría está sin usar. Un porcentaje pequeño viene con marcas de uso, y para eso están los grados."
+                    }
+                },
+                {
+                    "@type": "Question",
+                    "name": "¿Puedo elegir lo que hay dentro?",
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "No: los lotes se venden completos y precintados, y eso es lo que permite el precio. Lo que sí puedes es leer el listado exacto de contenido de cada lote antes de comprar, en la ficha de cada uno."
+                    }
+                },
+                {
+                    "@type": "Question",
+                    "name": "¿Tiene garantía?",
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "En los lotes clasificados (A, B y C), sí: tienes 14 días desde la entrega para reclamar cualquier unidad que no funcione como se describe, y la sustituimos o te abonamos su parte. El palé sin clasificar se vende cerrado y no admite devolución: su precio lo compensa."
+                    }
+                },
+                {
+                    "@type": "Question",
+                    "name": "¿Cómo funciona el contrarreembolso?",
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "Haces el pedido sin pagar nada. Cuando el transportista llega, pagas en efectivo o con tarjeta en su datáfono y te quedas el lote. La agencia cobra un 3 % (mínimo 5 €) por gestionar el cobro, que se suma al total."
+                    }
+                },
+                {
+                    "@type": "Question",
+                    "name": "¿Hacéis factura?",
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "Siempre, con IVA desglosado. Si compras como empresa o autónomo, escribe el CIF o NIF en el pedido y la factura saldrá a ese nombre."
+                    }
+                },
+                {
+                    "@type": "Question",
+                    "name": "¿De verdad llega en 24 horas?",
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "Si confirmas antes de las 14:00 de un día laborable, la agencia lo recoge esa misma tarde y lo entrega al día siguiente en península. Los palés van con transporte especializado y tardan entre 24 y 48 horas. Islas, bajo presupuesto."
+                    }
+                },
+                {
+                    "@type": "Question",
+                    "name": "¿Puedo ir a verlo o recogerlo en la nave?",
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "Sí. Estamos en Girona, de lunes a viernes de 8:00 a 18:00. Puedes ver los lotes abiertos, recoger tu pedido sin coste y, si compras varios palés, negociarlos en persona."
+                    }
+                }
+            ]
+        }
+    ]
+}</script>
+<!-- datos-estructurados:fin -->
 </head>
 
 <body>
@@ -50,7 +227,7 @@
       <a href="#lotes">Lotes</a>
       <a href="#como">Cómo funciona</a>
       <a href="#grados">Grados</a>
-      <a href="#pago">Pago y envío</a>
+      <a href="blog/index.html">Guías</a>
       <a href="#faq">Preguntas</a>
     </nav>
 
@@ -66,8 +243,11 @@
   <a href="#lotes">Lotes</a>
   <a href="#como">Cómo funciona</a>
   <a href="#grados">Grados</a>
-  <a href="#pago">Pago y envío</a>
+  <a href="blog/index.html">Guías</a>
   <a href="#faq">Preguntas</a>
+  <a href="comprar-devoluciones-de-amazon.html">Comprar devoluciones</a>
+  <a href="palets-de-devoluciones-de-amazon.html">Palés</a>
+  <a href="#pago">Pago y envío</a>
   <a href="checkout.html">Tramitar pedido</a>
 </nav>
 
@@ -174,13 +354,13 @@
     <div class="grid12 lotes" data-lotes>
 
       <article class="lote rv" data-lote="lote-electronica" data-precio="549" data-pvp="2640" data-uds="42" data-index="1">
-        <a class="lote-fig" href="#lote-electronica" data-open-lote="lote-electronica" aria-label="Ver contenido del lote Electrónica de consumo">
+        <a class="lote-fig" href="lotes/electronica.html" data-open-lote="lote-electronica" aria-label="Ver contenido del lote Electrónica de consumo">
           <img src="assets/img/lote-electronica.webp" width="1536" height="1024" alt="Palé con auriculares, altavoces, smartwatches y tablets en sus cajas" loading="lazy" decoding="async">
           <span class="sticker">Grado A/B</span>
         </a>
         <div class="lote-body">
           <p class="lote-meta">Ref TR-2609-01 · 42 uds · Caja 60×40×40 · 19 kg</p>
-          <h3 class="lote-title">Electrónica de consumo</h3>
+          <h3 class="lote-title"><a href="lotes/electronica.html">Electrónica de consumo</a></h3>
           <p class="lote-desc">Auriculares, altavoces Bluetooth, smartwatches, tablets y accesorios de carga.</p>
           <div class="lote-price"><span class="pvp">PVP estimado <s>2.640 €</s></span><span class="precio">549 €</span><span class="off">−79 %</span><span class="iva">IVA y envío incl.</span></div>
           <p class="lote-stock"><span class="stock-bar" aria-hidden="true"><i></i><i></i><i></i><i></i><i class="off"></i><i class="off"></i></span>Quedan 4 lotes</p>
@@ -193,13 +373,13 @@
       </article>
 
       <article class="lote rv" data-lote="lote-hogar-cocina" data-precio="429" data-pvp="1890" data-uds="14" data-index="2">
-        <a class="lote-fig" href="#lote-hogar-cocina" data-open-lote="lote-hogar-cocina" aria-label="Ver contenido del lote Pequeño electrodoméstico">
+        <a class="lote-fig" href="lotes/hogar-cocina.html" data-open-lote="lote-hogar-cocina" aria-label="Ver contenido del lote Pequeño electrodoméstico">
           <img src="assets/img/lote-hogar-cocina.webp" width="1536" height="1024" alt="Palé con freidoras de aire, batidoras, cafeteras, un robot aspirador y tostadoras" loading="lazy" decoding="async">
           <span class="sticker sticker--yellow">Grado B</span>
         </a>
         <div class="lote-body">
           <p class="lote-meta">Ref TR-2609-02 · 14 uds · Caja 80×60×60 · 38 kg</p>
-          <h3 class="lote-title">Pequeño electrodoméstico</h3>
+          <h3 class="lote-title"><a href="lotes/hogar-cocina.html">Pequeño electrodoméstico</a></h3>
           <p class="lote-desc">Freidoras de aire, batidoras, cafeteras de cápsulas, un robot aspirador y tostadoras.</p>
           <div class="lote-price"><span class="pvp">PVP estimado <s>1.890 €</s></span><span class="precio">429 €</span><span class="off">−77 %</span><span class="iva">IVA y envío incl.</span></div>
           <p class="lote-stock"><span class="stock-bar" aria-hidden="true"><i></i><i></i><i></i><i class="off"></i><i class="off"></i><i class="off"></i></span>Quedan 3 lotes</p>
@@ -212,13 +392,13 @@
       </article>
 
       <article class="lote rv" data-lote="lote-juguetes" data-precio="319" data-pvp="1720" data-uds="64" data-index="3">
-        <a class="lote-fig" href="#lote-juguetes" data-open-lote="lote-juguetes" aria-label="Ver contenido del lote Juguetes y juegos">
+        <a class="lote-fig" href="lotes/juguetes.html" data-open-lote="lote-juguetes" aria-label="Ver contenido del lote Juguetes y juegos">
           <img src="assets/img/lote-juguetes.webp" width="1536" height="1024" alt="Caja gaylord llena de juguetes: sets de construcción, peluches, juegos de mesa y coches teledirigidos" loading="lazy" decoding="async">
           <span class="sticker">Grado A/B</span>
         </a>
         <div class="lote-body">
           <p class="lote-meta">Ref TR-2609-03 · 64 uds · Caja 80×60×60 · 27 kg</p>
-          <h3 class="lote-title">Juguetes y juegos</h3>
+          <h3 class="lote-title"><a href="lotes/juguetes.html">Juguetes y juegos</a></h3>
           <p class="lote-desc">Sets de construcción, peluches, juegos de mesa, coches teledirigidos, muñecas y puzles.</p>
           <div class="lote-price"><span class="pvp">PVP estimado <s>1.720 €</s></span><span class="precio">319 €</span><span class="off">−81 %</span><span class="iva">IVA y envío incl.</span></div>
           <p class="lote-stock"><span class="stock-bar" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i class="off"></i></span>Quedan 5 lotes</p>
@@ -231,13 +411,13 @@
       </article>
 
       <article class="lote rv" data-lote="lote-herramientas" data-precio="489" data-pvp="2150" data-uds="18" data-index="4">
-        <a class="lote-fig" href="#lote-herramientas" data-open-lote="lote-herramientas" aria-label="Ver contenido del lote Herramientas y bricolaje">
+        <a class="lote-fig" href="lotes/herramientas.html" data-open-lote="lote-herramientas" aria-label="Ver contenido del lote Herramientas y bricolaje">
           <img src="assets/img/lote-herramientas.webp" width="1536" height="1024" alt="Palé y carro con taladros, atornilladores, amoladoras, maletines y un juego de vasos" loading="lazy" decoding="async">
           <span class="sticker">Grado A/B</span>
         </a>
         <div class="lote-body">
           <p class="lote-meta">Ref TR-2609-04 · 18 uds · Caja 60×40×40 · 41 kg</p>
-          <h3 class="lote-title">Herramientas y bricolaje</h3>
+          <h3 class="lote-title"><a href="lotes/herramientas.html">Herramientas y bricolaje</a></h3>
           <p class="lote-desc">Taladros y atornilladores a batería, sierra de calar, amoladora, maletines y nivel láser.</p>
           <div class="lote-price"><span class="pvp">PVP estimado <s>2.150 €</s></span><span class="precio">489 €</span><span class="off">−77 %</span><span class="iva">IVA y envío incl.</span></div>
           <p class="lote-stock is-low"><span class="stock-bar" aria-hidden="true"><i></i><i></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i></span>Quedan 2 lotes</p>
@@ -250,13 +430,13 @@
       </article>
 
       <article class="lote rv" data-lote="lote-moda" data-precio="590" data-pvp="3600" data-uds="120" data-index="5">
-        <a class="lote-fig" href="#lote-moda" data-open-lote="lote-moda" aria-label="Ver contenido del lote Moda y calzado">
+        <a class="lote-fig" href="lotes/moda.html" data-open-lote="lote-moda" aria-label="Ver contenido del lote Moda y calzado">
           <img src="assets/img/lote-moda.webp" width="1536" height="1024" alt="Caja gaylord con prendas embolsadas y etiquetadas junto a cajas de zapatillas" loading="lazy" decoding="async">
           <span class="sticker">Grado A</span>
         </a>
         <div class="lote-body">
           <p class="lote-meta">Ref TR-2609-05 · 120 uds · Gaylord 120×80×80 · 46 kg</p>
-          <h3 class="lote-title">Moda y calzado</h3>
+          <h3 class="lote-title"><a href="lotes/moda.html">Moda y calzado</a></h3>
           <p class="lote-desc">Zapatillas, sudaderas, vaqueros, chaquetas y mochilas. Prenda en bolsa con etiqueta.</p>
           <div class="lote-price"><span class="pvp">PVP estimado <s>3.600 €</s></span><span class="precio">590 €</span><span class="off">−84 %</span><span class="iva">IVA y envío incl.</span></div>
           <p class="lote-stock"><span class="stock-bar" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></span>Quedan 6 lotes</p>
@@ -269,13 +449,13 @@
       </article>
 
       <article class="lote rv" data-lote="lote-informatica" data-precio="699" data-pvp="3280" data-uds="26" data-index="6">
-        <a class="lote-fig" href="#lote-informatica" data-open-lote="lote-informatica" aria-label="Ver contenido del lote Informática y periféricos">
+        <a class="lote-fig" href="lotes/informatica.html" data-open-lote="lote-informatica" aria-label="Ver contenido del lote Informática y periféricos">
           <img src="assets/img/lote-informatica.webp" width="1536" height="1024" alt="Palé con dos monitores, teclados mecánicos, webcams, discos SSD, un router y una impresora" loading="lazy" decoding="async">
           <span class="sticker">Grado A/B</span>
         </a>
         <div class="lote-body">
           <p class="lote-meta">Ref TR-2609-06 · 26 uds · Caja 80×60×60 · 34 kg</p>
-          <h3 class="lote-title">Informática y periféricos</h3>
+          <h3 class="lote-title"><a href="lotes/informatica.html">Informática y periféricos</a></h3>
           <p class="lote-desc">Teclados mecánicos, ratones, dos monitores, webcams, discos SSD, router e impresora.</p>
           <div class="lote-price"><span class="pvp">PVP estimado <s>3.280 €</s></span><span class="precio">699 €</span><span class="off">−79 %</span><span class="iva">IVA y envío incl.</span></div>
           <p class="lote-stock is-low"><span class="stock-bar" aria-hidden="true"><i></i><i></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i></span>Quedan 2 lotes</p>
@@ -288,13 +468,13 @@
       </article>
 
       <article class="lote rv" data-lote="lote-deporte" data-precio="519" data-pvp="2340" data-uds="22" data-index="7">
-        <a class="lote-fig" href="#lote-deporte" data-open-lote="lote-deporte" aria-label="Ver contenido del lote Deporte y fitness">
+        <a class="lote-fig" href="lotes/deporte.html" data-open-lote="lote-deporte" aria-label="Ver contenido del lote Deporte y fitness">
           <img src="assets/img/lote-deporte.webp" width="1536" height="1024" alt="Palé con mancuernas, kettlebells, esterillas, una bicicleta estática plegable, una tienda y un patinete" loading="lazy" decoding="async">
           <span class="sticker sticker--yellow">Grado B</span>
         </a>
         <div class="lote-body">
           <p class="lote-meta">Ref TR-2609-07 · 22 uds · Palé EUR 120×80×110 · 96 kg</p>
-          <h3 class="lote-title">Deporte y fitness</h3>
+          <h3 class="lote-title"><a href="lotes/deporte.html">Deporte y fitness</a></h3>
           <p class="lote-desc">Mancuernas, kettlebells, esterillas, bicicleta estática plegable, bandas, tienda y patinete.</p>
           <div class="lote-price"><span class="pvp">PVP estimado <s>2.340 €</s></span><span class="precio">519 €</span><span class="off">−78 %</span><span class="iva">IVA y envío incl.</span></div>
           <p class="lote-stock"><span class="stock-bar" aria-hidden="true"><i></i><i></i><i></i><i class="off"></i><i class="off"></i><i class="off"></i></span>Quedan 3 lotes</p>
@@ -307,13 +487,13 @@
       </article>
 
       <article class="lote rv" data-lote="lote-bebe" data-precio="559" data-pvp="2610" data-uds="15" data-index="8">
-        <a class="lote-fig" href="#lote-bebe" data-open-lote="lote-bebe" aria-label="Ver contenido del lote Bebé y puericultura">
+        <a class="lote-fig" href="lotes/bebe.html" data-open-lote="lote-bebe" aria-label="Ver contenido del lote Bebé y puericultura">
           <img src="assets/img/lote-bebe.webp" width="1536" height="1024" alt="Palé con silla de coche, carrito, trona, vigilabebés, esterilizador y mochila portabebé" loading="lazy" decoding="async">
           <span class="sticker">Grado A/B</span>
         </a>
         <div class="lote-body">
           <p class="lote-meta">Ref TR-2609-08 · 15 uds · Palé EUR 120×80×120 · 58 kg</p>
-          <h3 class="lote-title">Bebé y puericultura</h3>
+          <h3 class="lote-title"><a href="lotes/bebe.html">Bebé y puericultura</a></h3>
           <p class="lote-desc">Silla de coche, carrito plegable, trona, vigilabebés, esterilizador y mochila portabebé.</p>
           <div class="lote-price"><span class="pvp">PVP estimado <s>2.610 €</s></span><span class="precio">559 €</span><span class="off">−79 %</span><span class="iva">IVA y envío incl.</span></div>
           <p class="lote-stock is-low"><span class="stock-bar" aria-hidden="true"><i></i><i></i><i class="off"></i><i class="off"></i><i class="off"></i><i class="off"></i></span>Quedan 2 lotes</p>
@@ -326,13 +506,13 @@
       </article>
 
       <article class="lote rv" data-lote="lote-belleza" data-precio="389" data-pvp="1980" data-uds="52" data-index="9">
-        <a class="lote-fig" href="#lote-belleza" data-open-lote="lote-belleza" aria-label="Ver contenido del lote Belleza y cuidado personal">
+        <a class="lote-fig" href="lotes/belleza.html" data-open-lote="lote-belleza" aria-label="Ver contenido del lote Belleza y cuidado personal">
           <img src="assets/img/lote-belleza.webp" width="1536" height="1024" alt="Mesa con secadores, planchas de pelo, afeitadoras, cepillos eléctricos, depiladoras y básculas" loading="lazy" decoding="async">
           <span class="sticker">Grado A/B</span>
         </a>
         <div class="lote-body">
           <p class="lote-meta">Ref TR-2609-09 · 52 uds · Caja 60×40×40 · 22 kg</p>
-          <h3 class="lote-title">Belleza y cuidado personal</h3>
+          <h3 class="lote-title"><a href="lotes/belleza.html">Belleza y cuidado personal</a></h3>
           <p class="lote-desc">Secadores, planchas de pelo, afeitadoras, cepillos eléctricos, depiladoras IPL y básculas.</p>
           <div class="lote-price"><span class="pvp">PVP estimado <s>1.980 €</s></span><span class="precio">389 €</span><span class="off">−80 %</span><span class="iva">IVA y envío incl.</span></div>
           <p class="lote-stock"><span class="stock-bar" aria-hidden="true"><i></i><i></i><i></i><i></i><i class="off"></i><i class="off"></i></span>Quedan 4 lotes</p>
@@ -345,14 +525,14 @@
       </article>
 
       <article class="lote lote--wide rv" data-lote="lote-pale-mixto" data-precio="1290" data-pvp="6500" data-uds="210" data-index="10">
-        <a class="lote-fig" href="#lote-pale-mixto" data-open-lote="lote-pale-mixto" aria-label="Ver contenido del palé mixto sin clasificar">
+        <a class="lote-fig" href="lotes/pale-mixto.html" data-open-lote="lote-pale-mixto" aria-label="Ver contenido del palé mixto sin clasificar">
           <img src="assets/img/lote-pale-mixto.webp" width="1536" height="1024" alt="Palé completo de cajas de devoluciones retractilado con film transparente" loading="lazy" decoding="async">
           <span class="sticker sticker--yellow">Para revendedores</span>
           <span class="sticker sticker--ink">Sin clasificar</span>
         </a>
         <div class="lote-body">
           <p class="lote-meta">Ref TR-2609-10 · ~210 uds · Palé EUR 120×80×180 · 210 kg</p>
-          <h3 class="lote-title">Palé mixto sin clasificar</h3>
+          <h3 class="lote-title"><a href="lotes/pale-mixto.html">Palé mixto sin clasificar</a></h3>
           <p class="lote-desc">Un palé completo tal cual baja del camión: hogar, electrónica, juguetes, deporte y sorpresas. No lo abrimos, no lo revisamos, y por eso vale menos del 20 % de su PVP. Es el lote de quien revende y sabe lo que compra.</p>
           <div class="lote-price"><span class="pvp">PVP estimado <s>6.500 €</s></span><span class="precio">1.290 €</span><span class="off">−80 %</span><span class="iva">IVA y transporte de palé incl.</span></div>
           <p class="lote-stock"><span class="stock-bar" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></span>Quedan 8 palés</p>
@@ -487,11 +667,49 @@
   </div>
 </section>
 
-<!-- ============================ 06 · PRÓXIMO CAMIÓN ============================ -->
+<!-- ============================ 06 · GUÍAS ============================ -->
+<section class="sec" id="guias">
+  <div class="wrap">
+    <header class="sec-head rv">
+      <p class="sec-num">06 · Guías</p>
+      <h2 class="sec-title">Antes de comprar, léete esto</h2>
+      <p class="sec-lead">Lo que hemos aprendido abriendo camiones, con los números reales. También los que no nos favorecen.</p>
+    </header>
+    <div class="enlaces rv">
+      <a class="enlace-card" href="blog/como-comprar-devoluciones-de-amazon.html">
+        <span class="enlace-kicker">Guía</span>
+        <h3>Cómo comprar devoluciones de Amazon</h3>
+        <p>Los pasos, los precios reales y los errores que se pagan caros la primera vez.</p>
+      </a>
+      <a class="enlace-card" href="blog/cuanto-cuesta-un-palet-de-devoluciones.html">
+        <span class="enlace-kicker">Precios</span>
+        <h3>Cuánto cuesta un palé</h3>
+        <p>Precios de mercado por categoría y por qué un precio demasiado bajo es mala señal.</p>
+      </a>
+      <a class="enlace-card" href="blog/es-rentable-revender-devoluciones-de-amazon.html">
+        <span class="enlace-kicker">Negocio</span>
+        <h3>¿Es rentable revender?</h3>
+        <p>Las cuentas con el tiempo dentro, y los casos en los que la respuesta es que no.</p>
+      </a>
+      <a class="enlace-card" href="blog/estafas-con-devoluciones-de-amazon.html">
+        <span class="enlace-kicker">Seguridad</span>
+        <h3>Estafas y cómo detectarlas</h3>
+        <p>Las cinco que se repiten, las señales que las delatan y qué hacer si ya pagaste.</p>
+      </a>
+    </div>
+    <p class="lotes-pie">
+      <a class="btn btn-line" href="blog/index.html">Ver las 13 guías</a>
+      <a class="btn btn-line" href="donde/index.html">Dónde enviamos</a>
+      <a class="btn btn-line" href="devoluciones-de-amazon-al-por-mayor.html">Compra al por mayor</a>
+    </p>
+  </div>
+</section>
+
+<!-- ============================ 07 · PRÓXIMO CAMIÓN ============================ -->
 <section class="sec sec--kraft" id="proximo">
   <div class="wrap">
     <header class="sec-head rv">
-      <p class="sec-num">06 · Próximo camión</p>
+      <p class="sec-num">07 · Próximo camión</p>
       <h2 class="sec-title">El jueves descargamos otro tráiler</h2>
       <p class="sec-lead">Cada semana entra una categoría nueva. La siguiente ya está comprada y en carretera.</p>
     </header>
@@ -533,11 +751,24 @@
         <p class="footer-disclaimer">Tornarem es un liquidador independiente de excedentes y devoluciones. Amazon es una marca registrada de Amazon.com, Inc. o sus filiales. No existe ninguna afiliación, patrocinio ni respaldo por su parte.</p>
       </div>
       <div>
+        <h4>Comprar</h4>
+        <ul>
+          <li><a href="comprar-devoluciones-de-amazon.html">Comprar devoluciones de Amazon</a></li>
+          <li><a href="palets-de-devoluciones-de-amazon.html">Palés de devoluciones</a></li>
+          <li><a href="lotes-de-devoluciones-de-amazon.html">Lotes de devoluciones</a></li>
+          <li><a href="cajas-misteriosas-amazon.html">Cajas misteriosas</a></li>
+          <li><a href="liquidacion-de-stock-amazon.html">Liquidación de stock</a></li>
+          <li><a href="devoluciones-de-amazon-al-por-mayor.html">Venta al por mayor</a></li>
+        </ul>
+      </div>
+      <div>
         <h4>Pedidos</h4>
         <ul>
           <li><a href="tel:+34900000000">900 000 000</a></li>
           <li><a href="https://wa.me/34600000000" target="_blank" rel="noopener">WhatsApp</a></li>
           <li><a href="mailto:pedidos@tornarem.cat">pedidos@tornarem.cat</a></li>
+          <li><a href="blog/index.html">Guías y blog</a></li>
+          <li><a href="donde/index.html">Dónde enviamos</a></li>
         </ul>
       </div>
       <div>
@@ -611,7 +842,7 @@
 
 <script defer src="lib/gsap.min.js"></script>
 <script defer src="lib/ScrollTrigger.min.js"></script>
-<script defer src="lib/catalogo.js?v=20260910"></script>
-<script defer src="main.js?v=20260910"></script>
+<script defer src="lib/catalogo.js?v=20260917"></script>
+<script defer src="main.js?v=20260917"></script>
 </body>
 </html>

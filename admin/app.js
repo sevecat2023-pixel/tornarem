@@ -51,7 +51,7 @@
   var ESCRIBEN = [
     "cambiar_estado", "cambiar_pago", "guardar_envio", "guardar_cliente",
     "anadir_nota", "estado_lote", "guardar_lote", "cambiar_password",
-    "salir"
+    "aviso_estado", "salir"
   ];
 
   var VISTAS = ["inicio", "pedidos", "clientes", "almacen", "ajustes"];
@@ -1675,10 +1675,118 @@
       S.lotes = d.lotes || {};
       S.vendidos = d.vendidos || {};
       pintarAlmacen();
+      cargarAvisos();
     }).catch(function (e) {
       if (sec) sec.classList.remove("is-cargando");
       fallo(e);
     });
+  }
+
+  /* -------------------------------------------------------------
+     LISTA DE AVISOS
+
+     Los correos que deja la gente en el blog y en las fichas de lote
+     agotado. Van dentro de Almacén porque es lo mismo: stock que
+     falta y gente esperándolo. El botón de escribir abre el correo
+     con todos en copia oculta, que es como se manda esto sin dejar
+     la lista de clientes a la vista de todos.
+     ------------------------------------------------------------- */
+  function cargarAvisos() {
+    var tbody = $("[data-cuerpo-avisos]");
+    if (!tbody) return null;
+    var q = $("[data-avisos-q]"), estado = $("[data-avisos-estado]");
+    return api("avisos", {
+      q: q ? q.value : "",
+      estado: estado ? estado.value : "todos"
+    }).then(function (d) {
+      S.avisos = d.avisos || [];
+      pintarAvisos(d.nuevos || 0);
+      sincronizarCsvAvisos();
+    }).catch(function (e) { fallo(e); });
+  }
+
+  function pintarAvisos(nuevos) {
+    var tbody = $("[data-cuerpo-avisos]");
+    if (!tbody) return;
+    var cuenta = $("[data-avisos-cuenta]");
+    if (cuenta) {
+      cuenta.textContent = String(nuevos);
+      cuenta.classList.toggle("is-bajo", nuevos > 0);
+    }
+    var lista = S.avisos || [];
+    if (!lista.length) {
+      tbody.innerHTML = '<tr><td colspan="6">Todavía no hay nadie apuntado con estos filtros.</td></tr>';
+      return;
+    }
+    tbody.innerHTML = lista.map(function (a) {
+      var est = a.estado === "avisado" ? "avisado" : "nuevo";
+      return '<tr data-aviso="' + escHTML(a.id) + '">' +
+        "<td>" + escHTML(fechaHora(a.fecha)) + "</td>" +
+        '<td><a href="mailto:' + escHTML(a.email) + '">' + escHTML(a.email) + "</a></td>" +
+        "<td>" + escHTML(a.nombre || "—") + "</td>" +
+        "<td>" + escHTML(a.interes || "Cualquiera") + "</td>" +
+        "<td><small>" + escHTML(a.origen || "—") + "</small></td>" +
+        '<td><button class="btn btn-mini ' + (est === "avisado" ? "btn-line" : "btn-solid") + '" type="button" data-aviso-estado="' +
+          (est === "avisado" ? "nuevo" : "avisado") + '">' +
+          (est === "avisado" ? "Avisado" : "Marcar avisado") + "</button></td>" +
+        "</tr>";
+    }).join("");
+  }
+
+  function initAvisos() {
+    var tbody = $("[data-cuerpo-avisos]");
+    if (!tbody) return;
+
+    tbody.addEventListener("click", function (e) {
+      var b = e.target.closest("[data-aviso-estado]");
+      if (!b) return;
+      var fila = b.closest("[data-aviso]");
+      if (!fila) return;
+      ocupado(b, true);
+      api("aviso_estado", { id: fila.getAttribute("data-aviso"), estado: b.getAttribute("data-aviso-estado") })
+        .then(function () { ocupado(b, false); cargarAvisos(); })
+        .catch(function (err) { ocupado(b, false); fallo(err); });
+    });
+
+    var recargar = $("[data-avisos-recargar]");
+    if (recargar) recargar.addEventListener("click", function () { cargarAvisos(); });
+
+    var q = $("[data-avisos-q]");
+    if (q) {
+      var t;
+      q.addEventListener("input", function () { clearTimeout(t); t = setTimeout(cargarAvisos, 350); });
+    }
+    var estado = $("[data-avisos-estado]");
+    if (estado) estado.addEventListener("change", function () { cargarAvisos(); sincronizarCsvAvisos(); });
+
+    var correo = $("[data-avisos-correo]");
+    if (correo) correo.addEventListener("click", function () {
+      var lista = (S.avisos || []).map(function (a) { return a.email; }).filter(Boolean);
+      if (!lista.length) { aviso("No hay nadie en la lista con estos filtros.", true); return; }
+      /* Copia oculta: nadie tiene por qué ver el correo de los demás.
+         Muchos gestores cortan por encima de 40-50 direcciones, así que
+         se avisa en vez de abrir un enlace que no va a funcionar. */
+      if (lista.length > 40) {
+        aviso("Son " + lista.length + " correos: descarga el CSV y mándalo desde tu gestor de correo, que el enlace se corta.", true);
+        return;
+      }
+      var asunto = "Tornarem · ha entrado camión nuevo";
+      window.location.href = "mailto:?bcc=" + encodeURIComponent(lista.join(",")) +
+        "&subject=" + encodeURIComponent(asunto);
+    });
+
+    sincronizarCsvAvisos();
+  }
+
+  /* El CSV se descarga por GET, así que los filtros van en la URL. */
+  function sincronizarCsvAvisos() {
+    var enlace = $("[data-avisos-csv]");
+    if (!enlace) return;
+    var q = $("[data-avisos-q]"), estado = $("[data-avisos-estado]");
+    var p = ["accion=exportar_avisos"];
+    if (q && q.value) p.push("q=" + encodeURIComponent(q.value));
+    if (estado && estado.value) p.push("estado=" + encodeURIComponent(estado.value));
+    enlace.href = "api.php?" + p.join("&");
   }
 
   function pintarAlmacen() {
@@ -1850,6 +1958,7 @@
     safe(initPedidos, "initPedidos");
     safe(initClientes, "initClientes");
     safe(initAlmacen, "initAlmacen");
+    safe(initAvisos, "initAvisos");
     safe(initAjustes, "initAjustes");
     safe(initCajon, "initCajon");
     safe(pintarRango, "pintarRango");

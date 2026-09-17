@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="es" data-base="../">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cómo calcular el margen de un lote antes de comprarlo</title>
+<meta name="description" content="Método paso a paso para calcular si un lote de devoluciones va a ser rentable antes de pagarlo, con la fórmula y un ejemplo completo.">
+<meta name="theme-color" content="#111111">
+<link rel="canonical" href="https://www.tornarem.cat/blog/como-calcular-el-margen-de-un-lote.html">
+
+<meta property="og:type" content="article">
+<meta property="og:title" content="Cómo calcular el margen de un lote antes de comprarlo">
+<meta property="og:description" content="Método paso a paso para calcular si un lote de devoluciones va a ser rentable antes de pagarlo, con la fórmula y un ejemplo completo.">
+<meta property="og:image" content="https://www.tornarem.cat/assets/img/lote-informatica.webp">
+<meta property="og:url" content="https://www.tornarem.cat/blog/como-calcular-el-margen-de-un-lote.html">
+<meta property="og:locale" content="es_ES">
+<meta property="og:site_name" content="Tornarem">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Cómo calcular el margen de un lote antes de comprarlo">
+<meta name="twitter:description" content="Método paso a paso para calcular si un lote de devoluciones va a ser rentable antes de pagarlo, con la fórmula y un ejemplo completo.">
+<meta name="twitter:image" content="https://www.tornarem.cat/assets/img/lote-informatica.webp">
+
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="preload" as="font" type="font/woff2" href="../assets/fonts/archivo-black-400-latin.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="../assets/fonts/ibm-plex-mono-400-latin.woff2" crossorigin>
+<link rel="stylesheet" href="../styles.css?v=20260917">
+<script type="application/ld+json">{
+    "@context": "https://schema.org",
+    "@graph": [
+        {
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+                {
+                    "@type": "ListItem",
+                    "position": 1,
+                    "name": "Inicio",
+                    "item": "https://www.tornarem.cat/"
+                },
+                {
+                    "@type": "ListItem",
+                    "position": 2,
+                    "name": "Guías",
+                    "item": "https://www.tornarem.cat/blog/index.html"
+                },
+                {
+                    "@type": "ListItem",
+                    "position": 3,
+                    "name": "Calcular el margen de un lote"
+                }
+            ]
+        },
+        {
+            "@type": "FAQPage",
+            "mainEntity": [
+                {
+                    "@type": "Question",
+                    "name": "¿Qué margen es aceptable?",
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "Por debajo del 40 % sobre lo invertido, con el tiempo contado, no compensa el trabajo. Entre 40 % y 120 % es lo normal en un lote bien trabajado."
+                    }
+                },
+                {
+                    "@type": "Question",
+                    "name": "¿Y si no sé a cuánto se vende lo que hay dentro?",
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "Entonces todavía no compres ese lote. Quince minutos buscando precios de reventa te ahorran cientos de euros parados en el salón."
+                    }
+                }
+            ]
+        },
+        {
+            "@type": "Article",
+            "headline": "Cómo calcular el margen de un lote antes de comprarlo",
+            "description": "Método paso a paso para calcular si un lote de devoluciones va a ser rentable antes de pagarlo, con la fórmula y un ejemplo completo.",
+            "image": "https://www.tornarem.cat/assets/img/lote-informatica.webp",
+            "datePublished": "2026-08-28",
+            "dateModified": "2026-08-28",
+            "author": {
+                "@type": "Organization",
+                "name": "Tornarem",
+                "url": "https://www.tornarem.cat/"
+            },
+            "publisher": {
+                "@type": "Organization",
+                "name": "Tornarem",
+                "logo": {
+                    "@type": "ImageObject",
+                    "url": "https://www.tornarem.cat/assets/favicon.svg"
+                }
+            },
+            "mainEntityOfPage": {
+                "@type": "WebPage",
+                "@id": "https://www.tornarem.cat/blog/como-calcular-el-margen-de-un-lote.html"
+            },
+            "inLanguage": "es-ES"
+        }
+    ]
+}</script>
+</head>
+
+<body>
+<a class="skip-link" href="#main">Saltar al contenido</a>
+
+<div class="ticker" aria-hidden="true">
+  <div class="ticker-track" data-ticker>
+    <span class="ticker-item">Entrega en 24 h en península</span>
+    <span class="ticker-item">Contrarreembolso o tarjeta</span>
+    <span class="ticker-item">Lotes cerrados desde 319 €</span>
+    <span class="ticker-item">Camión nuevo cada semana</span>
+    <span class="ticker-item">Factura con IVA</span>
+    <span class="ticker-item">Recogida gratis en nave</span>
+  </div>
+</div>
+
+<header class="nav">
+  <div class="wrap nav-inner">
+    <a class="brand" href="../index.html" aria-label="Tornarem, inicio">
+      <svg class="brand-mark" viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" fill="#111111"/><path d="M14 26h26v-8l12 12-12 12v-8H14z" fill="#ff4d00"/><rect x="12" y="44" width="40" height="6" fill="#ffffff"/></svg>
+      <span>Tornarem</span>
+      <small>Lotes de devoluciones</small>
+    </a>
+
+    <nav class="nav-links" aria-label="Principal">
+      <a href="../index.html#lotes">Lotes</a>
+      <a href="../index.html#como">Cómo funciona</a>
+      <a href="../index.html#grados">Grados</a>
+      <a href="../blog/index.html">Guías</a>
+      <a href="../index.html#faq">Preguntas</a>
+    </nav>
+
+    <div class="nav-right">
+      <button class="btn btn-solid nav-cart" type="button" data-cart-open aria-controls="carrito" aria-expanded="false">
+        Carrito <span class="nav-cart-count" data-cart-count>0</span>
+      </button>
+      <button class="nav-burger" type="button" data-menu-toggle aria-label="Abrir menú" aria-expanded="false" aria-controls="menu-movil"><span></span></button>
+    </div>
+  </div>
+</header>
+<nav class="nav-menu" id="menu-movil" data-menu aria-label="Menú móvil">
+      <a href="../index.html#lotes">Lotes</a>
+      <a href="../index.html#como">Cómo funciona</a>
+      <a href="../index.html#grados">Grados</a>
+      <a href="../blog/index.html">Guías</a>
+      <a href="../index.html#faq">Preguntas</a>
+  <a href="../comprar-devoluciones-de-amazon.html">Comprar devoluciones</a>
+  <a href="../palets-de-devoluciones-de-amazon.html">Palés</a>
+  <a href="../index.html#pago">Pago y envío</a>
+  <a href="../checkout.html">Tramitar pedido</a>
+</nav>
+
+<main id="main">
+
+<section class="page-head page-head--seo">
+  <div class="wrap page-head-grid">
+    <div>
+      <p class="crumbs"><a href="../index.html">Inicio</a> › <a href="../blog/index.html">Guías</a> › Calcular el margen de un lote</p>
+      <p class="kicker">Negocio · 6 min de lectura · Actualizado 28/08/2026</p>
+      <h1>Calcular el margen de un lote</h1>
+      <p class="page-lead">Un método de quince minutos para saber si un lote sale a cuenta antes de pagarlo. Con la fórmula, el ejemplo hecho y los tres números que casi todo el mundo se deja fuera.</p>
+      <div class="hero-cta">
+        <a class="btn btn-accent" href="../index.html#lotes">Ver lotes en venta</a>
+        <a class="btn btn-line" href="../index.html#como">Cómo funciona</a>
+      </div>
+    </div>
+    <figure class="page-fig">
+      <img src="../assets/img/lote-informatica.webp" width="1536" height="1024" alt="Monitores, teclados y discos de un lote de informática clasificado" fetchpriority="high" loading="eager" decoding="sync">
+      <figcaption><span>Nave 14 · Pol. Mas Xirgu · Girona</span><span>Stock propio</span></figcaption>
+    </figure>
+  </div>
+</section>
+<section class="sec sec--articulo">
+  <div class="wrap">
+    <div class="prose rv">
+    <h2>La fórmula</h2>
+    <p class="formula">Margen = (Unidades × % que se vende × Precio medio real) − Coste total</p>
+    <p>Donde <b>coste total</b> es el precio del lote más el material de envío más tu tiempo valorado a un precio por hora. Los tres factores de la izquierda son estimaciones tuyas, y ahí está todo el arte.</p>
+    <h2>Paso 1: el precio medio real</h2>
+    <p>No mires el PVP. Abre la plataforma donde vayas a vender, busca cinco productos parecidos a los del lote y mira <b>lo que se está pidiendo hoy por ellos usados</b>. Quédate con la mediana, no con la media: un anuncio disparatado te distorsiona el número.</p>
+    <p>Después réstale un 15 %. Ese es el descuento del regateo, y se lo van a pedir.</p>
+    <h2>Paso 2: el porcentaje que se vende</h2>
+    <ul>
+      <li>Lote clasificado de categoría que dominas: <b>80-85 %</b></li>
+      <li>Lote clasificado de categoría nueva para ti: <b>65-75 %</b></li>
+      <li>Palé mixto sin clasificar: <b>60-70 %</b></li>
+    </ul>
+    <p>Si te sale rentable con el número bajo de la horquilla, el lote es bueno. Si sólo sale con el alto, es un lote ajustado y cualquier imprevisto te lo come.</p>
+    <h2>Paso 3: los costes que se olvidan</h2>
+    <ul>
+      <li><b>Material de envío:</b> 0,80-1,50 € por pieza si vendes online.</li>
+      <li><b>Tu tiempo:</b> entre 15 y 25 horas por lote de 60 unidades. Ponle un precio, aunque sea 10 € la hora.</li>
+      <li><b>Comisiones</b> de plataforma donde las haya.</li>
+      <li><b>Devoluciones:</b> cuenta un 5 % de las ventas online.</li>
+      <li><b>Almacenaje</b> si lo pagas.</li>
+    </ul>
+    <h2>Ejemplo completo</h2>
+    <p>Lote de belleza: 52 unidades, 389 €.</p>
+    <table class="tabla">
+      <thead><tr><th>Concepto</th><th>Cálculo</th><th>Importe</th></tr></thead>
+      <tbody>
+        <tr><td>Ingresos previstos</td><td>52 × 75 % × 22 €</td><td>+858 €</td></tr>
+        <tr><td>Coste del lote</td><td>—</td><td>−389 €</td></tr>
+        <tr><td>Material de envío</td><td>39 × 1,20 €</td><td>−47 €</td></tr>
+        <tr><td>Tiempo</td><td>18 h × 10 €</td><td>−180 €</td></tr>
+        <tr><td>Devoluciones</td><td>5 % de 858 €</td><td>−43 €</td></tr>
+        <tr><td><b>Margen</b></td><td></td><td><b>+199 €</b></td></tr>
+      </tbody>
+    </table>
+    <p>199 € de beneficio limpio sobre 389 € invertidos, con el tiempo ya pagado. Un 51 %. Sin contar el tiempo serían 379 € y un 97 %, que es el número que suele enseñarse por ahí. Los dos son ciertos; sólo uno es honesto.</p>
+    <h2>La regla rápida</h2>
+    <p>Si no quieres hacer la tabla: <b>un lote sale a cuenta si el precio medio de reventa multiplicado por la mitad de las unidades supera el doble del precio del lote.</b> Es conservador a propósito. Si pasa ese filtro, haz la tabla. Si no lo pasa, no la hagas.</p>
+    </div>
+  </div>
+</section>
+<section class="sec" id="faq">
+  <div class="wrap">
+    <header class="sec-head rv">
+      <p class="sec-num">Preguntas</p>
+      <h2 class="sec-title">Lo que nos preguntáis</h2>
+    </header>
+    <div class="faq-cols rv">
+      <div class="faq">
+        <details class="faq-item">
+          <summary>¿Qué margen es aceptable?</summary>
+          <p>Por debajo del 40 % sobre lo invertido, con el tiempo contado, no compensa el trabajo. Entre 40 % y 120 % es lo normal en un lote bien trabajado.</p>
+        </details>
+        <details class="faq-item">
+          <summary>¿Y si no sé a cuánto se vende lo que hay dentro?</summary>
+          <p>Entonces todavía no compres ese lote. Quince minutos buscando precios de reventa te ahorran cientos de euros parados en el salón.</p>
+        </details>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="sec sec--kraft">
+  <div class="wrap">
+    <header class="sec-head rv">
+      <p class="sec-num">Más</p>
+      <h2 class="sec-title">Sigue leyendo</h2>
+    </header>
+    <div class="enlaces rv">
+      <a class="enlace-card" href="../blog/donde-vender-los-productos-de-un-lote.html">
+        <span class="enlace-kicker">Reventa</span>
+        <h3>Dónde vender un lote</h3>
+        <p>Cada canal tiene su producto y su ritmo. Aquí están todos, con lo que se lleva cada uno y qué tipo de pieza coloca mejor.</p>
+      </a>
+      <a class="enlace-card" href="../blog/cuanto-cuesta-un-palet-de-devoluciones.html">
+        <span class="enlace-kicker">Precios</span>
+        <h3>Cuánto cuesta un palé de devoluciones</h3>
+        <p>Precios de mercado por categoría y grado, qué hace que un palé cueste el doble que otro y en qué punto un precio barato deja de ser una oportunidad para ser un aviso.</p>
+      </a>
+      <a class="enlace-card" href="../blog/estafas-con-devoluciones-de-amazon.html">
+        <span class="enlace-kicker">Seguridad</span>
+        <h3>Estafas con devoluciones</h3>
+        <p>Las cinco estafas que se repiten en el sector, las señales que las delatan antes de pagar y qué se puede hacer cuando ya se ha pagado.</p>
+      </a>
+      <a class="enlace-card" href="../comprar-devoluciones-de-amazon.html">
+        <span class="enlace-kicker">Comprar</span>
+        <h3>Ver los lotes en venta</h3>
+        <p>Diez lotes clasificados, desde 319 € con IVA y envío incluidos.</p>
+      </a>
+    </div>
+  </div>
+</section>
+<section class="sec aviso" id="aviso">
+  <div class="wrap aviso-grid">
+    <div class="rv">
+      <p class="kicker">Lista de avisos</p>
+      <h2>¿No está lo que buscas?</h2>
+      <p>Cada jueves descarga un camión nuevo y la categoría cambia. El siguiente trae <b>Jardín y exterior</b>. Déjanos el correo y te escribimos el día que entre lo tuyo o vuelva a haber stock de un lote agotado.</p>
+      <p class="aviso-nota">Un correo cuando hay novedad, y para de contar. Ni spam, ni venta de datos, ni nada raro. Te borras contestando «baja».</p>
+    </div>
+    <form class="aviso-form rv" data-aviso method="post" action="../aviso.php" novalidate>
+      <label for="aviso-email">Tu correo</label>
+      <input id="aviso-email" type="email" name="email" required autocomplete="email" inputmode="email" placeholder="tucorreo@ejemplo.com">
+
+      <label for="aviso-interes">Qué te interesa</label>
+      <select id="aviso-interes" name="interes"><option value="Cualquier categoría">Cualquier categoría</option><option value="Electrónica">Electrónica</option><option value="Hogar y cocina">Hogar y cocina</option><option value="Juguetes">Juguetes</option><option value="Bricolaje">Bricolaje</option><option value="Moda">Moda</option><option value="Informática">Informática</option><option value="Deporte">Deporte</option><option value="Bebé">Bebé</option><option value="Belleza">Belleza</option><option value="Palés">Palés</option></select>
+
+      <div class="aviso-trampa" aria-hidden="true">
+        <label for="aviso-web">No rellenes esto</label>
+        <input id="aviso-web" type="text" name="web" tabindex="-1" autocomplete="off">
+      </div>
+      <input type="hidden" name="origen" value="blog/como-calcular-el-margen-de-un-lote.html">
+
+      <button class="btn btn-solid" type="submit" data-aviso-enviar>Avísame cuando entre</button>
+      <p class="aviso-ok" data-aviso-mensaje hidden role="status" aria-live="polite"></p>
+    </form>
+  </div>
+</section>
+<section class="sec cta-final">
+  <div class="wrap cta-grid">
+    <div>
+      <p class="kicker">Stock de hoy</p>
+      <h2 class="sec-title">De la teoría al palé</h2>
+      <p class="sec-lead">Todo lo que cuenta esta guía sale de abrir camiones cada semana. Los lotes que salen de ahí están en venta ahora mismo.</p>
+    </div>
+    <div class="cta-acciones">
+      <a class="btn btn-accent" href="../index.html#lotes">Ver los lotes en venta</a>
+      <a class="btn btn-line" href="https://wa.me/34600000000?text=Hola%2C%20quiero%20informaci%C3%B3n%20sobre%20los%20lotes" target="_blank" rel="noopener">Preguntar por WhatsApp</a>
+      <p class="cta-nota">Contrarreembolso o tarjeta · Entrega en 24 h en península · Factura con IVA</p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer" id="contacto">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <a class="brand" href="../index.html" aria-label="Tornarem, inicio">
+          <svg class="brand-mark" viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" fill="#ffffff"/><path d="M14 26h26v-8l12 12-12 12v-8H14z" fill="#ff4d00"/><rect x="12" y="44" width="40" height="6" fill="#111111"/></svg>
+          <span>Tornarem</span>
+        </a>
+        <p class="footer-disclaimer">Tornarem es un liquidador independiente de excedentes y devoluciones. Amazon es una marca registrada de Amazon.com, Inc. o sus filiales. No existe ninguna afiliación, patrocinio ni respaldo por su parte.</p>
+      </div>
+      <div>
+        <h4>Comprar</h4>
+        <ul>
+          <li><a href="../comprar-devoluciones-de-amazon.html">Comprar devoluciones de Amazon</a></li>
+          <li><a href="../palets-de-devoluciones-de-amazon.html">Palés de devoluciones</a></li>
+          <li><a href="../lotes-de-devoluciones-de-amazon.html">Lotes de devoluciones</a></li>
+          <li><a href="../cajas-misteriosas-amazon.html">Cajas misteriosas</a></li>
+          <li><a href="../liquidacion-de-stock-amazon.html">Liquidación de stock</a></li>
+          <li><a href="../devoluciones-de-amazon-al-por-mayor.html">Venta al por mayor</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Pedidos</h4>
+        <ul>
+          <li><a href="tel:+34900000000">900 000 000</a></li>
+          <li><a href="https://wa.me/34600000000" target="_blank" rel="noopener">WhatsApp</a></li>
+          <li><a href="mailto:pedidos@tornarem.cat">pedidos@tornarem.cat</a></li>
+          <li><a href="../blog/index.html">Guías y blog</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>La nave</h4>
+        <p>Nave 14 · Polígono Mas Xirgu<br>17005 Girona</p>
+        <p>Lunes a viernes<br>8:00–18:00</p>
+      </div>
+      <div>
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="../legal.html#aviso">Aviso legal</a></li>
+          <li><a href="../legal.html#privacidad">Privacidad</a></li>
+          <li><a href="../legal.html#condiciones">Condiciones de venta</a></li>
+          <li><a href="../legal.html#garantia">Garantía y reclamaciones</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Tornarem · Girona · Precios con IVA · Fotografías ilustrativas</span>
+      <span>Actualizado 18/09/2026 · <a class="footer-panel" href="../admin/index.html" rel="nofollow">Panel</a></span>
+    </div>
+  </div>
+</footer>
+
+<div class="drawer-backdrop" data-cart-backdrop></div>
+<aside class="drawer" id="carrito" data-cart aria-label="Carrito" aria-hidden="true">
+  <div class="drawer-head">
+    <h2>Tu carrito <span class="mono" data-cart-count-2>(0)</span></h2>
+    <button class="drawer-close" type="button" data-cart-close aria-label="Cerrar carrito">×</button>
+  </div>
+  <div class="drawer-items" data-cart-items>
+    <div class="drawer-empty">
+      <span>Todavía no hay ningún lote.</span>
+      <a class="btn btn-solid" href="../index.html#lotes">Ver los lotes</a>
+    </div>
+  </div>
+  <div class="drawer-foot">
+    <div class="drawer-row"><span>Subtotal</span><b data-cart-subtotal>0 €</b></div>
+    <p class="drawer-note">IVA y envío 24 h incluidos · Contrarreembolso +3 % al tramitar</p>
+    <a class="btn btn-accent btn-block" href="../checkout.html" data-cart-checkout>Tramitar pedido</a>
+  </div>
+</aside>
+
+<dialog class="lote-dialog" data-lote-dialog aria-labelledby="dlg-title">
+  <button class="dlg-close" type="button" data-dialog-close aria-label="Cerrar ficha">×</button>
+  <div class="dlg-grid">
+    <figure class="dlg-fig"><img data-dlg-img src="" alt=""></figure>
+    <div class="dlg-body">
+      <p class="lote-meta" data-dlg-meta></p>
+      <h2 id="dlg-title" data-dlg-title></h2>
+      <p data-dlg-resumen></p>
+      <ul data-dlg-contenido></ul>
+      <p class="dlg-nota" data-dlg-nota></p>
+      <div class="dlg-price">
+        <span class="precio" data-dlg-precio></span>
+        <span class="off" data-dlg-off></span>
+        <span class="pvp" data-dlg-pvp></span>
+      </div>
+      <p class="lote-stock" data-dlg-stock></p>
+      <div class="dlg-actions">
+        <button class="btn btn-accent" type="button" data-dlg-add>Añadir al carrito</button>
+        <button class="btn btn-line" type="button" data-dialog-close>Seguir mirando</button>
+      </div>
+    </div>
+  </div>
+</dialog>
+
+<div class="toast" data-toast role="status" aria-live="polite"></div>
+
+<script defer src="../lib/catalogo.js?v=20260917"></script>
+<script defer src="../main.js?v=20260917"></script>
+</body>
+</html>

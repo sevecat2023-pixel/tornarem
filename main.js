@@ -13,6 +13,11 @@
   (T.lotes || []).forEach(function (l) { LOTES[l.id] = l; });
 
   var reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  /* Prefijo hasta la raíz del sitio. La portada lo deja vacío; las
+     páginas generadas (blog/, lotes/, donde/) traen data-base="../"
+     en el <html>. Sin esto, una guía del blog pediría blog/estado.php
+     y se quedaría con el stock escrito en el HTML. */
+  var RAIZ = document.documentElement.getAttribute("data-base") || "";
   var $ = function (sel, scope) { return (scope || document).querySelector(sel); };
   var $$ = function (sel, scope) { return Array.prototype.slice.call((scope || document).querySelectorAll(sel)); };
   var escHTML = function (s) {
@@ -408,7 +413,7 @@
     if (!window.fetch || location.protocol === "file:") return;
     var ctrl = ("AbortController" in window) ? new AbortController() : null;
     var timer = ctrl ? setTimeout(function () { ctrl.abort(); }, 8000) : null;
-    fetch("estado.php", { headers: { "Accept": "application/json" }, signal: ctrl ? ctrl.signal : undefined })
+    fetch(RAIZ + "estado.php", { headers: { "Accept": "application/json" }, signal: ctrl ? ctrl.signal : undefined })
       .then(function (r) { return r.json(); })
       .then(function (d) {
         if (timer) clearTimeout(timer);
@@ -700,6 +705,60 @@
   /* -------------------------------------------------------------
      Página de gracias
      ------------------------------------------------------------- */
+  /* -------------------------------------------------------------
+     Lista de avisos (aviso.php)
+
+     Va en las páginas generadas: blog, fichas de lote y ciudades.
+     Si alguien llega leyendo y no compra hoy, al menos deja el correo
+     y aparece en el panel. Sin JavaScript el formulario sigue siendo
+     un formulario: se envía a pelo y aviso.php responde en HTML.
+     ------------------------------------------------------------- */
+  function initAviso() {
+    var form = $("[data-aviso]"); if (!form) return;
+    var salida = $("[data-aviso-mensaje]", form);
+    var boton = $("[data-aviso-enviar]", form);
+
+    function decir(texto, bien) {
+      if (!salida) { toast(escHTML(texto)); return; }
+      salida.hidden = false;
+      salida.textContent = texto;
+      salida.style.borderColor = bien ? "" : "#b00020";
+    }
+
+    form.addEventListener("submit", function (ev) {
+      if (!window.fetch || location.protocol === "file:") return;  /* que lo envíe el navegador */
+      ev.preventDefault();
+
+      var datos = {};
+      $$("input, select", form).forEach(function (c) { if (c.name) datos[c.name] = c.value; });
+      if (!datos.email || datos.email.indexOf("@") < 0) {
+        decir("Escribe un correo válido para que podamos avisarte.", false);
+        return;
+      }
+
+      boton.disabled = true; boton.classList.add("is-busy");
+      fetch(RAIZ + "aviso.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Accept": "application/json" },
+        body: JSON.stringify(datos)
+      })
+        .then(function (r) { return r.json(); })
+        .then(function (d) {
+          boton.disabled = false; boton.classList.remove("is-busy");
+          if (d && d.ok) {
+            decir(d.mensaje || "Apuntado. Te escribimos en cuanto entre el camión.", true);
+            form.reset();
+          } else {
+            decir((d && d.mensaje) || "No hemos podido apuntarte. Prueba otra vez.", false);
+          }
+        })
+        .catch(function () {
+          boton.disabled = false; boton.classList.remove("is-busy");
+          decir("No hemos podido conectar. Prueba otra vez o escríbenos a pedidos@tornarem.cat.", false);
+        });
+    });
+  }
+
   function initGracias() {
     var box = $("[data-gracias]"); if (!box) return;
     var q = {}; location.search.replace(/^\?/, "").split("&").forEach(function (kv) { if (!kv) return; var p = kv.split("="); q[decodeURIComponent(p[0])] = decodeURIComponent((p[1] || "").replace(/\+/g, " ")); });
@@ -737,6 +796,7 @@
     safe(initHero, "initHero");
     safe(initCheckout, "initCheckout");
     safe(initGracias, "initGracias");
+    safe(initAviso, "initAviso");
     safe(initEstado, "initEstado");
     /* Sincroniza el carrito entre pestañas */
     window.addEventListener("storage", function (e) { if (e.key === CART_KEY) { cart.load(); document.dispatchEvent(new CustomEvent("cart:change")); } });

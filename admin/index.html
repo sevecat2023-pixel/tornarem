@@ -9,7 +9,7 @@
 <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
 <link rel="preload" as="font" type="font/woff2" href="../assets/fonts/archivo-black-400-latin.woff2" crossorigin>
 <link rel="preload" as="font" type="font/woff2" href="../assets/fonts/ibm-plex-sans-latin.woff2" crossorigin>
-<link rel="stylesheet" href="admin.css?v=20260910">
+<link rel="stylesheet" href="admin.css?v=20260917">
 </head>
 
 <body class="panel">
@@ -350,6 +350,46 @@
         </table>
       </div>
 
+      <!-- ---------- Lista de avisos ----------
+           Quien deja el correo en el blog o en un lote agotado sale
+           aquí. Es trabajo pendiente, igual que un pedido nuevo. -->
+      <div class="bloque-avisos" data-bloque-avisos>
+        <div class="avisos-cab">
+          <h2>Lista de avisos <span class="pill" data-avisos-cuenta>0</span></h2>
+          <p class="aviso-linea">Gente que ha dejado el correo en una guía del blog o en la ficha de un lote agotado. Cuando descargues un camión de su categoría, escríbeles: es la lista más caliente que tienes.</p>
+          <div class="avisos-barra">
+            <label>Buscar
+              <input type="search" data-avisos-q placeholder="correo, nombre o categoría" autocomplete="off">
+            </label>
+            <label>Estado
+              <select data-avisos-estado>
+                <option value="todos">Todos</option>
+                <option value="nuevo" selected>Sin avisar</option>
+                <option value="avisado">Ya avisados</option>
+              </select>
+            </label>
+            <button class="btn btn-line btn-mini" type="button" data-avisos-recargar>Actualizar</button>
+            <a class="btn btn-line btn-mini" href="api.php?accion=exportar_avisos" data-avisos-csv>Descargar CSV</a>
+            <button class="btn btn-solid btn-mini" type="button" data-avisos-correo>Escribir a los de la lista</button>
+          </div>
+        </div>
+        <div class="tabla-wrap">
+          <table class="tabla" data-tabla-avisos>
+            <thead>
+              <tr>
+                <th scope="col">Fecha</th>
+                <th scope="col">Correo</th>
+                <th scope="col">Nombre</th>
+                <th scope="col">Le interesa</th>
+                <th scope="col">Vino de</th>
+                <th scope="col">Estado</th>
+              </tr>
+            </thead>
+            <tbody data-cuerpo-avisos></tbody>
+          </table>
+        </div>
+      </div>
+
     </section>
 
     <!-- ---------------------------- AJUSTES ---------------------------- -->
@@ -419,7 +459,7 @@
   <button class="btn btn-line" type="button" data-confirmar-no>Cancelar</button>
 </dialog>
 
-<script defer src="../lib/catalogo.js?v=20260910"></script>
-<script defer src="app.js?v=20260910"></script>
+<script defer src="../lib/catalogo.js?v=20260917"></script>
+<script defer src="app.js?v=20260917"></script>
 </body>
 </html>

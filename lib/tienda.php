@@ -2011,3 +2011,189 @@ function tienda_responder($datos, $codigo = 200) {
     echo tienda_json($datos, false);
     exit;
 }
+
+
+/* =============================================================
+   14. AVISOS DE CAMIÓN (captación de correos)
+
+   Mucha gente llega al blog leyendo, no comprando. Y mucha gente
+   entra buscando un lote que está agotado. Los dos se van y no
+   vuelven. Esto es lo que evita perderlos: dejan el correo, se
+   apuntan a una categoría y el panel los enseña con el resto del
+   trabajo del día.
+
+   Se guarda lo mínimo: correo, nombre si lo escriben, categoría
+   que les interesa y de qué página venían. Ni IP ni rastreo.
+   Un correo repetido no crea una línea nueva: actualiza la suya.
+   ============================================================= */
+
+function tienda_ruta_avisos() {
+    return tienda_datos_dir() . '/avisos.jsonl.php';
+}
+
+function tienda_email_valido($email) {
+    return is_string($email) && strlen($email) <= 160
+        && filter_var($email, FILTER_VALIDATE_EMAIL) !== false;
+}
+
+/* Lee la lista entera. Son cientos de líneas, no millones: cabe. */
+function tienda_avisos_todos() {
+    $ruta = tienda_ruta_avisos();
+    if (!is_file($ruta)) {
+        return array();
+    }
+    $raw = @file_get_contents($ruta);
+    if ($raw === false) {
+        return array();
+    }
+    $lista = array();
+    foreach (explode("\n", tienda_sin_guarda($raw)) as $linea) {
+        $linea = trim($linea);
+        if ($linea === '') {
+            continue;
+        }
+        $d = json_decode($linea, true);
+        if (is_array($d) && isset($d['email'])) {
+            $lista[] = $d;
+        }
+    }
+    return $lista;
+}
+
+/* Alta o actualización. Devuelve array(ok, mensaje, nuevo). */
+function tienda_aviso_crear($entrada) {
+    tienda_asegurar_datos();
+
+    $email = strtolower(trim(tienda_limpiar(isset($entrada['email']) ? $entrada['email'] : '', 160)));
+    if (!tienda_email_valido($email)) {
+        return array('ok' => false, 'mensaje' => 'Ese correo no parece válido. Míralo y vuelve a probar.');
+    }
+    $nombre  = tienda_limpiar(isset($entrada['nombre']) ? $entrada['nombre'] : '', 80);
+    $interes = tienda_limpiar(isset($entrada['interes']) ? $entrada['interes'] : '', 60);
+    $origen  = tienda_limpiar(isset($entrada['origen']) ? $entrada['origen'] : '', 120);
+
+    $fh = tienda_bloquear('avisos');
+    $lista = tienda_avisos_todos();
+    $nuevo = true;
+    foreach ($lista as $i => $a) {
+        if (isset($a['email']) && strtolower($a['email']) === $email) {
+            $nuevo = false;
+            $lista[$i]['nombre']  = ($nombre !== '') ? $nombre : (isset($a['nombre']) ? $a['nombre'] : '');
+            $lista[$i]['interes'] = ($interes !== '') ? $interes : (isset($a['interes']) ? $a['interes'] : '');
+            $lista[$i]['origen']  = ($origen !== '') ? $origen : (isset($a['origen']) ? $a['origen'] : '');
+            $lista[$i]['visto']   = tienda_ahora();
+            break;
+        }
+    }
+    if ($nuevo) {
+        $lista[] = array(
+            'id'      => 'AV-' . date('ymd') . '-' . substr(bin2hex(random_bytes(3)), 0, 5),
+            'fecha'   => tienda_ahora(),
+            'visto'   => tienda_ahora(),
+            'email'   => $email,
+            'nombre'  => $nombre,
+            'interes' => $interes,
+            'origen'  => $origen,
+            'estado'  => 'nuevo',
+        );
+    }
+
+    $texto = '';
+    foreach ($lista as $a) {
+        $texto .= tienda_json($a, false) . "\n";
+    }
+    $guardado = tienda_escribir_atomico(tienda_ruta_avisos(), $texto);
+    tienda_desbloquear($fh);
+
+    if (!$guardado) {
+        return array('ok' => false, 'mensaje' => 'No hemos podido guardarlo. Prueba otra vez en un minuto.');
+    }
+    return array(
+        'ok' => true,
+        'nuevo' => $nuevo,
+        'mensaje' => $nuevo
+            ? 'Apuntado. Te escribimos en cuanto entre el camión.'
+            : 'Ya estabas en la lista: hemos actualizado lo que nos has dicho.',
+    );
+}
+
+/* Para el panel: lista ordenada de la más reciente a la más vieja,
+   con filtro de texto y de estado. */
+function tienda_avisos($f) {
+    $q       = isset($f['q']) ? tienda_normaliza(tienda_limpiar($f['q'], 80)) : '';
+    $estado  = isset($f['estado']) ? tienda_limpiar($f['estado'], 20) : '';
+    $lista   = tienda_avisos_todos();
+    $salida  = array();
+
+    foreach ($lista as $a) {
+        if ($estado !== '' && $estado !== 'todos' && (isset($a['estado']) ? $a['estado'] : 'nuevo') !== $estado) {
+            continue;
+        }
+        if ($q !== '') {
+            $heno = tienda_normaliza(
+                (isset($a['email']) ? $a['email'] : '') . ' ' .
+                (isset($a['nombre']) ? $a['nombre'] : '') . ' ' .
+                (isset($a['interes']) ? $a['interes'] : '')
+            );
+            if (strpos($heno, $q) === false) {
+                continue;
+            }
+        }
+        $salida[] = $a;
+    }
+    usort($salida, function ($a, $b) {
+        $x = isset($b['fecha']) ? $b['fecha'] : '';
+        $y = isset($a['fecha']) ? $a['fecha'] : '';
+        return strcmp($x, $y);
+    });
+    return $salida;
+}
+
+/* Marcar como avisado (o volver a nuevo) desde el panel. */
+function tienda_aviso_estado($id, $estado) {
+    $estado = ($estado === 'avisado') ? 'avisado' : 'nuevo';
+    $fh = tienda_bloquear('avisos');
+    $lista = tienda_avisos_todos();
+    $tocado = false;
+    foreach ($lista as $i => $a) {
+        if (isset($a['id']) && $a['id'] === $id) {
+            $lista[$i]['estado'] = $estado;
+            $tocado = true;
+            break;
+        }
+    }
+    if ($tocado) {
+        $texto = '';
+        foreach ($lista as $a) {
+            $texto .= tienda_json($a, false) . "\n";
+        }
+        $tocado = tienda_escribir_atomico(tienda_ruta_avisos(), $texto);
+    }
+    tienda_desbloquear($fh);
+    return $tocado;
+}
+
+/* Exportación de la lista para el panel (CSV, mismo escape que los
+   pedidos: una celda que empieza por = la abre Excel como fórmula). */
+function tienda_avisos_csv($f) {
+    $lista = tienda_avisos($f);
+    $celda = function ($v) {
+        $s = (string) $v;
+        if ($s !== '' && strpos("=+-@\t\r", $s[0]) !== false) {
+            $s = "'" . $s;
+        }
+        return '"' . str_replace('"', '""', $s) . '"';
+    };
+    $filas = array(implode(';', array_map($celda, array('Fecha', 'Correo', 'Nombre', 'Le interesa', 'Vino de', 'Estado'))));
+    foreach ($lista as $a) {
+        $filas[] = implode(';', array_map($celda, array(
+            isset($a['fecha']) ? $a['fecha'] : '',
+            isset($a['email']) ? $a['email'] : '',
+            isset($a['nombre']) ? $a['nombre'] : '',
+            isset($a['interes']) ? $a['interes'] : '',
+            isset($a['origen']) ? $a['origen'] : '',
+            isset($a['estado']) ? $a['estado'] : 'nuevo',
+        )));
+    }
+    return "\xEF\xBB\xBF" . implode("\r\n", $filas) . "\r\n";
+}

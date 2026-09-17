@@ -631,7 +631,139 @@ main { padding-top: calc(var(--ticker-h) + var(--nav-h)); }
 @media (min-width: 960px) { .legal-grid { grid-template-columns: 220px 1fr; gap: 3rem; align-items: start; } .legal-nav { position: sticky; top: calc(var(--ticker-h) + var(--nav-h) + 1.5rem); } }
 
 /* =============================================================
-   10. Impresión y reducción de movimiento (sólo lo intrusivo)
+   10. PÁGINAS SEO: aterrizajes, fichas de lote, ciudades y blog
+   Las escribe tools/generar.php. Comparten cinta, menú y pie con
+   la portada, así que aquí sólo va lo que la portada no tiene.
+   ============================================================= */
+
+/* --- cabecera de página --------------------------------------- */
+.page-head--seo { background: var(--concrete); }
+.page-head-grid { display: grid; gap: 1.6rem; align-items: start; }
+.page-head--seo h1 { max-width: 18ch; }
+.page-lead { font-size: clamp(1.02rem, 1.6vw, 1.2rem); color: var(--ink-2); max-width: 58ch; margin-top: 1rem; }
+.page-head--seo .hero-cta { margin-top: 1.4rem; }
+.page-head--seo .kicker { margin-bottom: .6rem; }
+.page-fig { border: 2px solid var(--ink); background: var(--ink); display: grid; grid-template-rows: 1fr auto; min-width: 0; }
+.page-fig img { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; }
+.page-fig figcaption {
+  padding: .6rem .9rem; background: var(--bg); font-family: var(--mono); font-size: .68rem;
+  letter-spacing: .08em; text-transform: uppercase; display: flex; justify-content: space-between; gap: 1rem;
+}
+.page-head--seo .stats { margin-top: clamp(1.6rem, 4vw, 2.6rem); }
+@media (min-width: 960px) {
+  .page-head-grid { grid-template-columns: 7fr 5fr; gap: 3rem; }
+}
+
+/* --- cuerpo del artículo -------------------------------------- */
+.sec--articulo { background: var(--bg); }
+.sec--articulo .prose { max-width: 74ch; margin-inline: auto; }
+.prose ol, .prose ul { padding-left: 1.2rem; display: grid; gap: .5rem; }
+.prose a { text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
+@media (hover: hover) { .prose a:hover { background: var(--yellow); } }
+
+.pasos-lista { counter-reset: paso; list-style: none; padding-left: 0; gap: .8rem; }
+.pasos-lista > li {
+  counter-increment: paso; position: relative; padding: .9rem 1rem .9rem 3.2rem;
+  border: 1px solid var(--line); background: var(--concrete);
+}
+.pasos-lista > li::before {
+  content: counter(paso, decimal-leading-zero); position: absolute; left: 1rem; top: .8rem;
+  font-family: var(--display); font-size: 1.1rem; color: var(--accent);
+}
+.lista-check { list-style: none; padding-left: 0; }
+.lista-check > li { position: relative; padding-left: 2rem; }
+.lista-check > li::before {
+  content: "☐"; position: absolute; left: 0; top: -.1em; font-size: 1.15rem; color: var(--accent);
+}
+.lista-enlaces { list-style: none; padding-left: 0; }
+.lista-enlaces > li { padding-left: 1.1rem; position: relative; }
+.lista-enlaces > li::before { content: "▮"; position: absolute; left: 0; color: var(--accent); font-size: .6rem; top: .45em; }
+
+.nota-destacada, .aviso-honesto, .formula {
+  border-left: 4px solid var(--accent); background: var(--kraft); padding: .9rem 1.1rem; color: var(--ink);
+}
+.aviso-honesto { border-left-color: var(--ink); background: var(--concrete); font-size: .95rem; }
+.formula {
+  font-family: var(--mono); font-size: clamp(.85rem, 1.6vw, 1.05rem); background: var(--ink); color: var(--bg);
+  border-left-color: var(--accent); text-align: center; padding: 1.2rem 1rem;
+}
+
+/* --- tablas ---------------------------------------------------- */
+.tabla { width: 100%; border-collapse: collapse; font-size: .92rem; display: block; overflow-x: auto; }
+.tabla thead th {
+  background: var(--ink); color: var(--bg); font-family: var(--mono); font-size: .68rem;
+  letter-spacing: .08em; text-transform: uppercase; padding: .6rem .7rem; text-align: left; white-space: nowrap;
+}
+.tabla td { border: 1px solid var(--line); padding: .6rem .7rem; color: var(--ink-2); vertical-align: top; }
+.tabla tbody tr:nth-child(even) td { background: var(--concrete); }
+.tabla td b { color: var(--ink); }
+
+/* --- tarjetas de enlace ---------------------------------------- */
+.enlaces { display: grid; gap: 1px; background: var(--ink); border: 1px solid var(--ink); }
+.enlace-card { background: var(--bg); padding: 1.2rem 1.3rem 1.4rem; display: grid; gap: .5rem; align-content: start; }
+.enlace-kicker { font-family: var(--mono); font-size: .66rem; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); }
+.enlace-card h3 { font-family: var(--display); font-size: 1.1rem; text-transform: uppercase; line-height: 1.05; }
+.enlace-card p { color: var(--ink-2); font-size: .92rem; }
+@media (hover: hover) { .enlace-card:hover { background: var(--yellow); } }
+@media (min-width: 720px) { .enlaces { grid-template-columns: 1fr 1fr; } }
+@media (min-width: 1100px) { .enlaces { grid-template-columns: repeat(4, 1fr); } }
+.enlaces--prosa { margin-top: .4rem; }
+@media (min-width: 1100px) { .enlaces--prosa { grid-template-columns: repeat(2, 1fr); } }
+
+/* --- rejilla del blog ------------------------------------------ */
+.posts { display: grid; gap: 1px; background: var(--ink); border: 1px solid var(--ink); }
+.post-card { background: var(--bg); display: grid; grid-template-rows: auto 1fr; }
+.post-fig { display: block; overflow: hidden; border-bottom: 1px solid var(--line); background: var(--kraft-2); }
+.post-fig img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; transition: transform .8s var(--ease-out); }
+@media (hover: hover) { .post-card:hover .post-fig img { transform: scale(1.05); } }
+.post-body { padding: 1.1rem 1.2rem 1.3rem; display: grid; gap: .55rem; align-content: start; }
+.post-meta { font-family: var(--mono); font-size: .66rem; letter-spacing: .08em; text-transform: uppercase; color: var(--mute); }
+.post-body h3 { font-family: var(--display); font-size: 1.2rem; text-transform: uppercase; line-height: 1.02; }
+.post-body h3 a { display: block; }
+@media (hover: hover) { .post-body h3 a:hover { color: var(--accent); } }
+.post-body p { color: var(--ink-2); font-size: .93rem; }
+.post-mas { font-family: var(--mono); font-size: .72rem; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); }
+@media (min-width: 720px) { .posts { grid-template-columns: 1fr 1fr; } }
+@media (min-width: 1100px) { .posts { grid-template-columns: repeat(3, 1fr); } }
+
+/* --- llamada final --------------------------------------------- */
+.cta-final { background: var(--ink); color: var(--bg); border-bottom: 0; }
+.cta-final .sec-title { color: var(--bg); max-width: 14ch; }
+.cta-final .sec-lead { color: #d8d6cf; }
+.cta-final .kicker { color: var(--kraft-2); }
+.cta-grid { display: grid; gap: 1.6rem; align-items: center; }
+.cta-acciones { display: flex; flex-wrap: wrap; gap: .6rem; align-items: center; }
+.cta-final .btn-line { color: var(--bg); border-color: var(--bg); }
+@media (hover: hover) { .cta-final .btn-line:hover { background: var(--bg); color: var(--ink); } }
+.cta-nota { width: 100%; font-family: var(--mono); font-size: .68rem; letter-spacing: .06em; text-transform: uppercase; color: #a5a39b; }
+@media (min-width: 960px) { .cta-grid { grid-template-columns: 7fr 5fr; gap: 3rem; } }
+
+/* --- avisos de camión (captación) ------------------------------ */
+.aviso { background: var(--yellow); border-bottom: 2px solid var(--ink); }
+.aviso-grid { display: grid; gap: 1.4rem; align-items: start; }
+.aviso h2 { font-family: var(--display); text-transform: uppercase; font-size: clamp(1.6rem, 3.4vw, 2.6rem); line-height: .98; max-width: 16ch; }
+.aviso p { color: var(--ink-2); max-width: 54ch; }
+.aviso-form { display: grid; gap: .6rem; }
+.aviso-form label { font-family: var(--mono); font-size: .68rem; letter-spacing: .08em; text-transform: uppercase; }
+.aviso-form input, .aviso-form select {
+  border: 2px solid var(--ink); background: var(--bg); padding: .8rem .9rem; font: inherit; font-size: .95rem; width: 100%;
+}
+.aviso-form input:focus-visible, .aviso-form select:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
+.aviso-nota { font-family: var(--mono); font-size: .66rem; letter-spacing: .05em; text-transform: uppercase; color: var(--ink-2); }
+.aviso-trampa { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+.aviso-ok { border: 2px solid var(--ink); background: var(--bg); padding: 1rem 1.1rem; font-size: .95rem; }
+@media (min-width: 860px) { .aviso-grid { grid-template-columns: 6fr 6fr; gap: 3rem; } }
+
+/* --- retoques compartidos -------------------------------------- */
+.lote-title a { display: block; }
+@media (hover: hover) { .lote-title a:hover { color: var(--accent); } }
+.lotes-pie { margin-top: 1.4rem; }
+@media (min-width: 1100px) { .footer-grid { grid-template-columns: 1.6fr 1fr 1fr 1fr 1fr; } }
+@media (min-width: 720px) and (max-width: 1099px) { .footer-grid { grid-template-columns: 1fr 1fr; } }
+@media (min-width: 960px) { .nav-links a { padding: .7rem .62rem; } }
+
+/* =============================================================
+   11. Impresión y reducción de movimiento (sólo lo intrusivo)
    ============================================================= */
 @media (prefers-reduced-motion: reduce) {
   .ticker-track { animation-duration: 90s; }

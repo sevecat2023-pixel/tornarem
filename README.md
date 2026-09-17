@@ -42,12 +42,27 @@ enviarlo por correo o WhatsApp. Funciona, pero es menos cómodo.
 ## Qué hay dentro
 
 ```
-index.html          Portada: hero, cómo funciona, los 10 lotes, grados, pago, FAQ, próximo camión
+index.html          Portada: hero, cómo funciona, los 10 lotes, grados, pago, guías, FAQ
 checkout.html       Tramitar pedido: datos, dirección, forma de pago, resumen
 gracias.html        Confirmación del pedido (lee el número y el pago de la URL)
 legal.html          Aviso legal, privacidad, condiciones de venta, garantía, cookies
 pedido.php          ← RECEPCIÓN DE PEDIDOS: configúralo (ver abajo)
-estado.php          Stock y precios reales que lee la portada (solo lectura)
+estado.php          Stock y precios reales que lee la tienda (solo lectura)
+aviso.php           Lista de avisos: el correo de quien espera género nuevo
+robots.txt          Generado. Qué puede mirar Google y dónde está el sitemap
+sitemap.xml         Generado. Las 40 direcciones de la web, con su fecha
+comprar-devoluciones-de-amazon.html   ← 6 páginas de aterrizaje por búsqueda
+palets-de-devoluciones-de-amazon.html
+lotes-de-devoluciones-de-amazon.html
+cajas-misteriosas-amazon.html
+liquidacion-de-stock-amazon.html
+devoluciones-de-amazon-al-por-mayor.html
+lotes/              Una ficha por lote (10). Generadas
+donde/              Una página por provincia (8) + índice. Generadas
+blog/               13 guías + índice. Generadas
+tools/
+  generar.php       ← EL GENERADOR: escribe las 39 páginas de arriba
+  contenido/        Los textos: landings.php, categorias.php, ciudades.php, blog.php
 styles.css          Toda la hoja de estilo (incluye las tipografías)
 main.js             Carrito, fichas de lote, checkout, contadores, efectos
 .htaccess           Caché, tipos MIME y protección de la carpeta de datos
@@ -263,6 +278,11 @@ la tienda al momento (la portada pregunta por `estado.php`): si pones un lote
 a 0, sale como **agotado** y no se puede añadir al carrito. También puedes
 desactivar un lote para que desaparezca de la portada sin borrarlo.
 
+También, debajo de la tabla, la **lista de avisos**: los correos de quien
+espera que entre género. Cuando descargues un camión de una categoría, filtra
+por ella, pulsa «Escribir a los de la lista» y se abre tu correo con todos en
+copia oculta. Es la lista más caliente que vas a tener.
+
 ### Lo que este panel NO hace
 
 No se conecta con Shopify, ni con EasySell, ni con GLS, ni con ninguna
@@ -277,6 +297,73 @@ clave de Stripe en `pedido.php`.
 
 Descarga la carpeta `datos/` por FTP de vez en cuando. Ahí está todo: pedidos,
 stock y contraseña. Para restaurar, la vuelves a subir.
+
+---
+
+## Las páginas de Google (SEO)
+
+La web ya no es sólo la portada. Hay **39 páginas más** pensadas para que
+alguien que busca «comprar devoluciones de amazon», «palets de devoluciones»
+o «cuánto cuesta un palé» acabe aquí sin conocer el dominio:
+
+| Qué es | Cuántas | Para qué búsqueda |
+|---|---|---|
+| Aterrizajes de compra | 6 | comprar devoluciones, palés, lotes, cajas misteriosas, liquidación, al por mayor |
+| Fichas de lote | 10 | «lote de devoluciones de juguetes», una por categoría |
+| Páginas por provincia | 8 + índice | «devoluciones de amazon en madrid» |
+| Guías del blog | 13 + índice | «¿es rentable revender?», «qué hay dentro de un palé»… |
+
+Todas llevan su título, su descripción, sus migas de pan, sus datos
+estructurados (Google las puede enseñar con precio y estrellas) y enlaces
+hacia los lotes. Y todas tienen el formulario de **avisos**: quien llega
+leyendo y no compra hoy deja el correo y te sale en el panel.
+
+### Cómo se cambian esos textos
+
+No se editan los `.html` de `lotes/`, `donde/` ni `blog/`: **se borrarían** la
+próxima vez que generes. Los textos viven en `tools/contenido/`:
+
+```
+tools/contenido/landings.php     Las 6 páginas de compra
+tools/contenido/categorias.php   Lo propio de cada lote (a quién le sirve, margen…)
+tools/contenido/ciudades.php     Las provincias: plazos, dónde revender
+tools/contenido/blog.php         Los 13 artículos
+```
+
+Cambias lo que quieras ahí y luego, desde la carpeta del proyecto:
+
+```
+php tools/generar.php
+```
+
+Eso reescribe las 39 páginas, el `sitemap.xml`, el `robots.txt` y los datos
+estructurados de la portada, tomando los precios y el stock del catálogo.
+Después subes todo por FTP como siempre.
+
+Si sólo quieres ver qué páginas saldrían, sin escribir nada:
+
+```
+php tools/generar.php --listar
+```
+
+### Lo que hay que hacer una vez publicada
+
+1. Date de alta en [Google Search Console](https://search.google.com/search-console)
+   con tu dominio.
+2. Manda el sitemap: `https://www.tornarem.cat/sitemap.xml`.
+3. Ten paciencia. Posicionar una web nueva es cuestión de meses, no de días, y
+   **nadie te puede garantizar un número de visitas ni de pedidos**. Lo que sí
+   está hecho es toda la maquinaria: contenido propio, estructura, enlaces
+   internos y datos estructurados.
+
+### Avisos: la lista de correos
+
+En `Panel → Almacén → Lista de avisos` está la gente que ha dejado el correo
+en una guía o en la ficha de un lote agotado. Puedes filtrarla, marcarla como
+avisada, descargarla en CSV y escribirles a todos con copia oculta.
+
+Se guarda lo mínimo: correo, nombre si lo escriben, qué categoría les interesa
+y de qué página venían. Ni IP, ni rastreo, ni cookies de publicidad.
 
 ---
 

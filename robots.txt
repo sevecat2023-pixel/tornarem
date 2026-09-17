@@ -1,0 +1,12 @@
+# Tornarem
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /datos/
+Disallow: /checkout.html
+Disallow: /gracias.html
+Disallow: /pedido.php
+Disallow: /aviso.php
+Disallow: /estado.php
+
+Sitemap: https://www.tornarem.cat/sitemap.xml

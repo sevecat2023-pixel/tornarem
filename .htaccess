@@ -24,6 +24,8 @@
   ExpiresByType application/javascript "access plus 1 hours"
   ExpiresByType text/javascript "access plus 1 hours"
   ExpiresByType application/json "access plus 1 hours"
+  ExpiresByType application/xml "access plus 1 hours"
+  ExpiresByType text/xml "access plus 1 hours"
 
   # Media — cache long (use cache-busting filename if you change them)
   ExpiresByType image/webp "access plus 1 month"
@@ -104,13 +106,22 @@
   RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [R=301,L]
 </IfModule>
 
-# ----- Pretty URLs: serve "/about" as "/about.html" (uncomment if multi-page) -----
-# <IfModule mod_rewrite.c>
-#   RewriteEngine On
-#   RewriteCond %{REQUEST_FILENAME} !-d
-#   RewriteCond %{REQUEST_FILENAME}.html -f
-#   RewriteRule ^(.+?)/?$ $1.html [L]
-# </IfModule>
+# ----- Direcciones sin .html -----
+# Si alguien escribe o enlaza /comprar-devoluciones-de-amazon (sin la
+# extension), se le manda a la pagina de verdad con un 301. Se redirige
+# en vez de servirla en las dos direcciones a proposito: asi cada pagina
+# tiene una sola direccion buena y Google no ve contenido duplicado.
+#
+# Solo salta si el fichero .html existe de verdad y lo pedido no es ya
+# un fichero o una carpeta, asi que no puede entrar en bucle ni romper
+# /blog/, /lotes/ ni /donde/, que tienen su index.html.
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteCond %{REQUEST_FILENAME}.html -f
+  RewriteRule ^(.+?)/?$ $1.html [R=301,L]
+</IfModule>
 
 # ----- Protege los datos de tus clientes -----
 # En la carpeta datos/ están los pedidos, con nombres, teléfonos y

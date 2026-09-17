@@ -261,7 +261,7 @@ try {
     if ($accion === '') panel_fallo('Petición mal formada: falta la acción.', 400);
 
     /* Por GET sólo se descarga el CSV; todo lo demás va por POST. */
-    if ($metodo !== 'POST' && $accion !== 'exportar') {
+    if ($metodo !== 'POST' && $accion !== 'exportar' && $accion !== 'exportar_avisos') {
         panel_fallo('Esta acción sólo se atiende por POST.', 400);
     }
 
@@ -372,6 +372,7 @@ try {
     $escriben = [
         'cambiar_estado', 'cambiar_pago', 'guardar_envio', 'guardar_cliente',
         'anadir_nota', 'estado_lote', 'guardar_lote', 'cambiar_password',
+        'aviso_estado',
     ];
     if (in_array($accion, $escriben, true)) {
         $token = null;
@@ -600,6 +601,38 @@ try {
             break;
         }
 
+        /* ---- Lista de avisos ----
+           Gente que dejó el correo en el blog o en una ficha agotada.
+           Es trabajo pendiente igual que un pedido: por eso vive en el
+           panel y no en un fichero que nadie abre. */
+        case 'avisos': {
+            $avisos = tienda_avisos([
+                'q'      => panel_texto(panel_valor($in, 'q'), 80),
+                'estado' => panel_texto(panel_valor($in, 'estado'), 20),
+            ]);
+            $nuevos = 0;
+            foreach ($avisos as $a) {
+                if (!isset($a['estado']) || $a['estado'] === 'nuevo') $nuevos++;
+            }
+            tienda_responder([
+                'ok'     => true,
+                'avisos' => array_values($avisos),
+                'nuevos' => $nuevos,
+            ]);
+            break;
+        }
+
+        case 'aviso_estado': {
+            $id = panel_texto(panel_valor($in, 'id'), 40);
+            $estado = panel_texto(panel_valor($in, 'estado'), 20);
+            if ($id === '') panel_fallo('Falta el aviso.', 400);
+            if (!tienda_aviso_estado($id, $estado)) {
+                panel_fallo('No hemos encontrado ese aviso.', 404);
+            }
+            tienda_responder(['ok' => true, 'id' => $id, 'estado' => ($estado === 'avisado' ? 'avisado' : 'nuevo')]);
+            break;
+        }
+
         case 'guardar_lote': {
             $id = panel_texto(panel_valor($in, 'id'), 60);
             $lotes = tienda_lotes();
@@ -648,6 +681,20 @@ try {
             $csv = tienda_csv($f);
             if (!is_string($csv)) $csv = '';
             $nombre = 'tornarem-pedidos-' . date('Y-m-d') . '.csv';
+            header('Content-Type: text/csv; charset=utf-8');
+            header('Content-Disposition: attachment; filename="' . $nombre . '"');
+            header('Content-Length: ' . strlen($csv));
+            echo $csv;
+            exit;
+        }
+
+        case 'exportar_avisos': {
+            $csv = tienda_avisos_csv([
+                'q'      => panel_texto(panel_valor($in, 'q'), 80),
+                'estado' => panel_texto(panel_valor($in, 'estado'), 20),
+            ]);
+            if (!is_string($csv)) $csv = '';
+            $nombre = 'tornarem-avisos-' . date('Y-m-d') . '.csv';
             header('Content-Type: text/csv; charset=utf-8');
             header('Content-Disposition: attachment; filename="' . $nombre . '"');
             header('Content-Length: ' . strlen($csv));
