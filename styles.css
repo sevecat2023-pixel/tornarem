@@ -372,7 +372,12 @@ main { padding-top: calc(var(--ticker-h) + var(--nav-h)); }
 @media (hover: hover) { .lote-fig:hover img { transform: scale(1.05); } }
 .lote-fig .sticker { position: absolute; top: .8rem; left: .8rem; }
 .lote-fig .sticker--ink { left: auto; right: .8rem; }
-.lote-body { padding: 1.1rem 1.2rem 1.2rem; display: grid; gap: .6rem; align-content: start; }
+/* Las cinco filas fijas (referencia, título, resumen, precio, stock) con
+   el resumen elástico: así el precio y el stock quedan a la misma altura
+   en todas las tarjetas de una fila, aunque una descripción ocupe dos
+   líneas y la de al lado tres. Antes cada tarjeta ponía el precio donde
+   le caía y la fila parecía descuadrada. */
+.lote-body { padding: 1.1rem 1.2rem 1.2rem; display: grid; gap: .6rem; grid-template-rows: auto auto 1fr auto auto; }
 .lote-meta { font-family: var(--mono); font-size: .68rem; letter-spacing: .07em; text-transform: uppercase; color: var(--mute); }
 .lote-title { font-family: var(--display); font-size: clamp(1.25rem, 1.8vw, 1.55rem); text-transform: uppercase; line-height: 1; }
 .lote-desc { color: var(--ink-2); font-size: .95rem; }
@@ -387,21 +392,84 @@ main { padding-top: calc(var(--ticker-h) + var(--nav-h)); }
 .stock-bar i.off { background: transparent; border: 1px solid var(--ink); }
 .lote-stock.is-low { color: var(--accent); }
 .lote-stock.is-low .stock-bar i:not(.off) { background: var(--accent); }
-.lote-actions { display: grid; gap: .5rem; padding: 0 1.2rem 1.2rem; }
+/* Los dos botones se ponen uno al lado del otro sólo si caben DE VERDAD
+   en la tarjeta. Antes se decidía por el ancho de la pantalla, no por el
+   de la tarjeta: a tres columnas en una tableta, «Añadir al carrito» no
+   entraba, se salía de la tarjeta y la de al lado le tapaba el final del
+   texto. Con auto-fit los decide el sitio que hay. */
+.lote-actions { display: grid; gap: .5rem; padding: 0 1.2rem 1.2rem; grid-template-columns: repeat(auto-fit, minmax(10.5rem, 1fr)); }
+.lote-actions .btn { min-width: 0; white-space: normal; }
 .lote .barcode { margin: 0 1.2rem 1rem; }
-@media (min-width: 540px) { .lote-actions { grid-template-columns: 1fr 1fr; } }
-@media (min-width: 720px) { .lotes > * { grid-column: span 6; } .lotes > .lote--wide { grid-column: span 12; } .lotes > .lote:first-child { grid-column: span 12; } }
-@media (min-width: 960px) { .lotes > * { grid-column: span 4; } .lotes > .lote:first-child { grid-column: span 4; } .lotes > .lote--wide { grid-column: span 12; } }
-/* Lote ancho (el palé): imagen a un lado */
+/* -------------------------------------------------------------
+   Reparto de las tarjetas de lote
+
+   Dos por fila a partir de 720 px y tres a partir de 960. El problema
+   de una retícula fija es la última fila: con cuatro lotes quedaban
+   tres arriba y uno solo abajo, con dos tercios de hueco y la línea de
+   la rejilla colgando. De ahí las reglas de «última fila»: la tarjeta
+   que se queda sola ocupa la fila entera y, si quedan dos, se la
+   reparten a medias. Sale cuadrado con 1, 3, 4, 7 o 10 lotes, que es
+   lo que hay en las páginas, y con cualquier otro número también.
+
+   Una tarjeta estirada no se queda vertical: pasa a foto a un lado y
+   texto al otro, porque estirar la vertical significaría
+   una fotografía gigante.
+
+   .lotes--destacado es sólo la portada, donde la primera tarjeta va a
+   lo ancho a propósito. En los listados generados todas son iguales.
+   ------------------------------------------------------------- */
+
+/* ---- dos columnas ---- */
 @media (min-width: 720px) {
-  .lotes > .lote--wide, .lotes > .lote:first-child { grid-template-rows: auto; grid-template-columns: 1fr 1fr; }
-  .lotes > .lote--wide .lote-fig, .lotes > .lote:first-child .lote-fig { grid-row: 1 / 4; border-bottom: 0; border-right: 1px solid var(--line); height: 100%; }
-  .lotes > .lote--wide .lote-fig img, .lotes > .lote:first-child .lote-fig img { height: 100%; aspect-ratio: auto; }
+  .lotes > * { grid-column: span 6; }
+  .lotes > .lote--wide { grid-column: span 12; }
+  .lotes--destacado > .lote:first-child { grid-column: span 12; }
+}
+@media (min-width: 720px) and (max-width: 959.98px) {
+  .lotes > .lote:last-child:nth-child(2n + 1) { grid-column: span 12; }
+  .lotes > .lote:last-child:nth-child(2n + 1) { grid-template-rows: auto; grid-template-columns: 1fr 1fr; }
+  .lotes > .lote:last-child:nth-child(2n + 1) .lote-fig { grid-row: 1 / 4; border-bottom: 0; border-right: 1px solid var(--line); height: 100%; }
+  .lotes > .lote:last-child:nth-child(2n + 1) .lote-fig img { height: 100%; aspect-ratio: auto; }
+  .lotes > .lote:last-child:nth-child(2n + 1) .lote-body { grid-template-rows: none; align-content: start; }
+}
+
+/* ---- tres columnas ---- */
+@media (min-width: 960px) {
+  .lotes > * { grid-column: span 4; }
+  .lotes > .lote--wide { grid-column: span 12; }
+  .lotes--destacado > .lote:first-child { grid-column: span 4; }
+  .lotes > .lote:last-child:nth-child(3n + 1) { grid-column: span 12; }
+  .lotes > .lote:last-child:nth-child(3n + 2),
+  .lotes > .lote:nth-last-child(2):nth-child(3n + 1) { grid-column: span 6; }
+}
+
+/* ---- maquetación a lo ancho ---- */
+@media (min-width: 720px) {
+  .lotes > .lote--wide,
+  .lotes--destacado > .lote:first-child { grid-template-rows: auto; grid-template-columns: 1fr 1fr; }
+  .lotes > .lote--wide .lote-fig,
+  .lotes--destacado > .lote:first-child .lote-fig { grid-row: 1 / 4; border-bottom: 0; border-right: 1px solid var(--line); height: 100%; }
+  .lotes > .lote--wide .lote-fig img,
+  .lotes--destacado > .lote:first-child .lote-fig img { height: 100%; aspect-ratio: auto; }
+  .lotes > .lote--wide .lote-body,
+  .lotes--destacado > .lote:first-child .lote-body { grid-template-rows: none; align-content: start; }
 }
 @media (min-width: 960px) {
-  .lotes > .lote:first-child { grid-template-rows: auto 1fr auto; grid-template-columns: 1fr; }
-  .lotes > .lote:first-child .lote-fig { grid-row: auto; border-bottom: 1px solid var(--line); border-right: 0; height: auto; }
-  .lotes > .lote:first-child .lote-fig img { height: auto; aspect-ratio: 3 / 2; }
+  /* A tres columnas la primera de la portada vuelve a ser normal. */
+  .lotes--destacado > .lote:first-child { grid-template-rows: auto 1fr auto; grid-template-columns: 1fr; }
+  .lotes--destacado > .lote:first-child .lote-fig { grid-row: auto; border-bottom: 1px solid var(--line); border-right: 0; height: auto; }
+  .lotes--destacado > .lote:first-child .lote-fig img { height: auto; aspect-ratio: 3 / 2; }
+
+  .lotes > .lote:last-child:nth-child(3n + 1),
+  .lotes > .lote:last-child:nth-child(3n + 2),
+  .lotes > .lote:nth-last-child(2):nth-child(3n + 1) { grid-template-rows: auto; grid-template-columns: 1fr 1fr; }
+  .lotes > .lote:last-child:nth-child(3n + 1) .lote-fig,
+  .lotes > .lote:last-child:nth-child(3n + 2) .lote-fig,
+  .lotes > .lote:nth-last-child(2):nth-child(3n + 1) .lote-fig { grid-row: 1 / 4; border-bottom: 0; border-right: 1px solid var(--line); height: 100%; }
+  .lotes > .lote:last-child:nth-child(3n + 1) .lote-fig img,
+  .lotes > .lote:last-child:nth-child(3n + 2) .lote-fig img,
+  .lotes > .lote:nth-last-child(2):nth-child(3n + 1) .lote-fig img { height: 100%; aspect-ratio: auto; }
+  .lotes > .lote:last-child:nth-child(3n + 1) .lote-body { grid-template-rows: none; align-content: start; }
 }
 .lotes-note { margin-top: 1rem; font-family: var(--mono); font-size: .72rem; letter-spacing: .04em; color: var(--ink-2); }
 
@@ -464,6 +532,7 @@ main { padding-top: calc(var(--ticker-h) + var(--nav-h)); }
 .footer-grid { display: grid; gap: 2rem; }
 .footer h4 { font-family: var(--mono); font-size: .7rem; letter-spacing: .1em; text-transform: uppercase; color: var(--kraft-2); margin-bottom: .8rem; }
 .footer p, .footer li { font-size: .93rem; color: #d8d6cf; }
+.footer-grid p + p { margin-top: .8rem; }
 .footer ul { list-style: none; padding: 0; display: grid; gap: .35rem; }
 .footer a { text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
 @media (hover: hover) { .footer a:hover { background: var(--bg); color: var(--ink); text-decoration: none; } }
@@ -508,26 +577,41 @@ main { padding-top: calc(var(--ticker-h) + var(--nav-h)); }
 .drawer-row b { font-family: var(--display); font-size: 1.5rem; letter-spacing: -.02em; }
 .drawer-note { font-family: var(--mono); font-size: .66rem; color: var(--mute); text-transform: uppercase; letter-spacing: .05em; }
 
-.lote-dialog { border: 2px solid var(--ink); padding: 0; width: min(96vw, 1040px); max-height: 92vh; background: var(--bg); color: var(--ink); }
+/* El margin: auto no es decorativo. El reset de arriba pone margin: 0 a
+   todo, y con eso se lleva por delante el margin: auto con el que el
+   navegador centra un <dialog> abierto como modal: la ficha se quedaba
+   pegada a la esquina de arriba a la izquierda. */
+.lote-dialog {
+  margin: auto; border: 2px solid var(--ink); padding: 0;
+  width: min(96vw, 1040px); max-height: 92vh; overflow: hidden;
+  background: var(--bg); color: var(--ink);
+}
 .lote-dialog::backdrop { background: rgba(17, 17, 17, .6); }
 .dlg-grid { display: grid; }
 .dlg-fig { background: var(--ink); }
 .dlg-fig img { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; }
 .dlg-body { padding: 1.4rem 1.4rem 1.6rem; display: grid; gap: .8rem; align-content: start; overflow-y: auto; }
+/* El botón de cerrar flota sobre la esquina: la línea de referencia
+   necesita sitio para no pasarle por debajo. */
+.dlg-body .lote-meta { padding-right: 3.2rem; }
 .dlg-body h2 { font-family: var(--display); font-size: clamp(1.4rem, 2.6vw, 2rem); text-transform: uppercase; line-height: 1; }
 .dlg-body ul { padding-left: 0; list-style: none; display: grid; gap: .3rem; font-size: .95rem; }
 .dlg-body li::before { content: "▮ "; color: var(--accent); }
 .dlg-nota { font-size: .9rem; color: var(--ink-2); border-left: 3px solid var(--accent); padding-left: .8rem; }
 .dlg-price { display: flex; align-items: baseline; gap: .8rem; flex-wrap: wrap; border-top: 1px dashed var(--ink); padding-top: .8rem; }
 .dlg-price .precio { font-family: var(--display); font-size: 2.4rem; line-height: 1; }
-.dlg-price .pvp { font-family: var(--mono); font-size: .72rem; text-transform: uppercase; color: var(--mute); }
-.dlg-actions { display: grid; gap: .5rem; }
+.dlg-price .pvp { font-family: var(--mono); font-size: .72rem; text-transform: uppercase; color: var(--mute); width: 100%; order: -1; }
+/* El descuento se pinta igual aquí que en la tarjeta: misma etiqueta
+   amarilla, misma tipografía. Antes en la ficha salía como texto suelto
+   y no parecía la misma web. */
+.dlg-price .off { font-family: var(--mono); font-weight: 600; font-size: .8rem; background: var(--yellow); padding: .25rem .45rem; }
+.dlg-actions { display: grid; gap: .5rem; grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr)); }
+.dlg-actions .btn { min-width: 0; white-space: normal; }
 .dlg-close { position: absolute; top: .7rem; right: .7rem; width: 40px; height: 40px; border: 2px solid var(--ink); background: var(--bg); font-family: var(--mono); font-size: 1.2rem; display: grid; place-items: center; z-index: 2; }
 @media (hover: hover) { .dlg-close:hover { background: var(--ink); color: var(--bg); } }
 @media (min-width: 720px) {
   .dlg-grid { grid-template-columns: 1fr 1fr; max-height: 92vh; }
   .dlg-fig img { height: 100%; aspect-ratio: auto; }
-  .dlg-actions { grid-template-columns: 1fr 1fr; }
 }
 
 .toast {
@@ -644,14 +728,23 @@ main { padding-top: calc(var(--ticker-h) + var(--nav-h)); }
 .page-head--seo .hero-cta { margin-top: 1.4rem; }
 .page-head--seo .kicker { margin-bottom: .6rem; }
 .page-fig { border: 2px solid var(--ink); background: var(--ink); display: grid; grid-template-rows: 1fr auto; min-width: 0; }
-.page-fig img { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; }
+.page-fig img { width: 100%; height: 100%; min-height: 0; aspect-ratio: 3 / 2; object-fit: cover; }
 .page-fig figcaption {
   padding: .6rem .9rem; background: var(--bg); font-family: var(--mono); font-size: .68rem;
   letter-spacing: .08em; text-transform: uppercase; display: flex; justify-content: space-between; gap: 1rem;
 }
 .page-head--seo .stats { margin-top: clamp(1.6rem, 4vw, 2.6rem); }
+/* Estas casillas no siempre llevan un número corto: en la ficha del palé
+   mixto pone «Sin clasificar», y a 360 px se salía de su casilla. Se deja
+   que parta por espacios y que encoja un poco más que las de la portada,
+   que siempre llevan cifras. */
+.page-head--seo .stat-num { font-size: clamp(1.35rem, 6.4vw, 3rem); overflow-wrap: break-word; }
 @media (min-width: 960px) {
-  .page-head-grid { grid-template-columns: 7fr 5fr; gap: 3rem; }
+  /* La foto acompaña a la columna de texto en altura, como el hero de la
+     portada. Con align-items: start se quedaba corta y dejaba un hueco
+     blanco a la derecha que hacía que la cabecera pareciera descuadrada. */
+  .page-head-grid { grid-template-columns: 7fr 5fr; gap: 3rem; align-items: stretch; }
+  .page-fig img { aspect-ratio: auto; }
 }
 
 /* --- cuerpo del artículo -------------------------------------- */
@@ -707,6 +800,18 @@ main { padding-top: calc(var(--ticker-h) + var(--nav-h)); }
 @media (hover: hover) { .enlace-card:hover { background: var(--yellow); } }
 @media (min-width: 720px) { .enlaces { grid-template-columns: 1fr 1fr; } }
 @media (min-width: 1100px) { .enlaces { grid-template-columns: repeat(4, 1fr); } }
+/* Red de seguridad: el fondo de la rejilla es negro y se ve por las
+   juntas de 1 px, así que una celda vacía al final de la fila no queda
+   como un hueco sino como un rectángulo negro. Si los enlaces no son
+   cuatro, se ajusta el número de columnas a los que haya. */
+@media (min-width: 1100px) {
+  .enlaces:has(> :last-child:nth-child(3)) { grid-template-columns: repeat(3, 1fr); }
+  .enlaces:has(> :last-child:nth-child(2)) { grid-template-columns: repeat(2, 1fr); }
+  .enlaces:has(> :only-child) { grid-template-columns: 1fr; }
+}
+@media (min-width: 720px) and (max-width: 1099.98px) {
+  .enlaces:has(> :only-child) { grid-template-columns: 1fr; }
+}
 .enlaces--prosa { margin-top: .4rem; }
 @media (min-width: 1100px) { .enlaces--prosa { grid-template-columns: repeat(2, 1fr); } }
 
@@ -716,7 +821,7 @@ main { padding-top: calc(var(--ticker-h) + var(--nav-h)); }
 .post-fig { display: block; overflow: hidden; border-bottom: 1px solid var(--line); background: var(--kraft-2); }
 .post-fig img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; transition: transform .8s var(--ease-out); }
 @media (hover: hover) { .post-card:hover .post-fig img { transform: scale(1.05); } }
-.post-body { padding: 1.1rem 1.2rem 1.3rem; display: grid; gap: .55rem; align-content: start; }
+.post-body { padding: 1.1rem 1.2rem 1.3rem; display: grid; gap: .55rem; grid-template-rows: auto auto 1fr auto; }
 .post-meta { font-family: var(--mono); font-size: .66rem; letter-spacing: .08em; text-transform: uppercase; color: var(--mute); }
 .post-body h3 { font-family: var(--display); font-size: 1.2rem; text-transform: uppercase; line-height: 1.02; }
 .post-body h3 a { display: block; }
@@ -726,12 +831,27 @@ main { padding-top: calc(var(--ticker-h) + var(--nav-h)); }
 @media (min-width: 720px) { .posts { grid-template-columns: 1fr 1fr; } }
 @media (min-width: 1100px) { .posts { grid-template-columns: repeat(3, 1fr); } }
 
+/* La primera guía ocupa el ancho entero, con la foto a un lado. Dos
+   motivos: es la que hay que leer primero, y deja doce tarjetas para la
+   rejilla, que cuadran exactas tanto a dos columnas como a tres. Con
+   trece sueltas quedaban dos celdas negras al final. */
+.post-card--destacada { grid-column: 1 / -1; }
+@media (min-width: 720px) {
+  .post-card--destacada { grid-template-rows: auto; grid-template-columns: 5fr 7fr; }
+  .post-card--destacada .post-fig { border-bottom: 0; border-right: 1px solid var(--line); height: 100%; }
+  .post-card--destacada .post-fig img { height: 100%; aspect-ratio: auto; min-height: 260px; }
+  .post-card--destacada .post-body { padding: 1.6rem 1.8rem 1.8rem; align-content: center; grid-template-rows: auto auto auto auto; }
+  .post-card--destacada .post-body h3 { font-size: clamp(1.5rem, 2.6vw, 2.1rem); }
+  .post-card--destacada .post-body p { font-size: 1rem; max-width: 56ch; }
+}
+
 /* --- llamada final --------------------------------------------- */
 .cta-final { background: var(--ink); color: var(--bg); border-bottom: 0; }
 .cta-final .sec-title { color: var(--bg); max-width: 14ch; }
 .cta-final .sec-lead { color: #d8d6cf; }
 .cta-final .kicker { color: var(--kraft-2); }
 .cta-grid { display: grid; gap: 1.6rem; align-items: center; }
+.cta-grid > div:first-child { display: grid; gap: .8rem; align-content: start; }
 .cta-acciones { display: flex; flex-wrap: wrap; gap: .6rem; align-items: center; }
 .cta-final .btn-line { color: var(--bg); border-color: var(--bg); }
 @media (hover: hover) { .cta-final .btn-line:hover { background: var(--bg); color: var(--ink); } }
@@ -740,7 +860,10 @@ main { padding-top: calc(var(--ticker-h) + var(--nav-h)); }
 
 /* --- avisos de camión (captación) ------------------------------ */
 .aviso { background: var(--yellow); border-bottom: 2px solid var(--ink); }
-.aviso-grid { display: grid; gap: 1.4rem; align-items: start; }
+.aviso-grid { display: grid; gap: 1.6rem; align-items: start; }
+/* El reset pone margin: 0 a todo, así que el texto de la izquierda
+   (antetítulo, titular, párrafo y nota) salía pegado línea con línea. */
+.aviso-grid > div { display: grid; gap: .8rem; align-content: start; }
 .aviso h2 { font-family: var(--display); text-transform: uppercase; font-size: clamp(1.6rem, 3.4vw, 2.6rem); line-height: .98; max-width: 16ch; }
 .aviso p { color: var(--ink-2); max-width: 54ch; }
 .aviso-form { display: grid; gap: .6rem; }

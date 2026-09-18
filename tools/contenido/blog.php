@@ -191,8 +191,8 @@ $ART[] = array(
   'h1' => 'Grados A, B y C',
   'desc' => 'Qué significan los grados A, B y C en lotes de devoluciones, qué te puedes encontrar en cada uno y cómo detectar a quien usa la escala para inflar el precio.',
   'entradilla' => 'La letra que decide el precio. Qué hay detrás de cada grado, qué puedes esperar al abrir la caja y cómo saber si el vendedor está usando la escala para inflar.',
-  'img' => 'assets/img/clasificacion.webp',
-  'imgAlt' => 'Productos devueltos etiquetándose con su grado en la mesa de revisión',
+  'img' => 'assets/img/lote-electronica.webp',
+  'imgAlt' => 'Auriculares, altavoces y tablets de un lote de electrónica, revisados uno a uno',
   'fecha' => '2026-09-10', 'minutos' => 6,
   'tema' => 'Guía',
   'bloques' => array(
@@ -234,8 +234,8 @@ $ART[] = array(
   'h1' => '¿Es rentable revender devoluciones?',
   'desc' => 'Las cuentas reales de revender devoluciones de Amazon: margen por lote, tiempo invertido, qué se lleva cada plataforma y cuándo no sale rentable.',
   'entradilla' => 'Con números en la mano: lo que entra, lo que sale, lo que se lleva cada plataforma y las horas que hay debajo. Incluye los casos en los que la respuesta es que no.',
-  'img' => 'assets/img/lote-electronica.webp',
-  'imgAlt' => 'Lote de electrónica clasificado y listo para fotografiar',
+  'img' => 'assets/img/lote-informatica.webp',
+  'imgAlt' => 'Monitores, teclados y discos de un lote de informática, contados sobre la mesa',
   'fecha' => '2026-09-08', 'minutos' => 9,
   'tema' => 'Negocio',
   'bloques' => array(
@@ -388,8 +388,8 @@ $ART[] = array(
   'h1' => '¿Hace falta ser autónomo?',
   'desc' => 'Qué dice la normativa española sobre revender productos de segunda mano: cuándo hace falta darse de alta en Hacienda y en autónomos, y qué pasa si no lo haces.',
   'entradilla' => 'La pregunta que nos hacen más veces. La respuesta corta es «depende de si es habitual»; la larga está aquí, con la diferencia entre el alta en Hacienda y el alta en autónomos, que no son lo mismo.',
-  'img' => 'assets/img/clasificacion.webp',
-  'imgAlt' => 'Etiquetas y documentación sobre la mesa de clasificación',
+  'img' => 'assets/img/lote-herramientas.webp',
+  'imgAlt' => 'Maletines y herramienta de un lote, etiquetados y listos para facturar',
   'fecha' => '2026-09-01', 'minutos' => 7,
   'tema' => 'Legal',
   'bloques' => array(
@@ -430,8 +430,8 @@ $ART[] = array(
   'h1' => 'Calcular el margen de un lote',
   'desc' => 'Método paso a paso para calcular si un lote de devoluciones va a ser rentable antes de pagarlo, con la fórmula y un ejemplo completo.',
   'entradilla' => 'Un método de quince minutos para saber si un lote sale a cuenta antes de pagarlo. Con la fórmula, el ejemplo hecho y los tres números que casi todo el mundo se deja fuera.',
-  'img' => 'assets/img/lote-informatica.webp',
-  'imgAlt' => 'Monitores, teclados y discos de un lote de informática clasificado',
+  'img' => 'assets/img/lote-belleza.webp',
+  'imgAlt' => 'Secadores, planchas y depiladoras de un lote de belleza, contados sobre la mesa',
   'fecha' => '2026-08-28', 'minutos' => 6,
   'tema' => 'Negocio',
   'bloques' => array(
@@ -533,8 +533,8 @@ $ART[] = array(
   'h1' => 'Estafas con devoluciones',
   'desc' => 'Las estafas más habituales al comprar devoluciones y palés de Amazon en España, las señales de alarma y qué hacer si ya has pagado.',
   'entradilla' => 'Las cinco estafas que se repiten en el sector, las señales que las delatan antes de pagar y qué se puede hacer cuando ya se ha pagado.',
-  'img' => 'assets/img/camion-descarga.webp',
-  'imgAlt' => 'Muelle de descarga con palés reales esperando a ser clasificados',
+  'img' => 'assets/img/lote-deporte.webp',
+  'imgAlt' => 'Palé de material deportivo precintado en el muelle, con su etiqueta a la vista',
   'fecha' => '2026-08-20', 'minutos' => 6,
   'tema' => 'Seguridad',
   'bloques' => array(
@@ -595,8 +595,8 @@ $ART[] = array(
   'h1' => 'Tu primera compra, paso a paso',
   'desc' => 'Lista de comprobación para la primera compra de un lote de devoluciones: antes de pedir, al recibirlo y las dos primeras semanas de venta.',
   'entradilla' => 'Una lista para imprimir y tachar: qué mirar antes de pedir, qué hacer el día que llega la caja y cómo organizar las dos primeras semanas.',
-  'img' => 'assets/img/lote-belleza.webp',
-  'imgAlt' => 'Lote de belleza abierto y clasificado sobre la mesa',
+  'img' => 'assets/img/lote-bebe.webp',
+  'imgAlt' => 'Sillas de coche, carrito y trona de un lote de puericultura ya revisado',
   'fecha' => '2026-08-15', 'minutos' => 5,
   'tema' => 'Guía',
   'bloques' => array(
@@ -648,8 +648,8 @@ $ART[] = array(
   'h1' => 'Qué es la liquidación de stock',
   'desc' => 'Qué es el stock de liquidación, de dónde sale, por qué las plataformas prefieren venderlo con descuento y qué papel juegan los liquidadores.',
   'entradilla' => 'La cadena completa: del cliente que devuelve al camión que acaba en una nave de Girona. Entender por qué existe este mercado ayuda a comprar mejor dentro de él.',
-  'img' => 'assets/img/hero-almacen.webp',
-  'imgAlt' => 'Estanterías de la nave con stock clasificado por categorías',
+  'img' => 'assets/img/lote-hogar-cocina.webp',
+  'imgAlt' => 'Freidoras, batidoras y cafeteras de un lote de pequeño electrodoméstico',
   'fecha' => '2026-08-10', 'minutos' => 6,
   'tema' => 'Sector',
   'bloques' => array(
@@ -748,9 +748,13 @@ $tarjetas = '';
 $listaLD = array();
 $n = 1;
 foreach ($INDICE as $a) {
-    $tarjetas .= '      <article class="post-card rv">
+    /* La primera va a lo ancho: es la guía por la que hay que empezar y,
+       de paso, deja doce tarjetas para la rejilla, que cuadran exactas
+       a dos y a tres columnas. */
+    $clase = ($n === 1) ? 'post-card post-card--destacada rv' : 'post-card rv';
+    $tarjetas .= '      <article class="' . $clase . '">
         <a class="post-fig" href="' . e($a['slug']) . '.html" tabindex="-1" aria-hidden="true">
-          <img src="../' . e($a['img']) . '" width="1536" height="1024" alt="" loading="lazy" decoding="async">
+          <img src="../' . e($a['img']) . '" width="1536" height="1024" alt="" loading="' . ($n === 1 ? 'eager' : 'lazy') . '" decoding="async">
         </a>
         <div class="post-body">
           <p class="post-meta">' . e($a['tema']) . ' · ' . (int) $a['minutos'] . ' min · ' . e(date('d/m/Y', strtotime($a['fecha']))) . '</p>
@@ -791,6 +795,7 @@ $PAGINAS[] = array(
   'relacionados' => array(
     array('k' => 'Comprar', 't' => 'Comprar devoluciones de Amazon', 'u' => 'comprar-devoluciones-de-amazon.html', 'd' => 'Cómo funciona, qué cuesta y qué mirar antes de pagar.'),
     array('k' => 'Comprar', 't' => 'Lotes de devoluciones', 'u' => 'lotes-de-devoluciones-de-amazon.html', 'd' => 'Los diez lotes del catálogo, con su contenido publicado.'),
+    array('k' => 'Comprar', 't' => 'Palés completos', 'u' => 'palets-de-devoluciones-de-amazon.html', 'd' => 'Más volumen y menos euros por referencia, si tienes dónde descargar.'),
     array('k' => 'Envíos', 't' => 'Dónde enviamos', 'u' => 'donde/index.html', 'd' => 'Plazos reales por provincia y recogida gratis en Girona.'),
   ),
   'relTitulo' => 'Ir a comprar',

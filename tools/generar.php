@@ -27,7 +27,7 @@ $RAIZ = dirname(__DIR__);
 require_once $RAIZ . '/lib/tienda.php';
 
 define('SITIO', 'https://www.tornarem.cat');
-define('VER', '20260917');          /* rompe la caché de css/js */
+define('VER', '20260918');          /* rompe la caché de css/js */
 define('HOY', date('Y-m-d'));
 
 $CAT = tienda_catalogo_base();

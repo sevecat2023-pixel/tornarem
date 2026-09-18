@@ -61,7 +61,7 @@ $m = htmlspecialchars($r['mensaje'], ENT_QUOTES, 'UTF-8');
 echo '<!DOCTYPE html><html lang="es"><head><meta charset="utf-8">'
    . '<meta name="viewport" content="width=device-width,initial-scale=1">'
    . '<meta name="robots" content="noindex"><title>Tornarem</title>'
-   . '<link rel="stylesheet" href="styles.css?v=20260917"></head><body>'
+   . '<link rel="stylesheet" href="styles.css?v=20260918"></head><body>'
    . '<main style="min-height:70vh;display:grid;place-items:center;padding:2rem;text-align:center">'
    . '<div><h1 style="font-family:var(--display);text-transform:uppercase">' . ($r['ok'] ? 'Apuntado' : 'Vaya') . '</h1>'
    . '<p style="margin:1rem 0 1.5rem">' . $m . '</p>'

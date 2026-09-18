@@ -228,6 +228,7 @@ $PAGINAS[] = array(
   'relacionados' => array(
     array('k' => 'Comprar', 't' => 'Comprar devoluciones de Amazon', 'u' => 'comprar-devoluciones-de-amazon.html', 'd' => 'Cómo funciona, qué cuesta y qué mirar antes de pagar.'),
     array('k' => 'Comprar', 't' => 'Palés completos', 'u' => 'palets-de-devoluciones-de-amazon.html', 'd' => 'Pesos, medidas y cómo se descarga un palé sin muelle.'),
+    array('k' => 'Comprar', 't' => 'Lotes de devoluciones', 'u' => 'lotes-de-devoluciones-de-amazon.html', 'd' => 'Los diez lotes del catálogo, con su contenido publicado.'),
     array('k' => 'Guía', 't' => 'Cómo comprar devoluciones de Amazon', 'u' => 'blog/como-comprar-devoluciones-de-amazon.html', 'd' => 'La guía completa, paso a paso.'),
   ),
   'ctaTitulo' => 'Llegamos mañana a casi toda España',
