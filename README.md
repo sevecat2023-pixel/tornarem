@@ -49,6 +49,11 @@ legal.html          Aviso legal, privacidad, condiciones de venta, garantía, co
 pedido.php          ← RECEPCIÓN DE PEDIDOS: configúralo (ver abajo)
 estado.php          Stock y precios reales que lee la tienda (solo lectura)
 aviso.php           Lista de avisos: el correo de quien espera género nuevo
+api.php             API pública de sólo lectura: catálogo, stock y condiciones
+feed.php            Catálogo de productos para ChatGPT, servido al momento
+llms.txt            Generado. Mapa del sitio en texto plano para modelos
+feed/               Generado. El catálogo en JSONL y CSV para subir a OpenAI
+sobre-tornarem.html Generado. Datos de la empresa: lo que somos y lo que no
 robots.txt          Generado. Qué puede mirar Google y dónde está el sitemap
 sitemap.xml         Generado. Las 40 direcciones de la web, con su fecha
 comprar-devoluciones-de-amazon.html   ← 20 páginas de aterrizaje por búsqueda
@@ -61,8 +66,10 @@ lotes/              Una ficha por lote (10). Generadas
 donde/              50 provincias + 22 ciudades + índice. Generadas
 blog/               43 guías + índice. Generadas
 tools/
-  generar.php       ← EL GENERADOR: escribe las 39 páginas de arriba
-  contenido/        Los textos: landings.php, categorias.php, ciudades.php, blog.php
+  generar.php       ← EL GENERADOR: escribe las páginas, el feed, robots y llms.txt
+  avisar-buscadores.php  Avisa a Bing por IndexNow de que hay páginas nuevas
+  contenido/        Los textos: landings.php, landings2.php, categorias.php,
+                    ciudades.php, blog.php, empresa.php
 styles.css          Toda la hoja de estilo (incluye las tipografías)
 main.js             Carrito, fichas de lote, checkout, contadores, efectos
 .htaccess           Caché, tipos MIME y protección de la carpeta de datos
@@ -75,6 +82,7 @@ admin/              ← EL PANEL: pedidos, clientes, almacén
 lib/
   catalogo.js       ← LOS LOTES: nombres, contenido, precios, stock, contacto
   tienda.php        Capa de datos compartida: pedidos, stock, resúmenes, acceso
+  feed.php          Construye el catálogo de productos para ChatGPT
   gsap.min.js       Animación del hero (local, no se carga de ningún CDN)
   ScrollTrigger.min.js
 datos/              Se crea sola en el servidor. AQUÍ VIVEN TUS PEDIDOS
@@ -370,6 +378,98 @@ llevándose por delante el resto del dominio.
 Lo que sí hay es la entrada honesta a esas mismas búsquedas: «cómo salir
 barato de electrónica comprando devoluciones», «¿salen iPhone en los lotes?»,
 «monitores y pantallas de devolución». Misma gente, respuesta verdadera.
+
+### Que ChatGPT te encuentre (y te recomiende)
+
+Hay **dos caminos distintos** y conviene no mezclarlos, porque uno lo
+puedes usar hoy y el otro depende de que te aprueben.
+
+#### 1. Salir citado en las respuestas de ChatGPT (esto ya está montado)
+
+Cuando alguien le pregunta a ChatGPT «dónde comprar devoluciones de
+Amazon en España», ChatGPT busca en la web y cita páginas. Para poder
+salir ahí hacen falta tres cosas, y las tres están hechas:
+
+- **Que el robot de ChatGPT pueda entrar.** `robots.txt` nombra uno a
+  uno a `OAI-SearchBot` (el que decide si sales en las respuestas de
+  ChatGPT), `ChatGPT-User`, `GPTBot`, `PerplexityBot`, `ClaudeBot`,
+  `Google-Extended`, `Bingbot` y ocho más. Se nombran de uno en uno
+  porque en `robots.txt` **un robot que encuentra su propio grupo
+  ignora el grupo `*` entero**: si no repites las prohibiciones dentro
+  de cada grupo, se te cuela en `/admin/`.
+- **Que haya algo citable.** Cada página de compra y cada ficha de lote
+  empieza con un bloque **«En corto»**: un párrafo que contesta la
+  pregunta con las cifras dentro. Es lo que un asistente copia. Si la
+  respuesta está enterrada en el párrafo nueve, no la cita.
+- **Que los datos se puedan leer sin adivinar.** Tres sitios:
+  `/api.php` (catálogo en JSON con precio y stock reales),
+  `/feed.php` (el mismo dato en formato de feed de producto) y
+  `/llms.txt` (un mapa del sitio en texto plano). Los tres permiten
+  origen cruzado y llevan `noindex`, que es lo correcto: legibles para
+  quien los necesita, fuera de los resultados de búsqueda.
+
+Y una página nueva: **`/sobre-tornarem.html`**, que es la que lee un
+asistente cuando le preguntan «¿qué es Tornarem, es de fiar?». Está
+escrita para citarse entera, y dice con todas las letras lo que NO
+somos. Eso último importa más de lo que parece: un modelo que no
+encuentra el desmentido se lo inventa, y lo que se inventa suele ser
+«portal oficial de Amazon».
+
+#### 2. Vender dentro de ChatGPT (esto depende de que te aprueben)
+
+OpenAI tiene un **catálogo de productos** con nueve campos
+obligatorios: `item_id`, `title`, `description`, `url`, `brand`,
+`seller_name`, `image_url`, `availability` y `price`. Tu catálogo ya
+está generado con ese formato exacto, más veinte campos recomendados
+(condición, medidas, peso, transporte, devoluciones, política):
+
+```
+feed/productos.jsonl     El formato que recomienda OpenAI
+feed/productos.csv       El mismo, en CSV
+/feed.php                Servido por web, siempre con el stock del momento
+```
+
+Lo que **tienes que hacer tú**, porque no se puede hacer por ti:
+
+1. Date de alta en el **portal de comerciantes de OpenAI** y pasa la
+   verificación de empresa. Sin eso, el fichero no lo mira nadie.
+2. Sube `feed/productos.jsonl` por donde te indiquen en el alta.
+3. Vuelve a generarlo cuando cambien precios o stock
+   (`php tools/generar.php`) y súbelo otra vez.
+
+**Instant Checkout** —comprar dentro de ChatGPT sin salir— es otra cosa
+y hoy está limitado a socios aprobados. Necesita además una API de
+sesiones de compra (crear, actualizar, completar, cancelar), dos
+webhooks y pagos delegados. No lo he montado a medias a propósito: un
+checkout que no funciona es peor que no tenerlo. Cuando te aprueben el
+catálogo, se habla.
+
+#### 3. Que Bing te indexe rápido
+
+Buena parte de la búsqueda con IA se apoya en el índice de Bing. Si
+Bing no te tiene, ChatGPT no te encuentra por mucho que escribas.
+
+```
+php tools/avisar-buscadores.php
+```
+
+Eso avisa a Bing y Yandex por IndexNow de las 149 direcciones del
+sitemap. Crea una clave la primera vez (`tools/indexnow.clave`) y
+publica el fichero de verificación en la raíz. Lánzalo cada vez que
+generes contenido nuevo.
+
+Google **no** usa IndexNow: para Google, Search Console y el sitemap.
+
+#### Lo que no te puedo prometer
+
+Ni yo ni nadie: **un número de pedidos al día por este canal**. El
+tráfico que llega hoy desde asistentes es una fracción pequeña del que
+llega por búsqueda normal, y depende de que te citen, que depende de
+que te indexen, que depende del tiempo. Lo que está hecho es que
+cuando un asistente busque sobre esto, encuentre tu web, la pueda leer
+entera y no se invente lo que dice de ti.
+
+---
 
 ### Avisos: la lista de correos
 

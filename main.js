@@ -568,6 +568,26 @@
      ------------------------------------------------------------- */
   function initCheckout() {
     var form = $("[data-checkout-form]"); if (!form) return;
+
+    /* checkout.html?lote=lote-moda deja ese lote ya en el carrito.
+       Lo usan la API pública y cualquier asistente que recomiende un
+       lote: en vez de comprar por su cuenta, le pasa este enlace a la
+       persona, que es quien rellena la dirección y confirma. Se
+       comprueba que el lote existe y que queda stock; si no, no se
+       toca nada y el carrito se queda como estaba. */
+    safe(function () {
+      var pedido = (location.search.match(/[?&]lote=([^&]+)/) || [])[1];
+      if (!pedido) return;
+      var id = decodeURIComponent(pedido);
+      var l = LOTES[id];
+      if (!l || l.activo === false || topeStock(l) < 1) return;
+      if (!cart.items[id]) { cart.items[id] = 1; cart.save(); }
+      /* Se quita de la dirección para que recargar no vuelva a añadirlo */
+      if (window.history && history.replaceState) {
+        history.replaceState(null, "", location.pathname);
+      }
+    }, "preCarrito");
+
     var itemsEl = $("[data-co-items]"), emptyEl = $("[data-co-empty]"), gridEl = $("[data-co-grid]");
     var subEl = $("[data-co-subtotal]"), codRow = $("[data-co-cod-row]"), codEl = $("[data-co-cod]"), totEl = $("[data-co-total]"), etaEl = $("[data-co-eta]");
     var msg = $("[data-co-msg]"), submit = $("[data-co-submit]");

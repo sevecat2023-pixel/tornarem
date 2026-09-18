@@ -1,5 +1,175 @@
-# Tornarem
+# Tornarem — lotes de devoluciones de Amazon
+# Aqui no se bloquea a ningun buscador ni a ningun asistente.
+# Lo unico cerrado es el panel, los datos de clientes y las
+# paginas que no tienen sentido en un resultado de busqueda.
+
+# Buscadores y todo lo demás
 User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /datos/
+Disallow: /checkout.html
+Disallow: /gracias.html
+Disallow: /pedido.php
+Disallow: /aviso.php
+Disallow: /estado.php
+
+# ChatGPT: decide si esta web sale citada en sus respuestas
+User-agent: OAI-SearchBot
+Allow: /
+Disallow: /admin/
+Disallow: /datos/
+Disallow: /checkout.html
+Disallow: /gracias.html
+Disallow: /pedido.php
+Disallow: /aviso.php
+Disallow: /estado.php
+
+# ChatGPT cuando una persona le pide que abra esta web
+User-agent: ChatGPT-User
+Allow: /
+Disallow: /admin/
+Disallow: /datos/
+Disallow: /checkout.html
+Disallow: /gracias.html
+Disallow: /pedido.php
+Disallow: /aviso.php
+Disallow: /estado.php
+
+# OpenAI, entrenamiento de modelos
+User-agent: GPTBot
+Allow: /
+Disallow: /admin/
+Disallow: /datos/
+Disallow: /checkout.html
+Disallow: /gracias.html
+Disallow: /pedido.php
+Disallow: /aviso.php
+Disallow: /estado.php
+
+# Perplexity, indexación
+User-agent: PerplexityBot
+Allow: /
+Disallow: /admin/
+Disallow: /datos/
+Disallow: /checkout.html
+Disallow: /gracias.html
+Disallow: /pedido.php
+Disallow: /aviso.php
+Disallow: /estado.php
+
+# Perplexity cuando una persona pide abrir la web
+User-agent: Perplexity-User
+Allow: /
+Disallow: /admin/
+Disallow: /datos/
+Disallow: /checkout.html
+Disallow: /gracias.html
+Disallow: /pedido.php
+Disallow: /aviso.php
+Disallow: /estado.php
+
+# Anthropic, indexación
+User-agent: ClaudeBot
+Allow: /
+Disallow: /admin/
+Disallow: /datos/
+Disallow: /checkout.html
+Disallow: /gracias.html
+Disallow: /pedido.php
+Disallow: /aviso.php
+Disallow: /estado.php
+
+# Claude cuando una persona pide abrir la web
+User-agent: Claude-User
+Allow: /
+Disallow: /admin/
+Disallow: /datos/
+Disallow: /checkout.html
+Disallow: /gracias.html
+Disallow: /pedido.php
+Disallow: /aviso.php
+Disallow: /estado.php
+
+# Claude, búsqueda
+User-agent: Claude-SearchBot
+Allow: /
+Disallow: /admin/
+Disallow: /datos/
+Disallow: /checkout.html
+Disallow: /gracias.html
+Disallow: /pedido.php
+Disallow: /aviso.php
+Disallow: /estado.php
+
+# Gemini y las respuestas de IA de Google
+User-agent: Google-Extended
+Allow: /
+Disallow: /admin/
+Disallow: /datos/
+Disallow: /checkout.html
+Disallow: /gracias.html
+Disallow: /pedido.php
+Disallow: /aviso.php
+Disallow: /estado.php
+
+# Apple Intelligence
+User-agent: Applebot-Extended
+Allow: /
+Disallow: /admin/
+Disallow: /datos/
+Disallow: /checkout.html
+Disallow: /gracias.html
+Disallow: /pedido.php
+Disallow: /aviso.php
+Disallow: /estado.php
+
+# Bing, del que bebe buena parte de la búsqueda con IA
+User-agent: Bingbot
+Allow: /
+Disallow: /admin/
+Disallow: /datos/
+Disallow: /checkout.html
+Disallow: /gracias.html
+Disallow: /pedido.php
+Disallow: /aviso.php
+Disallow: /estado.php
+
+# Alexa y la búsqueda de Amazon
+User-agent: Amazonbot
+Allow: /
+Disallow: /admin/
+Disallow: /datos/
+Disallow: /checkout.html
+Disallow: /gracias.html
+Disallow: /pedido.php
+Disallow: /aviso.php
+Disallow: /estado.php
+
+# Meta AI
+User-agent: meta-externalagent
+Allow: /
+Disallow: /admin/
+Disallow: /datos/
+Disallow: /checkout.html
+Disallow: /gracias.html
+Disallow: /pedido.php
+Disallow: /aviso.php
+Disallow: /estado.php
+
+# DuckDuckGo AI
+User-agent: DuckAssistBot
+Allow: /
+Disallow: /admin/
+Disallow: /datos/
+Disallow: /checkout.html
+Disallow: /gracias.html
+Disallow: /pedido.php
+Disallow: /aviso.php
+Disallow: /estado.php
+
+# Common Crawl, la base de media investigación y medio modelo
+User-agent: CCBot
 Allow: /
 Disallow: /admin/
 Disallow: /datos/

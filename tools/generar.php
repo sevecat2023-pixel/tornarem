@@ -184,6 +184,7 @@ function bloque_pie($b, $extra) {
           <li><a href="https://wa.me/34600000000" target="_blank" rel="noopener">WhatsApp</a></li>
           <li><a href="mailto:pedidos@tornarem.cat">pedidos@tornarem.cat</a></li>
           <li><a href="' . e($b) . 'blog/index.html">Guías y blog</a></li>
+          <li><a href="' . e($b) . 'sobre-tornarem.html">Sobre Tornarem</a></li>
         </ul>
       </div>
       <div>
@@ -578,7 +579,7 @@ function render($p) {
 ' . bloque_nav($b) . '
 <main id="main">
 
-' . $hero . $prosa . $lotes . bloque_faq(isset($p['faq']) ? $p['faq'] : array())
+' . $hero . bloque_respuesta($p) . $prosa . $lotes . bloque_faq(isset($p['faq']) ? $p['faq'] : array())
     . bloque_relacionados(isset($p['relacionados']) ? $p['relacionados'] : array(), $b, isset($p['relTitulo']) ? $p['relTitulo'] : 'Sigue por aquí')
     . (!empty($p['aviso']) ? bloque_aviso($p, $b) : '')
     . bloque_cta($b, isset($p['ctaTitulo']) ? $p['ctaTitulo'] : 'Hoy hay lotes en la nave',
@@ -591,6 +592,32 @@ function render($p) {
 <script defer src="' . e($b) . 'main.js?v=' . VER . '"></script>
 </body>
 </html>
+';
+}
+
+/* Respuesta rápida: el párrafo que contesta la pregunta de la página
+   en seco, con las cifras dentro, justo debajo del titular.
+
+   Sirve para dos cosas a la vez. Para quien llega con prisa, que lee
+   una frase y ya sabe si le interesa. Y para los asistentes tipo
+   ChatGPT o Perplexity, que citan webs: lo que se llevan es el
+   párrafo que responde de forma directa y comprobable, no el que da
+   rodeos. Si no puede citarse en tres líneas, no lo citan. */
+function bloque_respuesta($p) {
+    if (empty($p['respuesta'])) { return ''; }
+    $datos = '';
+    if (!empty($p['respuestaDatos'])) {
+        foreach ($p['respuestaDatos'] as $d) {
+            $datos .= '      <div><dt>' . e($d[0]) . '</dt><dd>' . $d[1] . '</dd></div>' . "\n";
+        }
+        $datos = "    <dl class=\"respuesta-datos\">\n" . $datos . "    </dl>\n";
+    }
+    return '<section class="respuesta">
+  <div class="wrap">
+    <p class="respuesta-eti">En corto</p>
+    <p class="respuesta-texto">' . $p['respuesta'] . '</p>
+' . $datos . '  </div>
+</section>
 ';
 }
 
@@ -649,6 +676,7 @@ $PAGINAS = array();
 require $RAIZ . '/tools/contenido/categorias.php';
 require $RAIZ . '/tools/contenido/landings.php';
 require $RAIZ . '/tools/contenido/landings2.php';
+require $RAIZ . '/tools/contenido/empresa.php';
 require $RAIZ . '/tools/contenido/ciudades.php';
 require $RAIZ . '/tools/contenido/blog.php';
 
@@ -686,20 +714,127 @@ if (!$soloListar) {
     $x .= "</urlset>\n";
     file_put_contents($RAIZ . '/sitemap.xml', $x);
 
-    /* --- robots.txt --- */
-    $robots = "# Tornarem\n"
-        . "User-agent: *\n"
-        . "Allow: /\n"
-        . "Disallow: /admin/\n"
-        . "Disallow: /datos/\n"
-        . "Disallow: /checkout.html\n"
-        . "Disallow: /gracias.html\n"
-        . "Disallow: /pedido.php\n"
-        . "Disallow: /aviso.php\n"
-        . "Disallow: /estado.php\n"
-        . "\n"
-        . "Sitemap: " . SITIO . "/sitemap.xml\n";
+    /* --- robots.txt ---
+       Los rastreadores de IA se nombran uno a uno a propósito. Dos
+       motivos. Uno: en robots.txt, cuando un robot encuentra un grupo
+       con su nombre, IGNORA el grupo «*» entero, así que cada grupo
+       tiene que repetir sus prohibiciones o se cuela en /admin/. Y
+       dos: muchos alojamientos y cortafuegos bloquean a estos robots
+       por defecto, y un «Allow» explícito deja por escrito que aquí
+       no se bloquean.
+
+       El que de verdad importa para salir citado en ChatGPT es
+       OAI-SearchBot: quien lo bloquea desaparece de las respuestas de
+       búsqueda de ChatGPT. GPTBot es el de entrenamiento y se deja
+       entrar a propósito: que el modelo sepa que esta empresa existe
+       juega a favor. */
+    /* api.php y feed.php NO se prohiben: son justo lo que queremos que
+       lea un agente. Lo que llevan es una cabecera X-Robots-Tag de
+       noindex, que es lo correcto aqui: rastreable para quien lo
+       necesita, pero fuera de los resultados de busqueda. */
+    $prohibido = array('/admin/', '/datos/', '/checkout.html', '/gracias.html',
+                       '/pedido.php', '/aviso.php', '/estado.php');
+    $robots_bots = array(
+        '*'                  => 'Buscadores y todo lo demás',
+        'OAI-SearchBot'      => 'ChatGPT: decide si esta web sale citada en sus respuestas',
+        'ChatGPT-User'       => 'ChatGPT cuando una persona le pide que abra esta web',
+        'GPTBot'             => 'OpenAI, entrenamiento de modelos',
+        'PerplexityBot'      => 'Perplexity, indexación',
+        'Perplexity-User'    => 'Perplexity cuando una persona pide abrir la web',
+        'ClaudeBot'          => 'Anthropic, indexación',
+        'Claude-User'        => 'Claude cuando una persona pide abrir la web',
+        'Claude-SearchBot'   => 'Claude, búsqueda',
+        'Google-Extended'    => 'Gemini y las respuestas de IA de Google',
+        'Applebot-Extended'  => 'Apple Intelligence',
+        'Bingbot'            => 'Bing, del que bebe buena parte de la búsqueda con IA',
+        'Amazonbot'          => 'Alexa y la búsqueda de Amazon',
+        'meta-externalagent' => 'Meta AI',
+        'DuckAssistBot'      => 'DuckDuckGo AI',
+        'CCBot'              => 'Common Crawl, la base de media investigación y medio modelo',
+    );
+    $robots = "# Tornarem — lotes de devoluciones de Amazon\n"
+        . "# Aqui no se bloquea a ningun buscador ni a ningun asistente.\n"
+        . "# Lo unico cerrado es el panel, los datos de clientes y las\n"
+        . "# paginas que no tienen sentido en un resultado de busqueda.\n";
+    foreach ($robots_bots as $bot => $para) {
+        $robots .= "\n# " . $para . "\n"
+            . "User-agent: " . $bot . "\n"
+            . "Allow: /\n";
+        foreach ($prohibido as $d) {
+            $robots .= "Disallow: " . $d . "\n";
+        }
+    }
+    $robots .= "\nSitemap: " . SITIO . "/sitemap.xml\n";
     file_put_contents($RAIZ . '/robots.txt', $robots);
+
+    /* --- llms.txt ---
+       Convencion propuesta (llmstxt.org) para dar a un modelo un mapa
+       del sitio en texto plano. Con honestidad: NINGUN proveedor
+       grande ha confirmado que lo lea, asi que esto es una apuesta
+       barata, no una via de trafico. Cuesta un fichero y no estorba. */
+    $llms = "# Tornarem\n\n"
+        . "> Liquidador independiente de devoluciones y excedentes, con nave propia en Girona (Espana).\n"
+        . "> Compra camiones completos de mercancia devuelta, la clasifica por grados y la vende en\n"
+        . "> lotes cerrados con el contenido publicado. Precios desde 319 EUR con IVA y transporte\n"
+        . "> incluidos en peninsula. Se paga contrarreembolso o con tarjeta. Entrega en 24 h.\n\n"
+        . "NO es Amazon ni un portal oficial de Amazon. Amazon es una marca registrada de\n"
+        . "Amazon.com, Inc. o sus filiales; no hay afiliacion, patrocinio ni respaldo por su parte.\n\n"
+        . "## Datos en tiempo real\n\n"
+        . "- [API publica del catalogo](" . SITIO . "/api.php): precios y stock actuales en JSON.\n"
+        . "- [Catalogo de productos](" . SITIO . "/feed.php): mismo dato en el formato de feed de producto.\n"
+        . "- [Sobre Tornarem](" . SITIO . "/sobre-tornarem.html): quienes son, donde estan y en que condiciones venden.\n\n"
+        . "## Que se vende\n\n";
+    foreach ($CAT['lotes'] as $l) {
+        $llms .= "- [" . $l['nombre'] . "](" . SITIO . "/lotes/" . slug_de_lote($l['id']) . ".html): "
+            . $l['uds'] . " unidades, grado " . $l['grado'] . ", " . eur($l['precio']) . ". " . $l['resumen'] . "\n";
+    }
+    $llms .= "\n## Donde empezar\n\n"
+        . "- [Comprar devoluciones de Amazon](" . SITIO . "/comprar-devoluciones-de-amazon.html): como funciona, precios y que mirar antes de pagar.\n"
+        . "- [Pales de devoluciones](" . SITIO . "/palets-de-devoluciones-de-amazon.html): pesos, medidas y descarga.\n"
+        . "- [Cajas sorpresa](" . SITIO . "/cajas-sorpresa-amazon.html): que hay de verdad detras de ese nombre.\n"
+        . "- [Guias](" . SITIO . "/blog/index.html): 43 guias sobre comprar y revender devoluciones.\n"
+        . "- [Donde enviamos](" . SITIO . "/donde/index.html): plazos reales por provincia.\n\n"
+        . "## Condiciones\n\n"
+        . "- Moneda: EUR. Todos los precios llevan el IVA incluido.\n"
+        . "- Transporte incluido en peninsula. Baleares y Canarias: presupuesto previo, no hay tarifa fija.\n"
+        . "- Plazo: 24 h en peninsula si se confirma antes de las 14:00 de un dia laborable. Pale: 24-48 h.\n"
+        . "- Pago: contrarreembolso (recargo del 3 %, minimo 5 EUR) o tarjeta.\n"
+        . "- Devoluciones: 14 dias con el lote completo. El pale mixto sin clasificar se vende cerrado y NO admite devolucion.\n"
+        . "- Pedido minimo: un lote.\n"
+        . "- No se garantizan marcas concretas: si categoria, grado, numero de unidades y estado.\n";
+    file_put_contents($RAIZ . '/llms.txt', $llms);
+
+    /* --- catalogo de productos, escrito en disco ---
+       Se deja tambien como fichero para poder subirlo al portal de
+       comerciantes de OpenAI, que funciona por envio de fichero y no
+       por leer una URL. */
+    require_once $RAIZ . '/lib/feed.php';
+    if (!is_dir($RAIZ . '/feed')) { mkdir($RAIZ . '/feed', 0755, true); }
+    file_put_contents($RAIZ . '/feed/productos.jsonl', tienda_feed_jsonl());
+    file_put_contents($RAIZ . '/feed/productos.csv', tienda_feed_csv());
+    /* El .htaccess de la raíz cierra por extensión todo lo que acabe en
+       .json o .jsonl, para que nadie pueda pedir los datos de clientes
+       por el navegador. Aquí hay que volver a abrirlo: este fichero SÍ
+       es público, es justo lo que tiene que leer un agente. */
+    file_put_contents($RAIZ . '/feed/.htaccess',
+        "# El catalogo de productos es publico a proposito.\n"
+        . "# La raiz cierra .json y .jsonl para proteger datos/; aqui se reabre.\n"
+        . "<FilesMatch \"\\.(jsonl|csv)$\">\n"
+        . "  <IfModule mod_authz_core.c>\n"
+        . "    Require all granted\n"
+        . "  </IfModule>\n"
+        . "  <IfModule !mod_authz_core.c>\n"
+        . "    Order allow,deny\n"
+        . "    Allow from all\n"
+        . "  </IfModule>\n"
+        . "  <IfModule mod_headers.c>\n"
+        . "    Header set Access-Control-Allow-Origin \"*\"\n"
+        . "    Header set X-Robots-Tag \"noindex\"\n"
+        . "  </IfModule>\n"
+        . "</FilesMatch>\n"
+        . "<IfModule mod_mime.c>\n"
+        . "  AddType application/jsonl .jsonl\n"
+        . "</IfModule>\n");
 
     /* --- datos estructurados de la portada ---
        index.html se mantiene a mano, pero los precios y el stock viven

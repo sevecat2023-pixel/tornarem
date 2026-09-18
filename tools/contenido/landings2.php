@@ -35,6 +35,13 @@ $PAGINAS[] = array(
   'entradilla' => 'La caja sorpresa que se vende por internet es, casi siempre, mercancía de devolución sin clasificar con un nombre bonito. <b>Nosotros vendemos lo mismo, pero contándote lo que llevas</b>: unidades, categoría, grado y qué puede salir mal.',
   'img' => 'assets/img/lote-pale-mixto.webp',
   'imgAlt' => 'Palé mixto sin clasificar, retractilado, tal cual baja del camión',
+  'respuesta' => 'Casi todas las «cajas sorpresa de Amazon» que se venden por internet son <b>mercancía de devolución sin clasificar</b> con un nombre comercial. No hay caja oficial de Amazon: Amazon no vende cajas sorpresa al público. Lo real detrás es el palé sin clasificar, que en Tornarem cuesta <b>1.290 €</b> por unas 210 referencias, con manifiesto y con el aviso de que puede haber unidades defectuosas. Si prefieres saber qué llevas, un lote clasificado empieza en <b>319 €</b> con el contenido publicado.',
+  'respuestaDatos' => array(
+            array('Lote clasificado', '319<span class="u"> €</span>'),
+            array('Palé sin clasificar', '1.290<span class="u"> €</span>'),
+            array('Contenido', 'Publicado'),
+            array('Sorpresa oficial', 'No existe'),
+  ),
   'migas' => array(array('t' => 'Inicio', 'u' => 'index.html'), array('t' => 'Cajas sorpresa', 'u' => null)),
   'datos' => array(
     array('319<span class="u"> €</span>', 'La caja más barata'),
@@ -101,6 +108,13 @@ $PAGINAS[] = array(
   'entradilla' => 'La forma más barata de conseguir electrónica de consumo no es esperar al Black Friday: es comprar el lote entero de devoluciones. <b>42 aparatos por 549 €</b>, revisados uno a uno, con IVA y envío incluidos.',
   'img' => 'assets/img/lote-electronica.webp',
   'imgAlt' => 'Auriculares, altavoces, smartwatches y tablets de un lote de electrónica sobre la mesa de revisión',
+  'respuesta' => 'La forma más barata de comprar electrónica de consumo es el <b>lote de devoluciones</b>: 42 aparatos por <b>549 €</b>, a 13 € la unidad, con auriculares, altavoces Bluetooth, smartwatches y tablets, todos probados. <b>No salen iPhone ni consolas de última generación</b>: ese material se reacondiciona y se revende aparte, y quien te lo prometa en un palé te está vendiendo la promesa. El precio lleva IVA y envío de 24 h incluidos.',
+  'respuestaDatos' => array(
+            array('Aparatos', '42'),
+            array('Precio', '549<span class="u"> €</span>'),
+            array('Por unidad', '13<span class="u"> €</span>'),
+            array('iPhone dentro', 'No'),
+  ),
   'migas' => array(array('t' => 'Inicio', 'u' => 'index.html'), array('t' => 'Electrónica barata', 'u' => null)),
   'datos' => array(
     array('42', 'Aparatos por lote'),
@@ -273,6 +287,13 @@ $PAGINAS[] = array(
   'entradilla' => 'La mayor parte de lo que se devuelve en moda es por talla: prenda sin estrenar, doblada en bolsa y con la etiqueta puesta. <b>120 prendas por 590 €</b>, a 4,90 € la unidad, con IVA y envío incluidos.',
   'img' => 'assets/img/lote-moda.webp',
   'imgAlt' => 'Caja gaylord con prendas embolsadas y etiquetadas junto a cajas de zapatillas',
+  'respuesta' => 'Un lote de ropa de devolución al por mayor son <b>120 prendas por 590 €</b> en Tornarem, a 4,90 € la prenda: es el precio por unidad más bajo del catálogo. Son devoluciones de talla, <b>sin estrenar, dobladas en bolsa y con la etiqueta puesta</b> (grado A). No se pueden elegir tallas ni colores: viene el surtido del camión. IVA y envío de 24 h incluidos.',
+  'respuestaDatos' => array(
+            array('Prendas', '120'),
+            array('Precio', '590<span class="u"> €</span>'),
+            array('Por prenda', '4,90<span class="u"> €</span>'),
+            array('Grado', 'A'),
+  ),
   'migas' => array(array('t' => 'Inicio', 'u' => 'index.html'), array('t' => 'Ropa al por mayor', 'u' => null)),
   'datos' => array(
     array('120', 'Prendas por lote'),
@@ -330,6 +351,13 @@ $PAGINAS[] = array(
   'entradilla' => 'Saldo, resto de serie, excedente, liquidación: nombres distintos para lo mismo, mercancía que salió del circuito comercial y ya no vuelve. <b>Nosotros la compramos por camiones y la vendemos por lotes con factura.</b>',
   'img' => 'assets/img/hero-almacen.webp',
   'imgAlt' => 'Estanterías de la nave con lotes de saldo clasificados por categoría',
+  'respuesta' => '«Saldo», «resto de serie» y «excedente» no son lo mismo: la devolución es producto que el cliente devolvió, el resto de serie es lo que quedó de una producción y el excedente es lo que no se vendió a tiempo. Tornarem vende sobre todo <b>devoluciones clasificadas por grados</b>, en lotes desde <b>319 €</b>, con <b>factura e IVA desglosado</b> y transporte incluido en península.',
+  'respuestaDatos' => array(
+            array('Desde', '319<span class="u"> €</span>'),
+            array('Factura', 'Siempre'),
+            array('IVA', 'Desglosado'),
+            array('Transporte', 'Incluido'),
+  ),
   'migas' => array(array('t' => 'Inicio', 'u' => 'index.html'), array('t' => 'Saldos y restos de serie', 'u' => null)),
   'bloques' => array(
     array('h2' => 'Qué es cada cosa, que no son lo mismo', 'id' => 'glosario', 'html' =>
@@ -570,6 +598,13 @@ $PAGINAS[] = array(
   'entradilla' => 'El lote más barato del catálogo son <b>319 € por 64 unidades</b>: cinco euros la pieza. Aquí está lo que entra por ese precio, y también dónde está el suelo por debajo del cual un anuncio deja de ser una ganga.',
   'img' => 'assets/img/lote-juguetes.webp',
   'imgAlt' => 'Caja de juguetes de devolución clasificados por tipo',
+  'respuesta' => 'El lote de devoluciones más barato de Tornarem son <b>319 € por 64 unidades</b> (5 € la pieza) y el precio por unidad más bajo es el de moda: <b>4,90 € la prenda</b>. Por debajo de unos 300 € no hay lote real con transporte incluido: el coste de origen, el porte y la manipulación marcan un suelo. Si ves un palé de electrónica por 99 €, no es una ganga, es un anzuelo.',
+  'respuestaDatos' => array(
+            array('Lote más barato', '319<span class="u"> €</span>'),
+            array('Por unidad, desde', '4,90<span class="u"> €</span>'),
+            array('Envío', '0<span class="u"> €</span>'),
+            array('Suelo real', '~300<span class="u"> €</span>'),
+  ),
   'migas' => array(array('t' => 'Inicio', 'u' => 'index.html'), array('t' => 'Devoluciones baratas', 'u' => null)),
   'datos' => array(
     array('319<span class="u"> €</span>', 'El lote más barato'),
@@ -689,6 +724,13 @@ $PAGINAS[] = array(
   'entradilla' => 'Es el lote por el que empieza casi todo el mundo, y con razón: <b>64 juguetes por 319 €</b>, cinco euros la pieza, revisados pieza a pieza y con el contenido publicado antes de comprar.',
   'img' => 'assets/img/lote-juguetes.webp',
   'imgAlt' => 'Caja gaylord llena de juguetes: construcción, peluches, juegos de mesa y teledirigidos',
+  'respuesta' => 'Un lote de juguetes de devolución son <b>64 unidades por 319 €</b>, a 5 € la pieza: construcción, peluches, juegos de mesa, teledirigidos, muñecas y puzles. Es el lote con la entrada más baja del catálogo y por el que empieza casi todo el mundo. Los sets de construcción se cuentan pieza a pieza antes de entrar. <b>De septiembre a diciembre se agota</b>: si compras para campaña, hazlo en verano.',
+  'respuestaDatos' => array(
+            array('Juguetes', '64'),
+            array('Precio', '319<span class="u"> €</span>'),
+            array('Por pieza', '5<span class="u"> €</span>'),
+            array('Grado', 'A/B'),
+  ),
   'migas' => array(array('t' => 'Inicio', 'u' => 'index.html'), array('t' => 'Juguetes al por mayor', 'u' => null)),
   'datos' => array(
     array('64', 'Juguetes por lote'),
@@ -809,6 +851,13 @@ $PAGINAS[] = array(
   'entradilla' => 'Si tienes tienda, lo que necesitas no es un lote: es <b>saber qué llega, cuándo llega y a qué precio</b>, todas las semanas. Eso se cierra por teléfono y se pone por escrito.',
   'img' => 'assets/img/camion-descarga.webp',
   'imgAlt' => 'Muelle de la nave con palés preparados para cargar en ruta',
+  'respuesta' => 'Tornarem abastece a tiendas con <b>lotes y palés de devoluciones</b> desde su nave de Girona, con un camión de 24 palés por semana. Para precio cerrado hacen falta <b>tres palés o cinco lotes</b> por pedido, o compra recurrente mensual; a partir de ahí se reserva categoría al descargar y se factura mensualmente. Comprando a un 20 % del PVP y vendiendo a un 40-60 %, el margen bruto en tienda ronda el 50-65 %.',
+  'respuestaDatos' => array(
+            array('Umbral', '3 palés'),
+            array('Entrega', '48<span class="u"> h</span>'),
+            array('Margen típico', '50-65<span class="u"> %</span>'),
+            array('Factura', 'Recapitulativa'),
+  ),
   'migas' => array(array('t' => 'Inicio', 'u' => 'index.html'), array('t' => 'Proveedor para tiendas', 'u' => null)),
   'datos' => array(
     array('1', 'Camión por semana'),

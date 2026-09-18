@@ -1,0 +1,18 @@
+# El catalogo de productos es publico a proposito.
+# La raiz cierra .json y .jsonl para proteger datos/; aqui se reabre.
+<FilesMatch "\.(jsonl|csv)$">
+  <IfModule mod_authz_core.c>
+    Require all granted
+  </IfModule>
+  <IfModule !mod_authz_core.c>
+    Order allow,deny
+    Allow from all
+  </IfModule>
+  <IfModule mod_headers.c>
+    Header set Access-Control-Allow-Origin "*"
+    Header set X-Robots-Tag "noindex"
+  </IfModule>
+</FilesMatch>
+<IfModule mod_mime.c>
+  AddType application/jsonl .jsonl
+</IfModule>

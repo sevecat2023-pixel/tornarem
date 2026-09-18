@@ -34,6 +34,13 @@ $PAGINAS[] = array(
   'entradilla' => 'Compramos camiones enteros de devoluciones, los abrimos, los clasificamos por grados y los vendemos en lotes cerrados con el contenido publicado. <b>Desde 319 €</b>, con IVA y envío de 24 h incluidos, y pagando al recibirlo si lo prefieres.',
   'img' => 'assets/img/hero-almacen.webp',
   'imgAlt' => 'Pasillo de la nave con estanterías llenas de palés de devoluciones clasificadas',
+  'respuesta' => 'Las devoluciones de Amazon se compran a <b>liquidadores</b>, no a Amazon: Amazon vende su mercancía devuelta en camiones completos a empresas que la clasifican y la revenden. En Tornarem un lote cerrado cuesta <b>desde 319 €</b> (64 unidades de juguetes, a 5 € la pieza) y un palé completo <b>1.290 €</b> (unas 210 referencias). El precio lleva IVA y transporte incluidos, se paga contrarreembolso o con tarjeta y llega en 24 horas en península.',
+  'respuestaDatos' => array(
+            array('Desde', '319<span class="u"> €</span>'),
+            array('Lotes distintos', '10'),
+            array('Entrega', '24<span class="u"> h</span>'),
+            array('Pago', 'Contrarreembolso'),
+  ),
   'migas' => array(array('t' => 'Inicio', 'u' => 'index.html'), array('t' => 'Comprar devoluciones de Amazon', 'u' => null)),
   'datos' => array(
     array('<span data-count="10" data-cifra="lotes">10</span>', 'Lotes distintos en venta'),
@@ -108,6 +115,13 @@ $PAGINAS[] = array(
   'entradilla' => 'Un palé es la unidad de compra de quien ya revende: más volumen, menos euros por referencia y el transporte incluido en el precio. Tenemos <b>palés por categoría</b> y el <b>palé mixto sin clasificar</b>, tal cual baja del camión.',
   'img' => 'assets/img/camion-descarga.webp',
   'imgAlt' => 'Descarga de palés retractilados desde un tráiler en el muelle de la nave',
+  'respuesta' => 'Un palé de devoluciones de Amazon en España cuesta <b>entre 500 y 1.500 €</b> según categoría y grado. En Tornarem, el palé por categoría empieza en <b>519 €</b> y el <b>palé mixto sin clasificar son 1.290 €</b> por unas 210 referencias, a 6 € cada una. Pesan entre 58 y 210 kg, viajan con transporte paletizado incluido y llegan en 24-48 horas en península. Si no tienes muelle, hay que pedir plataforma elevadora al hacer el pedido.',
+  'respuestaDatos' => array(
+            array('Palé por categoría', '519<span class="u"> €</span>'),
+            array('Palé mixto', '1.290<span class="u"> €</span>'),
+            array('Referencias', '~210'),
+            array('Porte', 'Incluido'),
+  ),
   'migas' => array(array('t' => 'Inicio', 'u' => 'index.html'), array('t' => 'Palés de devoluciones', 'u' => null)),
   'datos' => array(
     array('519<span class="u"> €</span>', 'Palé por categoría desde'),
@@ -323,6 +337,13 @@ $PAGINAS[] = array(
   'entradilla' => 'Si revendes de forma habitual, no necesitas un lote: necesitas <b>volumen constante, precio cerrado y saber cuándo llega</b>. Eso se habla por teléfono y se cierra por escrito.',
   'img' => 'assets/img/camion-descarga.webp',
   'imgAlt' => 'Muelle de la nave con varios palés preparados para cargar',
+  'respuesta' => 'Para comprar devoluciones de Amazon al por mayor en Tornarem el umbral son <b>tres palés o cinco lotes</b> en un mismo pedido, o un compromiso de compra mensual. A partir de ahí hay precio cerrado con porte incluido, reserva de categoría del camión del jueves antes de que salga a la web, y <b>factura recapitulativa mensual</b> a nombre de la empresa. No se garantizan marcas concretas: sí categoría, grado y volumen.',
+  'respuestaDatos' => array(
+            array('Umbral', '3 palés'),
+            array('Camiones', '1 por semana'),
+            array('Palés por camión', '24'),
+            array('Factura', 'Mensual'),
+  ),
   'migas' => array(array('t' => 'Inicio', 'u' => 'index.html'), array('t' => 'Venta al por mayor', 'u' => null)),
   'datos' => array(
     array('24', 'Palés por camión'),

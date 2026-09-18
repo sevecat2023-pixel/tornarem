@@ -747,6 +747,30 @@ main { padding-top: calc(var(--ticker-h) + var(--nav-h)); }
   .page-fig img { aspect-ratio: auto; }
 }
 
+/* --- respuesta rápida ------------------------------------------ */
+/* El párrafo citable: fondo amarillo de alta visibilidad, texto grande
+   y las cifras debajo en una lista de definición, que es lo que un
+   asistente lee bien. */
+.respuesta { background: var(--yellow); border-bottom: 2px solid var(--ink); padding-block: clamp(1.4rem, 3vw, 2.2rem); }
+.respuesta-eti {
+  font-family: var(--mono); font-size: .68rem; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--ink-2); margin-bottom: .5rem;
+}
+.respuesta-eti::before { content: "▮ "; color: var(--accent); }
+.respuesta-texto { font-size: clamp(1.05rem, 1.9vw, 1.35rem); line-height: 1.45; max-width: 76ch; }
+.respuesta-texto b { font-weight: 600; }
+.respuesta-datos {
+  display: grid; gap: 1px; background: var(--ink); border: 1px solid var(--ink);
+  margin-top: 1.2rem; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+}
+.respuesta-datos > div { background: var(--yellow); padding: .7rem .9rem; }
+.respuesta-datos dt {
+  font-family: var(--mono); font-size: .64rem; letter-spacing: .08em;
+  text-transform: uppercase; color: var(--ink-2);
+}
+.respuesta-datos dd { font-family: var(--display); font-size: 1.35rem; line-height: 1.1; margin-top: .2rem; }
+.respuesta-datos dd .u { font-size: .6em; }
+
 /* --- cuerpo del artículo -------------------------------------- */
 .sec--articulo { background: var(--bg); }
 .sec--articulo .prose { max-width: 74ch; margin-inline: auto; }

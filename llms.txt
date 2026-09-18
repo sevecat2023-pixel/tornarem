@@ -1,0 +1,46 @@
+# Tornarem
+
+> Liquidador independiente de devoluciones y excedentes, con nave propia en Girona (Espana).
+> Compra camiones completos de mercancia devuelta, la clasifica por grados y la vende en
+> lotes cerrados con el contenido publicado. Precios desde 319 EUR con IVA y transporte
+> incluidos en peninsula. Se paga contrarreembolso o con tarjeta. Entrega en 24 h.
+
+NO es Amazon ni un portal oficial de Amazon. Amazon es una marca registrada de
+Amazon.com, Inc. o sus filiales; no hay afiliacion, patrocinio ni respaldo por su parte.
+
+## Datos en tiempo real
+
+- [API publica del catalogo](https://www.tornarem.cat/api.php): precios y stock actuales en JSON.
+- [Catalogo de productos](https://www.tornarem.cat/feed.php): mismo dato en el formato de feed de producto.
+- [Sobre Tornarem](https://www.tornarem.cat/sobre-tornarem.html): quienes son, donde estan y en que condiciones venden.
+
+## Que se vende
+
+- [Electrónica de consumo](https://www.tornarem.cat/lotes/electronica.html): 42 unidades, grado A/B, 549 €. Auriculares, altavoces Bluetooth, smartwatches, tablets y accesorios de carga.
+- [Pequeño electrodoméstico](https://www.tornarem.cat/lotes/hogar-cocina.html): 14 unidades, grado B, 429 €. Freidoras de aire, batidoras, cafeteras de cápsulas, un robot aspirador y tostadoras.
+- [Juguetes y juegos](https://www.tornarem.cat/lotes/juguetes.html): 64 unidades, grado A/B, 319 €. Sets de construcción, peluches, juegos de mesa, coches teledirigidos, muñecas y puzles.
+- [Herramientas y bricolaje](https://www.tornarem.cat/lotes/herramientas.html): 18 unidades, grado A/B, 489 €. Taladros y atornilladores a batería, sierra de calar, amoladora, maletines y nivel láser.
+- [Moda y calzado](https://www.tornarem.cat/lotes/moda.html): 120 unidades, grado A, 590 €. Zapatillas, sudaderas, vaqueros, chaquetas y mochilas. Prenda en bolsa con etiqueta.
+- [Informática y periféricos](https://www.tornarem.cat/lotes/informatica.html): 26 unidades, grado A/B, 699 €. Teclados mecánicos, ratones, dos monitores, webcams, discos SSD, router e impresora.
+- [Deporte y fitness](https://www.tornarem.cat/lotes/deporte.html): 22 unidades, grado B, 519 €. Mancuernas, kettlebells, esterillas, bicicleta estática plegable, bandas, tienda y patinete.
+- [Bebé y puericultura](https://www.tornarem.cat/lotes/bebe.html): 15 unidades, grado A/B, 559 €. Silla de coche, carrito plegable, trona, vigilabebés, esterilizador y mochila portabebé.
+- [Belleza y cuidado personal](https://www.tornarem.cat/lotes/belleza.html): 52 unidades, grado A/B, 389 €. Secadores, planchas de pelo, afeitadoras, cepillos eléctricos, depiladoras IPL y básculas.
+- [Palé mixto sin clasificar](https://www.tornarem.cat/lotes/pale-mixto.html): 210 unidades, grado Sin clasificar, 1.290 €. Un palé completo tal cual baja del camión. Hogar, electrónica, juguetes, deporte y sorpresas.
+
+## Donde empezar
+
+- [Comprar devoluciones de Amazon](https://www.tornarem.cat/comprar-devoluciones-de-amazon.html): como funciona, precios y que mirar antes de pagar.
+- [Pales de devoluciones](https://www.tornarem.cat/palets-de-devoluciones-de-amazon.html): pesos, medidas y descarga.
+- [Cajas sorpresa](https://www.tornarem.cat/cajas-sorpresa-amazon.html): que hay de verdad detras de ese nombre.
+- [Guias](https://www.tornarem.cat/blog/index.html): 43 guias sobre comprar y revender devoluciones.
+- [Donde enviamos](https://www.tornarem.cat/donde/index.html): plazos reales por provincia.
+
+## Condiciones
+
+- Moneda: EUR. Todos los precios llevan el IVA incluido.
+- Transporte incluido en peninsula. Baleares y Canarias: presupuesto previo, no hay tarifa fija.
+- Plazo: 24 h en peninsula si se confirma antes de las 14:00 de un dia laborable. Pale: 24-48 h.
+- Pago: contrarreembolso (recargo del 3 %, minimo 5 EUR) o tarjeta.
+- Devoluciones: 14 dias con el lote completo. El pale mixto sin clasificar se vende cerrado y NO admite devolucion.
+- Pedido minimo: un lote.
+- No se garantizan marcas concretas: si categoria, grado, numero de unidades y estado.

@@ -140,6 +140,17 @@ foreach ($CAT['lotes'] as $l) {
         'entradilla' => e($l['resumen']) . ' <b>' . e($l['uds']) . ' unidades por ' . e(eur($l['precio'])) . '</b>, con IVA y envío de 24 h incluidos. PVP estimado del contenido: ' . e(eur($l['pvp'])) . '.',
         'img' => $l['img'],
         'imgAlt' => 'Lote de ' . mb_strtolower($l['nombre'], 'UTF-8') . ' preparado en la nave: ' . rtrim($l['resumen'], '.'),
+        'respuesta' => 'Un ' . e($palabra) . ' de ' . e(mb_strtolower($l['nombre'], 'UTF-8')) . ' de devoluciones de Amazon cuesta <b>'
+            . e(eur($l['precio'])) . '</b> en Tornarem e incluye <b>' . (int) $l['uds'] . ' unidades</b> de grado '
+            . e($l['grado']) . ', revisadas una a una. Salen a ' . e(number_format($porUnidad, 2, ',', '.')) . ' € la unidad, frente a un PVP estimado de '
+            . e(eur($l['pvp'])) . '. El precio lleva IVA y transporte incluidos, se paga contrarreembolso o con tarjeta y llega en '
+            . ($esPale ? '24-48 horas' : '24 horas') . ' en península.',
+        'respuestaDatos' => array(
+            array('Precio final', e(eur($l['precio']))),
+            array('Unidades', (int) $l['uds']),
+            array('Por unidad', e(number_format($porUnidad, 2, ',', '.')) . ' €'),
+            array('Grado', e($l['grado'])),
+        ),
         'ogTipo' => 'product',
         'migas' => array(
             array('t' => 'Inicio', 'u' => 'index.html'),
