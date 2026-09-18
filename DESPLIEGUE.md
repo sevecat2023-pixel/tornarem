@@ -1,4 +1,61 @@
-# Publicar tornabox.eu — guion para Claude Code en el Mac
+# tornabox.eu — estado y mantenimiento
+
+## ⚠️ LA WEB YA ESTÁ PUBLICADA. NO LANCES `deploy-vps.sh` DESDE ESTA RAMA.
+
+Comprobado el **18/09/2026** contra el servidor real:
+
+| Comprobación | Resultado |
+|---|---|
+| `https://tornabox.eu/` | 200, con HTTPS y redirección desde http |
+| `https://www.tornabox.eu/` | 200 |
+| `/api/salud` | `{"ok":true,"servicio":"tornabox-api","pedidos":4}` |
+| `/api/pedidos` sin token | 401 |
+| `/datos/pedidos.json`, `/pedidos.log`, `/server.js` | 404 |
+| `/admin.html` | **200 y sin contraseña** ← hay que arreglarlo |
+
+El VPS sirve una versión que **no sale de esta rama**: lleva el pixel de
+Google Ads `AW-18436324360` con modo de consentimiento, `og:image` y los
+assets en `?v=20260918b`. Viene de la rama
+`claude/amazon-returns-sales-portal-u4rxi5`.
+
+`deploy-vps.sh` hace `git reset --hard` a la rama
+`claude/tienda-minimalista-psicologia-9q5ku3`, así que **lanzarlo ahora
+borraría el pixel de Google Ads y todo lo demás que se hizo después**.
+Antes de desplegar nada hay que fusionar las dos ramas.
+
+## Lo único que falta: cerrar el CRM
+
+`/admin.html` está abierto. Los pedidos no se pueden leer (la API exige el
+token), pero el panel no debería ser público y la contraseña que pide por
+dentro está en el repositorio. Un solo comando en el VPS:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/sevecat2023-pixel/tornarem/claude/tienda-minimalista-psicologia-9q5ku3/proteger-crm.sh -o proteger-crm.sh
+sudo bash proteger-crm.sh
+```
+
+Genera la clave y la imprime. Para elegirla tú:
+
+```bash
+sudo CRM_USUARIO=alex CRM_CLAVE=loquesea bash proteger-crm.sh
+```
+
+No toca la web ni los pedidos: solo añade `auth_basic` a nginx, con copia de
+seguridad de la configuración y `nginx -t` antes de recargar (si no valida,
+deja el fichero como estaba). Si ya está puesto, no hace nada.
+
+Probado contra nginx 1.24.0 (la misma versión del VPS): sin credenciales 401,
+con las buenas 200, con las malas 401, la tienda sigue en 200 y `/datos/` en 404.
+
+Comprobar después:
+
+```bash
+curl -so /dev/null -w '%{http_code}\n' https://tornabox.eu/admin.html   # 401
+```
+
+---
+
+# Guion original de publicación (para un VPS nuevo)
 
 Este fichero es para la sesión de **Claude Code que corra en el Mac**, no para
 la sesión en la nube: desde la nube el puerto 22 está bloqueado y no hay acceso
