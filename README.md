@@ -51,15 +51,15 @@ estado.php          Stock y precios reales que lee la tienda (solo lectura)
 aviso.php           Lista de avisos: el correo de quien espera género nuevo
 robots.txt          Generado. Qué puede mirar Google y dónde está el sitemap
 sitemap.xml         Generado. Las 40 direcciones de la web, con su fecha
-comprar-devoluciones-de-amazon.html   ← 6 páginas de aterrizaje por búsqueda
+comprar-devoluciones-de-amazon.html   ← 20 páginas de aterrizaje por búsqueda
 palets-de-devoluciones-de-amazon.html
-lotes-de-devoluciones-de-amazon.html
-cajas-misteriosas-amazon.html
-liquidacion-de-stock-amazon.html
-devoluciones-de-amazon-al-por-mayor.html
+cajas-sorpresa-amazon.html
+comprar-electronica-barata-devoluciones.html
+lotes-de-ropa-al-por-mayor.html
+...  (las veinte están en tools/contenido/landings.php y landings2.php)
 lotes/              Una ficha por lote (10). Generadas
-donde/              Una página por provincia (8) + índice. Generadas
-blog/               13 guías + índice. Generadas
+donde/              50 provincias + 22 ciudades + índice. Generadas
+blog/               43 guías + índice. Generadas
 tools/
   generar.php       ← EL GENERADOR: escribe las 39 páginas de arriba
   contenido/        Los textos: landings.php, categorias.php, ciudades.php, blog.php
@@ -302,16 +302,18 @@ stock y contraseña. Para restaurar, la vuelves a subir.
 
 ## Las páginas de Google (SEO)
 
-La web ya no es sólo la portada. Hay **39 páginas más** pensadas para que
-alguien que busca «comprar devoluciones de amazon», «palets de devoluciones»
-o «cuánto cuesta un palé» acabe aquí sin conocer el dominio:
+La web ya no es sólo la portada. Hay **147 páginas más** pensadas para que
+alguien que busca «comprar devoluciones de amazon», «cajas sorpresa»,
+«cuánto cuesta un palé» o «devoluciones de amazon en vigo» acabe aquí sin
+conocer el dominio:
 
 | Qué es | Cuántas | Para qué búsqueda |
 |---|---|---|
-| Aterrizajes de compra | 6 | comprar devoluciones, palés, lotes, cajas misteriosas, liquidación, al por mayor |
+| Aterrizajes de compra | 20 | comprar devoluciones, palés, cajas sorpresa, electrónica barata, ropa al por mayor, saldos, Wallapop, Vinted, mercadillo, proveedor para tiendas… |
 | Fichas de lote | 10 | «lote de devoluciones de juguetes», una por categoría |
-| Páginas por provincia | 8 + índice | «devoluciones de amazon en madrid» |
-| Guías del blog | 13 + índice | «¿es rentable revender?», «qué hay dentro de un palé»… |
+| Provincias | 50 + índice | «devoluciones de amazon en madrid» |
+| Ciudades grandes | 22 | «comprar devoluciones en vigo», «en getafe»… |
+| Guías del blog | 43 + índice | «¿es rentable revender?», «cuánto se gana», «qué precio poner»… |
 
 Todas llevan su título, su descripción, sus migas de pan, sus datos
 estructurados (Google las puede enseñar con precio y estrellas) y enlaces
@@ -324,10 +326,11 @@ No se editan los `.html` de `lotes/`, `donde/` ni `blog/`: **se borrarían** la
 próxima vez que generes. Los textos viven en `tools/contenido/`:
 
 ```
-tools/contenido/landings.php     Las 6 páginas de compra
+tools/contenido/landings.php     Las 6 primeras páginas de compra
+tools/contenido/landings2.php    Las otras 14
 tools/contenido/categorias.php   Lo propio de cada lote (a quién le sirve, margen…)
-tools/contenido/ciudades.php     Las provincias: plazos, dónde revender
-tools/contenido/blog.php         Los 13 artículos
+tools/contenido/ciudades.php     Las 50 provincias y las 22 ciudades
+tools/contenido/blog.php         Las 43 guías
 ```
 
 Cambias lo que quieras ahí y luego, desde la carpeta del proyecto:
@@ -336,7 +339,7 @@ Cambias lo que quieras ahí y luego, desde la carpeta del proyecto:
 php tools/generar.php
 ```
 
-Eso reescribe las 39 páginas, el `sitemap.xml`, el `robots.txt` y los datos
+Eso reescribe las 147 páginas, el `sitemap.xml`, el `robots.txt` y los datos
 estructurados de la portada, tomando los precios y el stock del catálogo.
 Después subes todo por FTP como siempre.
 
@@ -355,6 +358,18 @@ php tools/generar.php --listar
    **nadie te puede garantizar un número de visitas ni de pedidos**. Lo que sí
    está hecho es toda la maquinaria: contenido propio, estructura, enlaces
    internos y datos estructurados.
+
+### Lo que NO se ha hecho, a propósito
+
+No hay páginas para búsquedas de producto que no vendemos («comprar iPhone
+18», «televisión 50 pulgadas oferta»). Quien escribe eso quiere ese producto;
+si llega aquí y ve un palé, se va en tres segundos. Google mide ese rebote,
+llama a esas páginas *doorway pages* y es de lo poco que penaliza de verdad,
+llevándose por delante el resto del dominio.
+
+Lo que sí hay es la entrada honesta a esas mismas búsquedas: «cómo salir
+barato de electrónica comprando devoluciones», «¿salen iPhone en los lotes?»,
+«monitores y pantallas de devolución». Misma gente, respuesta verdadera.
 
 ### Avisos: la lista de correos
 

@@ -529,9 +529,13 @@ function render($p) {
         array('Comprar devoluciones de Amazon', 'comprar-devoluciones-de-amazon.html'),
         array('Palés de devoluciones', 'palets-de-devoluciones-de-amazon.html'),
         array('Lotes de devoluciones', 'lotes-de-devoluciones-de-amazon.html'),
-        array('Cajas misteriosas', 'cajas-misteriosas-amazon.html'),
-        array('Liquidación de stock', 'liquidacion-de-stock-amazon.html'),
-        array('Venta al por mayor', 'devoluciones-de-amazon-al-por-mayor.html'),
+        array('Cajas sorpresa', 'cajas-sorpresa-amazon.html'),
+        array('Electrónica barata', 'comprar-electronica-barata-devoluciones.html'),
+        array('Ropa al por mayor', 'lotes-de-ropa-al-por-mayor.html'),
+        array('Juguetes al por mayor', 'lotes-de-juguetes-al-por-mayor.html'),
+        array('Saldos y restos de serie', 'saldos-y-restos-de-serie.html'),
+        array('Empezar con 500 €', 'empezar-a-revender-con-500-euros.html'),
+        array('Proveedor para tiendas', 'proveedor-de-saldos-para-tiendas.html'),
     );
 
     $hero = isset($p['hero']) ? $p['hero'] : bloque_cabecera($p, $b);
@@ -644,6 +648,7 @@ function bloque_cabecera($p, $b) {
 $PAGINAS = array();
 require $RAIZ . '/tools/contenido/categorias.php';
 require $RAIZ . '/tools/contenido/landings.php';
+require $RAIZ . '/tools/contenido/landings2.php';
 require $RAIZ . '/tools/contenido/ciudades.php';
 require $RAIZ . '/tools/contenido/blog.php';
 
